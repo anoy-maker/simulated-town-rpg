@@ -69,8 +69,16 @@ func advance_day() -> void:
 			continue
 		for business in _businesses.values():
 			if business.industry == "farmer" and (worker == business.owner or worker in business.employees):
-				_harvests[worker] = _rng.randi_range(2, 6)
+				_harvests[worker] = _harvest_opportunity()
 	_record("labor_environment", "world", "", true, {"opportunities": _harvests.duplicate()})
+
+
+func _harvest_opportunity() -> int:
+	return _rng.randi_range(2, 6)
+
+
+func _unit_price(item: String) -> int:
+	return Config.PRICES[item]
 
 
 func _wage(worker: String, business: String) -> int:
@@ -188,7 +196,7 @@ func transfer_item(actor: String, target: String, item: String, amount: Variant)
 func purchase(buyer: String, seller: String, item: String, quantity: Variant, unit_price: Variant) -> bool:
 	var valid: bool = _entities.has(buyer) and _businesses.has(seller) and item in ITEMS
 	if valid:
-		valid = Config.INDUSTRIES[_businesses[seller].industry].output == item and unit_price is int and unit_price == Config.PRICES[item]
+		valid = Config.INDUSTRIES[_businesses[seller].industry].output == item and unit_price is int and unit_price == _unit_price(item)
 		if _businesses.has(buyer):
 			valid = valid and Config.INDUSTRIES[_businesses[buyer].industry].input == item
 		else:
@@ -225,7 +233,7 @@ func observe(actor: String, business: String = "") -> Dictionary:
 	for id in ids:
 		var firm: Dictionary = _businesses[id]
 		var item: String = Config.INDUSTRIES[firm.industry].output
-		observation.offers.append({"seller": id, "item": item, "unit_price": Config.PRICES[item], "stock": _entities[id].inventory[item]})
+		observation.offers.append({"seller": id, "item": item, "unit_price": _unit_price(item), "stock": _entities[id].inventory[item]})
 	for offer in _offers.values():
 		if offer.worker == actor and offer.status == "offered":
 			observation.shift_offers.append(offer.duplicate(true))

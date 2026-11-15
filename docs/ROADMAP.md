@@ -133,7 +133,7 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 
 ## M10: Business Income and Capital Circulation
 
-**Status:** Implemented and verified; [M10 results](M10_RESULTS.md) await review. Stop after M10; no M11.
+**Status:** Completed. [M10 results](M10_RESULTS.md) remain unchanged and have not been adopted as a viable economy.
 
 - Separate `settlement_finance` scenario using exactly M9's population, initial holdings, labor/production, wages, prices and market rules.
 - Atomic, ownership-authorized cash withdrawals with a conservative two-day operating reserve; separate income from wages and formal profit.
@@ -142,6 +142,18 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 - Per-business capital/revenue/expenses/production and individual wages/distributions/food access; assess employee participation and sustained circulation.
 
 **Done when:** technical accounting/reserve safeguards and actual economic effects are independently verified and documented. Increased circulation alone does not establish broad viability; further changes wait for review.
+
+## M11: Deterministic Economic Equilibrium Reference
+
+**Status:** Implemented and verified; [M11 results](M11_RESULTS.md) await review. Stop here before further milestones.
+
+- Isolated prescribed reference with the exact twelve-person endowments, 2/4/4 prices, eight-coin shifts and deterministic four-wheat harvest.
+- Reuse authoritative purchases, payroll and recipes; alternate two worker pairs per industry and feed everyone daily.
+- Verify 1/2/30/365 days, every-event conservation/bounds, daily business recurrence and two-day household recurrence.
+- Check 4380 annual meals, 2190 shifts, zero misses, actual commodity sources/sinks and deterministic replay.
+- Preserve historical outputs; use concise reports and ledger fingerprints rather than verbose annual dumps.
+
+**Done when:** the exact reference invariants pass, actual results/deviations are documented, and feasibility under prescribed decisions remains explicitly distinct from autonomous stability. No sector expansion or new autonomous economic behavior.
 
 ## Later possibilities
 
