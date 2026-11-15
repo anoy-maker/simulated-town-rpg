@@ -97,7 +97,7 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 
 ## M7: Economic Foundations and Calibration Laboratory
 
-**Status:** Implemented and verified; [M7 results](M7_RESULTS.md) await review. Stop here; M8 has not started.
+**Status:** Completed. [M7 results](M7_RESULTS.md) remain the isolated-intervention baseline.
 
 - Separate calibration scenario with only the requested yield, target, price, wage, and initial-balance parameters.
 - Fixed M6B baseline plus five isolated interventions; unchanged population, policies, recipes, authority, and scheduling.
@@ -106,6 +106,18 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 - Preserve all historical outputs; report improvements, deterioration, or stalls without optimization or post-result tuning.
 
 **Done when:** configuration boundaries and accounting are verified, all prescribed experiments replay, economic limits and actual results are documented, and future calibration directions remain suggestions only.
+
+## M8: Candidate Viable Economic Baseline
+
+**Status:** Implemented and verified; [M8 results](M8_RESULTS.md) await review. No candidate/default adoption; M9 has not started.
+
+- Optional combined affordable-bread/productivity configuration; reuse the three matched M7 comparisons.
+- Keep all other parameters, policies, authoritative mechanisms, historical outputs, and defaults unchanged.
+- Six new 30/365-day cases for seeds 7/42/99, independent replay and shared audits.
+- Observe food owned during planning but sold before consumption without reserving it or changing behavior.
+- Assess capacity, household access, business continuity, distribution, and sampled resilience, not only aggregate meals.
+
+**Done when:** all regressions pass, the four-way comparison and event-linked observation are documented, limitations are explicit, and adoption/future work remain for review.
 
 ## Later possibilities
 

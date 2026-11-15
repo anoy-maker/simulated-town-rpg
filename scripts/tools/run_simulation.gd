@@ -21,8 +21,8 @@ func _init() -> void:
 		args = args.slice(2)
 	var experiment: String = "baseline"
 	if not args.is_empty() and args[0] == "--experiment":
-		if scenario != "calibration" or args.size() < 2 or args[1] not in Calibration.Config.EXPERIMENTS:
-			_fail("Use --scenario calibration --experiment " + "|".join(Calibration.Config.EXPERIMENTS))
+		if scenario != "calibration" or args.size() < 2 or args[1] not in Calibration.Config.available_experiments():
+			_fail("Use --scenario calibration --experiment " + "|".join(Calibration.Config.available_experiments()))
 			return
 		experiment = args[1]
 		args = args.slice(2)

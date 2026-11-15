@@ -9,13 +9,16 @@ const EXPERIMENTS = ["baseline", "higher_productivity", "higher_target", "lower_
 
 
 static func preset(experiment: String) -> Dictionary:
-	assert(experiment in EXPERIMENTS)
+	assert(experiment in available_experiments())
 	var config: Dictionary = DEFAULT.duplicate(true)
 	match experiment:
 		"higher_productivity": config.harvest_bonus = 2
 		"higher_target": config.farmer_target = 8
 		"lower_food_price": config.prices.bread = 2
 		"higher_wage": config.daily_payment = 3
+		"combined_candidate":
+			config.harvest_bonus = 2
+			config.prices.bread = 2
 		"extra_liquidity":
 			for actor in config.initial_money:
 				config.initial_money[actor] += 10
@@ -48,7 +51,12 @@ static func _integer(value: Variant, minimum: int, maximum: int) -> bool:
 
 
 static func experiment_name(config: Dictionary) -> String:
-	for name in EXPERIMENTS:
+	for name in available_experiments():
 		if config == preset(name):
 			return name
 	return "custom"
+
+
+static func available_experiments() -> Array:
+	# Keep the six-case M7 study unchanged; M8 explicitly selects its combination.
+	return EXPERIMENTS + ["combined_candidate"]
