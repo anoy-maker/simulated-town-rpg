@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0/M1 complete; M2 trading scenario implemented and awaiting review
+**Status:** M0/M1/M2 complete; M3 needs and decisions implemented and awaiting review
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -60,7 +60,7 @@ A credible early demonstration is **four people who can complete—or fail to co
 
 ## Project status
 
-The headless GDScript kernel provides the original M0 simulation, M1 atomic purchases, and a separate M2 trading scenario, with automated accounting tests. There is no main scene; use the script commands below. Licensing, public release plans, and the final title remain undecided.
+The headless GDScript kernel provides the original M0 simulation, M1 atomic purchases, M2 fixed trading, and a separate M3 agents scenario, with automated accounting tests. There is no main scene; use the script commands below. Licensing, public release plans, and the final title remain undecided.
 
 ## Run M0
 
@@ -129,7 +129,7 @@ The command returns `true` only after moving all four wheat to the miller and al
 
 Each attempt appends one `purchase` event: `actor` is the buyer, `target` the seller, and `details` contains `buyer`, `seller`, `item`, `quantity`, `unit_price`, and `total_price`. Rejections also contain a failure `reason`. `total_price` is null when validation stops before safe total calculation. Rejected purchases leave day, inventories, and balances unchanged.
 
-The existing test command runs all 147 M0 checks plus the purchase and trading tests. The M0 routine remains unchanged and never calls purchases. See [M1 verification results and exact assumptions](docs/M1_RESULTS.md).
+The existing test command runs all 147 M0 checks plus the purchase, trading, and agents tests. The M0 routine remains unchanged and never calls purchases. See [M1 verification results and exact assumptions](docs/M1_RESULTS.md).
 
 ## M2: The Trading Village
 
@@ -159,4 +159,29 @@ Every goods exchange uses `world.purchase()`. These are unconditional scripted a
 
 The trading report includes initial/final holdings, production/consumption totals, successful/rejected purchase counts and volumes per commodity, each NPC's sales/purchase/payment cash flow, unmet meals, and failure groups with participants, resource/recipe, reason, count, and first/last day. `earned` includes sales and employer payments received; `spent` includes purchases and employer payments sent. Rejected attempts contribute no cash or goods flow. These figures are derived from the event ledger.
 
-See [M2 actual results and verification](docs/M2_RESULTS.md), including shortages and financial distress at 30 and 365 days. Stop after M2; M3 has not started.
+See [M2 actual results and verification](docs/M2_RESULTS.md), including shortages and financial distress at 30 and 365 days.
+
+## M3: Needs and Decisions
+
+```sh
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario agents 30 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario agents 365 42
+godot --headless --no-header --path . --script res://scripts/tools/run_simulation.gd -- --scenario agents 365 42 --json > work/agents-365.json
+```
+
+Create `work/` first for redirected output; the same writable XDG setup and day limits apply. The default remains M0, and `--scenario trading` retains the exact M2 report and ledger.
+
+The new scenario separates four concerns:
+
+- **Goals/priorities:** `npc_policy.gd` declares defaults; `Agents.new(seed, initial_entities, goals)` accepts a copied, validated configuration. Food target is one bread, output targets are 4 wheat / 4 flour / 6 bread, and production is capped at two batches per work turn. Non-bakers reserve the cost of missing target food before buying inputs. Cora buys ingredients for her own bread instead of reserving money for a self-purchase.
+- **Available information:** `agent_world.gd` projects only the actor's ID, occupation, inventory, money, current day, and daily meal need, plus public seller/item/price/stock offers. All farmer wheat, miller flour, and baker bread are explicitly advertised. Other money, unadvertised inventory, and global event history are excluded. Observations are copies.
+- **Proposals:** `npc_policy.gd` is a pure function over observations, goals, and the current phase. It receives no world instance. It proposes `wait`, `purchase`, `harvest`, `produce`, or `consume`, with a reason.
+- **Authority:** `agent_world.gd` validates phase/action and fixed market offers, then dispatches to existing world commands using the actual actor. Current funds, stock, roles, recipes, and capacity are revalidated even if the observation was stale. Policies never write state.
+
+The daily schedule retains M2's payment, work-chain, food, and eating order. Ada attempts the same two-coin payment first. One harvest opportunity is drawn per day, even if she waits, keeping M2's day-by-day random environment. Ada then decides whether wheat is below target. Bram and Cora each decide on inputs, then work, using fresh observations. All four choose food actions, then meal actions. There are 13 decision opportunities per day; the employer payment remains a fixed scenario rule.
+
+Food purchases fill only the target shortfall, limited by cash and advertised stock. Production targets determine required batches and inputs; actual input stock limits work. Existing inputs/output prevent redundant purchases or work. Whole harvests/recipe batches can overshoot a target; subsequent turns wait until stock falls below it. A villager still attempts one actual-stock consumption for the daily meal, even when food is unavailable, so unmet meals remain explicit. Successful consumption records clear that day's need, and the agents executor rejects a duplicate meal. Needs reset to one meal each day without health effects or accumulated hunger debt.
+
+Every choice appends a `decision` event with actor, phase, selected action, policy reason, outcome (`executed`, `rejected`, or `wait`), execution failure reason, and the underlying command event ID where present. Decision records do not move money or goods. Reports add goal settings and decision frequencies by actor/action/reason and outcome; economic failures exclude the duplicate decision annotation.
+
+Prices, initial endowments, recipes, wage amount/timing, and the seed remain M2's. Goals and policies were fixed before examining economic results. See [M3 actual results and comparison with M2](docs/M3_RESULTS.md). Stop after M3; no later milestone has started.
