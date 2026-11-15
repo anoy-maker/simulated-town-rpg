@@ -121,7 +121,7 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 
 ## M9: Workplaces, Labor, and Employment
 
-**Status:** Implemented and verified; [M9 results](M9_RESULTS.md) await review. Stop after M9; no M10.
+**Status:** Completed. [M9 results](M9_RESULTS.md) remain the unchanged labor baseline.
 
 - Separate twelve-resident `settlement_labor` experiment with business accounts, productive assets, owners, skills, employment, and actual paid shifts.
 - Predeclared prices, wages, endowments, capacity, and positive potential physical buffer; no post-result rescue or tuning.
@@ -130,6 +130,18 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 - Fixed 30/365-day seeds 7/42/99, replay, independent full ledger/receipt reconciliation, household/business reports, all prior hashes preserved.
 
 **Done when:** actual participation, productive capacity/utilization, payroll and capital, food access, inactivity and failures are documented without guaranteeing prosperity. Historical scenarios remain unchanged; further settlement systems wait for review.
+
+## M10: Business Income and Capital Circulation
+
+**Status:** Implemented and verified; [M10 results](M10_RESULTS.md) await review. Stop after M10; no M11.
+
+- Separate `settlement_finance` scenario using exactly M9's population, initial holdings, labor/production, wages, prices and market rules.
+- Atomic, ownership-authorized cash withdrawals with a conservative two-day operating reserve; separate income from wages and formal profit.
+- Predeclared no-withdrawal, household-needs and half-surplus policies; no outcome tuning or forced work/subsidy.
+- Matched 30/365-day seeds 7/42/99, independent replay/reconstruction, exact M9 control and all historical hashes preserved.
+- Per-business capital/revenue/expenses/production and individual wages/distributions/food access; assess employee participation and sustained circulation.
+
+**Done when:** technical accounting/reserve safeguards and actual economic effects are independently verified and documented. Increased circulation alone does not establish broad viability; further changes wait for review.
 
 ## Later possibilities
 

@@ -35,9 +35,14 @@ func run(days: int) -> void:
 					world.execute_decision(firm.owner, phase, proposal, business, worker)
 				var work: Dictionary = Policy.decide(world.observe(worker), "work")
 				world.execute_decision(worker, "work", work, business)
+		_before_food()
 		for phase in ["food", "meal"]:
 			for actor in participant_ids():
 				world.execute_decision(actor, phase, Policy.decide(world.observe(actor), phase))
+
+
+func _before_food() -> void:
+	pass
 
 
 func report() -> Dictionary:

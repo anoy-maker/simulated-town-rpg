@@ -9,14 +9,15 @@ const Market = preload("res://scripts/sim/market_runner.gd")
 const MarketDownstream = preload("res://scripts/sim/market_downstream_runner.gd")
 const Calibration = preload("res://scripts/sim/calibration_runner.gd")
 const Labor = preload("res://scripts/sim/labor_runner.gd")
+const Finance = preload("res://scripts/sim/finance_runner.gd")
 
 
 func _init() -> void:
 	var args = OS.get_cmdline_user_args()
 	var scenario: String = "m0"
 	if not args.is_empty() and args[0] == "--scenario":
-		if args.size() < 2 or args[1] not in ["m0", "trading", "agents", "coordination", "planning", "market", "market_downstream", "calibration", "settlement_labor"]:
-			_fail("Scenario must be m0, trading, agents, coordination, planning, market, market_downstream, calibration, or settlement_labor.")
+		if args.size() < 2 or args[1] not in ["m0", "trading", "agents", "coordination", "planning", "market", "market_downstream", "calibration", "settlement_labor", "settlement_finance"]:
+			_fail("Scenario must be m0, trading, agents, coordination, planning, market, market_downstream, calibration, settlement_labor, or settlement_finance.")
 			return
 		scenario = args[1]
 		args = args.slice(2)
@@ -34,10 +35,17 @@ func _init() -> void:
 			return
 		priority = args[1]
 		args = args.slice(2)
+	var distribution: String = "needs"
+	if not args.is_empty() and args[0] == "--distribution":
+		if scenario != "settlement_finance" or args.size() < 2 or args[1] not in Finance.Finance.POLICIES:
+			_fail("Use --scenario settlement_finance --distribution none|needs|half-surplus")
+			return
+		distribution = args[1]
+		args = args.slice(2)
 	if args.size() > 3 or (args.size() > 0 and not args[0].is_valid_int()) \
 			or (args.size() > 1 and not args[1].is_valid_int()) \
 			or (args.size() > 2 and args[2] != "--json"):
-		_fail("Usage: run_simulation.gd -- [--scenario m0|trading|agents|coordination|planning|market|market_downstream|calibration|settlement_labor] [--experiment name] [--priority commitment-first|immediate-needs-first] [days (0..10000)] [seed] [--json]")
+		_fail("Usage: run_simulation.gd -- [--scenario m0|trading|agents|coordination|planning|market|market_downstream|calibration|settlement_labor|settlement_finance] [--experiment name] [--priority commitment-first|immediate-needs-first] [--distribution none|needs|half-surplus] [days (0..10000)] [seed] [--json]")
 		return
 	var days: int = int(args[0]) if args.size() > 0 else 30
 	var seed_value: int = int(args[1]) if args.size() > 1 else 42
@@ -59,12 +67,16 @@ func _init() -> void:
 		simulation = Calibration.new(seed_value, Calibration.Config.preset(experiment))
 	elif scenario == "settlement_labor":
 		simulation = Labor.new(seed_value)
+	elif scenario == "settlement_finance":
+		simulation = Finance.new(seed_value, distribution)
 	simulation.run(days)
 	var report: Dictionary = simulation.report()
 	if args.size() > 2:
 		print(JSON.stringify({"report": report, "events": simulation.world.events()}, "\t", true))
 	else:
-		if scenario == "settlement_labor":
+		if scenario == "settlement_finance":
+			print("Simulated Town RPG M10 settlement_finance (%s) | days=%d seed=%d" % [distribution, days, seed_value])
+		elif scenario == "settlement_labor":
 			print("Simulated Town RPG M9 settlement_labor | days=%d seed=%d" % [days, seed_value])
 		elif scenario == "calibration":
 			print("Simulated Town RPG M7 calibration (%s) | days=%d seed=%d" % [experiment, days, seed_value])
@@ -89,10 +101,12 @@ func _init() -> void:
 				before.name, actor, before.role, before.money, after.money,
 				JSON.stringify(before.inventory), JSON.stringify(after.inventory), report.unmet_meals[actor]])
 		print("Totals: " + JSON.stringify(report.totals, "", true))
-		if scenario == "settlement_labor":
+		if scenario in ["settlement_labor", "settlement_finance"]:
 			for key in ["prices", "shifts", "potential", "accounts", "business_activity", "money"]:
 				print(key + ": " + JSON.stringify(report[key], "", true))
 			print("Business holdings: " + JSON.stringify(report.final.entities, "", true))
+			if scenario == "settlement_finance":
+				print("Ownership income: " + JSON.stringify(report.finance, "", true))
 		if scenario in ["trading", "agents", "coordination", "planning", "market", "market_downstream", "calibration"]:
 			print("Prices: " + JSON.stringify(report.prices, "", true))
 			print("Purchases: " + JSON.stringify(report.purchases, "", true))
