@@ -3,6 +3,7 @@ extends SceneTree
 const World = preload("res://scripts/sim/world_state.gd")
 const Simulation = preload("res://scripts/sim/simulation_runner.gd")
 const PurchaseTests = preload("res://tests/purchase_tests.gd")
+const TradingTests = preload("res://tests/trading_tests.gd")
 
 var _checks: int = 0
 var _failures: int = 0
@@ -18,6 +19,8 @@ func _init() -> void:
 	_test_simulation()
 	print("M0 regression checks: %d" % _checks)
 	PurchaseTests.run(self)
+	print("M0/M1 regression checks: %d" % _checks)
+	TradingTests.run(self)
 	print("Tests: %d checks, %d failures" % [_checks, _failures])
 	quit(0 if _failures == 0 else 1)
 

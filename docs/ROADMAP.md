@@ -16,7 +16,7 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 
 ## M1: Atomic purchases
 
-**Status:** Atomic transaction mechanism implemented; [verification results](M1_RESULTS.md) await review. Stop here before subsequent work.
+**Status:** Completed. [M1 verification results](M1_RESULTS.md) remain part of the regression suite.
 
 - Validated buyer/seller/item/quantity/unit-price exchange with simultaneous goods and money movement.
 - Structured success/rejection events and compatibility with ledger auditing.
@@ -25,13 +25,16 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 
 **Done when:** atomic purchase tests and all M0 checks pass, events reconstruct purchases correctly, and the existing 30-day simulation remains byte-identical. The current task narrows the earlier economic-robustness plan to this transaction mechanism; NPC purchasing policies, wages, and production planning remain deferred.
 
-## M2: Observable 2D village
+## M2: The Trading Village
 
-- Simple Godot tile map and a handful of buildings.
-- NPC schedules and movement with constraints and reachable destinations.
-- Inspector UI showing inventories, goals, and event history.
+**Status:** Implemented and verified; [M2 results](M2_RESULTS.md) await review. Stop here; M3 has not started.
 
-**Done when:** the user can watch simulated daily life and inspect why an NPC took an action.
+- Separately selected deterministic scenario with fixed-price wheat/flour/bread purchases and a basic employer payment.
+- Explicit initial endowments, tick order, source/sink accounting, and failure consequences.
+- Cash-flow, trade, production, consumption, and shortage reports for 30 and 365 days.
+- Preserve M0's historical output and all M0/M1 tests.
+
+**Done when:** the trading ledger reconstructs exact state, cash and commodities reconcile, both run lengths reproduce, and results document failures without economic tuning. This task replaces the earlier visual-village M2 plan; rendering and movement remain deferred.
 
 ## M3: Social behavior without LLMs
 
