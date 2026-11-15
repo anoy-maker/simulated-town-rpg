@@ -6,6 +6,7 @@ const PurchaseTests = preload("res://tests/purchase_tests.gd")
 const TradingTests = preload("res://tests/trading_tests.gd")
 const AgentsTests = preload("res://tests/agents_tests.gd")
 const CoordinationTests = preload("res://tests/coordination_tests.gd")
+const PlanningTests = preload("res://tests/planning_tests.gd")
 
 var _checks: int = 0
 var _failures: int = 0
@@ -27,6 +28,8 @@ func _init() -> void:
 	AgentsTests.run(self)
 	print("M0/M1/M2/M3 regression checks: %d" % _checks)
 	CoordinationTests.run(self)
+	print("M0–M4 regression checks: %d" % _checks)
+	PlanningTests.run(self)
 	print("Tests: %d checks, %d failures" % [_checks, _failures])
 	quit(0 if _failures == 0 else 1)
 
