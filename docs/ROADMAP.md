@@ -109,7 +109,7 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 
 ## M8: Candidate Viable Economic Baseline
 
-**Status:** Implemented and verified; [M8 results](M8_RESULTS.md) await review. No candidate/default adoption; M9 has not started.
+**Status:** Completed. [M8 results](M8_RESULTS.md) remain unchanged; no candidate/default adoption.
 
 - Optional combined affordable-bread/productivity configuration; reuse the three matched M7 comparisons.
 - Keep all other parameters, policies, authoritative mechanisms, historical outputs, and defaults unchanged.
@@ -118,6 +118,18 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 - Assess capacity, household access, business continuity, distribution, and sampled resilience, not only aggregate meals.
 
 **Done when:** all regressions pass, the four-way comparison and event-linked observation are documented, limitations are explicit, and adoption/future work remain for review.
+
+## M9: Workplaces, Labor, and Employment
+
+**Status:** Implemented and verified; [M9 results](M9_RESULTS.md) await review. Stop after M9; no M10.
+
+- Separate twelve-resident `settlement_labor` experiment with business accounts, productive assets, owners, skills, employment, and actual paid shifts.
+- Predeclared prices, wages, endowments, capacity, and positive potential physical buffer; no post-result rescue or tuning.
+- Pure owner/worker decisions, authoritative eligibility/payroll/input/capacity validation, bounded labor across workplaces.
+- Individual food needs from personal funds; explicit skipped, unfunded, and failed shifts.
+- Fixed 30/365-day seeds 7/42/99, replay, independent full ledger/receipt reconciliation, household/business reports, all prior hashes preserved.
+
+**Done when:** actual participation, productive capacity/utilization, payroll and capital, food access, inactivity and failures are documented without guaranteeing prosperity. Historical scenarios remain unchanged; further settlement systems wait for review.
 
 ## Later possibilities
 
