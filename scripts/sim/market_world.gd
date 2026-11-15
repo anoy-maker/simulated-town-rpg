@@ -17,7 +17,7 @@ func _market(_actor: String) -> Dictionary:
 	# The policy selects offers, not the world. Keep known fixed prices available.
 	var market: Dictionary = {}
 	for item in ITEMS:
-		market[item] = {"seller": "", "unit_price": Trading.PRICES[item], "stock": 0}
+		market[item] = {"seller": "", "unit_price": _unit_price(item), "stock": 0}
 	return market
 
 
@@ -29,7 +29,7 @@ func observe(actor: String) -> Dictionary:
 	for seller in ids:
 		var item: String = OUTPUTS.get(_entities[seller].role, "")
 		if not item.is_empty():
-			offers[item].append({"seller": seller, "unit_price": Trading.PRICES[item],
+			offers[item].append({"seller": seller, "unit_price": _unit_price(item),
 				"stock": _entities[seller].inventory[item]})
 	observation["offers"] = offers
 	var output: String = OUTPUTS.get(_entities[actor].role, "")

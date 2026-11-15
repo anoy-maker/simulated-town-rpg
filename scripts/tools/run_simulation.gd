@@ -7,16 +7,24 @@ const Coordination = preload("res://scripts/sim/coordination_runner.gd")
 const Planning = preload("res://scripts/sim/planning_runner.gd")
 const Market = preload("res://scripts/sim/market_runner.gd")
 const MarketDownstream = preload("res://scripts/sim/market_downstream_runner.gd")
+const Calibration = preload("res://scripts/sim/calibration_runner.gd")
 
 
 func _init() -> void:
 	var args = OS.get_cmdline_user_args()
 	var scenario: String = "m0"
 	if not args.is_empty() and args[0] == "--scenario":
-		if args.size() < 2 or args[1] not in ["m0", "trading", "agents", "coordination", "planning", "market", "market_downstream"]:
-			_fail("Scenario must be m0, trading, agents, coordination, planning, market, or market_downstream.")
+		if args.size() < 2 or args[1] not in ["m0", "trading", "agents", "coordination", "planning", "market", "market_downstream", "calibration"]:
+			_fail("Scenario must be m0, trading, agents, coordination, planning, market, market_downstream, or calibration.")
 			return
 		scenario = args[1]
+		args = args.slice(2)
+	var experiment: String = "baseline"
+	if not args.is_empty() and args[0] == "--experiment":
+		if scenario != "calibration" or args.size() < 2 or args[1] not in Calibration.Config.EXPERIMENTS:
+			_fail("Use --scenario calibration --experiment " + "|".join(Calibration.Config.EXPERIMENTS))
+			return
+		experiment = args[1]
 		args = args.slice(2)
 	var priority: String = "commitment-first"
 	if not args.is_empty() and args[0] == "--priority":
@@ -28,7 +36,7 @@ func _init() -> void:
 	if args.size() > 3 or (args.size() > 0 and not args[0].is_valid_int()) \
 			or (args.size() > 1 and not args[1].is_valid_int()) \
 			or (args.size() > 2 and args[2] != "--json"):
-		_fail("Usage: run_simulation.gd -- [--scenario m0|trading|agents|coordination|planning|market|market_downstream] [--priority commitment-first|immediate-needs-first] [days (0..10000)] [seed] [--json]")
+		_fail("Usage: run_simulation.gd -- [--scenario m0|trading|agents|coordination|planning|market|market_downstream|calibration] [--experiment name] [--priority commitment-first|immediate-needs-first] [days (0..10000)] [seed] [--json]")
 		return
 	var days: int = int(args[0]) if args.size() > 0 else 30
 	var seed_value: int = int(args[1]) if args.size() > 1 else 42
@@ -46,12 +54,16 @@ func _init() -> void:
 		simulation = Market.new(seed_value)
 	elif scenario == "market_downstream":
 		simulation = MarketDownstream.new(seed_value)
+	elif scenario == "calibration":
+		simulation = Calibration.new(seed_value, Calibration.Config.preset(experiment))
 	simulation.run(days)
 	var report: Dictionary = simulation.report()
 	if args.size() > 2:
 		print(JSON.stringify({"report": report, "events": simulation.world.events()}, "\t", true))
 	else:
-		if scenario == "market_downstream":
+		if scenario == "calibration":
+			print("Simulated Town RPG M7 calibration (%s) | days=%d seed=%d" % [experiment, days, seed_value])
+		elif scenario == "market_downstream":
 			print("Simulated Town RPG M6B market_downstream | days=%d seed=%d" % [days, seed_value])
 		elif scenario == "market":
 			print("Simulated Town RPG M6 market | days=%d seed=%d" % [days, seed_value])
@@ -72,23 +84,27 @@ func _init() -> void:
 				before.name, actor, before.role, before.money, after.money,
 				JSON.stringify(before.inventory), JSON.stringify(after.inventory), report.unmet_meals[actor]])
 		print("Totals: " + JSON.stringify(report.totals, "", true))
-		if scenario in ["trading", "agents", "coordination", "planning", "market", "market_downstream"]:
+		if scenario in ["trading", "agents", "coordination", "planning", "market", "market_downstream", "calibration"]:
 			print("Prices: " + JSON.stringify(report.prices, "", true))
 			print("Purchases: " + JSON.stringify(report.purchases, "", true))
 			print("Cash flow: " + JSON.stringify(report.cash_flow, "", true))
 			print("Employer payments: " + JSON.stringify(report.payments, "", true))
 			print("Failure groups: " + JSON.stringify(report.failure_groups, "", true))
-		if scenario in ["agents", "coordination", "planning", "market", "market_downstream"]:
+		if scenario in ["agents", "coordination", "planning", "market", "market_downstream", "calibration"]:
 			print("Goals: " + JSON.stringify(report.goals, "", true))
 			print("Decisions: " + JSON.stringify(report.decisions, "", true))
-		if scenario in ["coordination", "planning", "market", "market_downstream"]:
+		if scenario in ["coordination", "planning", "market", "market_downstream", "calibration"]:
 			print("Agreements: " + JSON.stringify(report.agreements, "", true))
-		if scenario in ["planning", "market", "market_downstream"]:
+		if scenario in ["planning", "market", "market_downstream", "calibration"]:
 			print("Activity after day 26: " + JSON.stringify(report.activity_after_day_26, "", true))
 			print("Final working-capital estimates: " + JSON.stringify(report.final_working_capital, "", true))
-		if scenario in ["market", "market_downstream"]:
+		if scenario in ["market", "market_downstream", "calibration"]:
 			print("Market participants: " + JSON.stringify(report.participants, "", true))
 			print("Schedule: " + JSON.stringify(report.schedule))
+		if scenario == "calibration":
+			print("Configuration: " + JSON.stringify(report.configuration, "", true))
+			print("Potential: " + JSON.stringify(report.potential, "", true))
+			print("Calibration: " + JSON.stringify(report.calibration, "", true))
 		print("Failures: " + JSON.stringify(report.failures, "", true))
 		print("Events: %d; first failures:" % report.event_count)
 		for event in report.notable_events:

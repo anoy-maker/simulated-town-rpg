@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0–M6 complete; M6B downstream market experiment implemented and awaiting review
+**Status:** M0–M6B complete; M7 economic calibration laboratory implemented and awaiting review
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -270,4 +270,23 @@ This separate configuration has **Ada as the only farmer, Bram and Edda as mille
 
 Occupation/ID order is Ada → Bram → Edda → Cora → Finn → Dain. There are 38 decisions/day and one seeded harvest opportunity/day, including waits. Both millers independently purchase wheat, produce and advertise flour, and consider public requests. Both bakers independently select flour suppliers and produce/sell bread. Supplier selection remains price, stock, then ID. The four-wheat farmer target is an inventory trigger: sales below four can cause another harvest on the next work turn; extra downstream producers alone do not change the target or grant another daily harvest. Existing voluntarily accepted supply obligations can raise the effective target.
 
-All existing commands and historical outputs remain preserved. See [actual M6B results, farmer-response analysis, supplier choices, and limitations](docs/M6B_RESULTS.md). Comparisons across M5/M6/M6B change money supply, capacity, roles, or scheduling and do not establish causal improvements. Stop after M6B; no calibration or M7 work.
+All existing commands and historical outputs remain preserved. See [actual M6B results, farmer-response analysis, supplier choices, and limitations](docs/M6B_RESULTS.md). Comparisons across M5/M6/M6B change money supply, capacity, roles, or scheduling and do not establish causal improvements. M6B remains an unchanged regression baseline.
+
+## M7: Economic Foundations and Calibration Laboratory
+
+```sh
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario calibration --experiment baseline 30 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario calibration --experiment lower_food_price 365 42
+# Complete fixed matrix, independent replay, ledger audit, JSON captures and CSV tables:
+python3 scripts/tools/run_calibration.py --output work/m7
+```
+
+Use the same writable XDG setup for direct Godot commands. The Python batch tool needs only the standard library and Godot, configures its own writable data/cache directories, and runs all six presets × seeds 7/42/99 × horizons 30/365 twice. `--experiment` follows `--scenario calibration`; it defaults to `baseline`. Other scenarios reject that option. Calibration uses the unchanged commitment-first policies and M6B population/schedule.
+
+Presets are `baseline`, `higher_productivity` (+2 to the same seeded harvest draw), `higher_target` (farmer target 8), `lower_food_price` (bread 2), `higher_wage` (payment 3), and `extra_liquidity` (+10 coins per NPC at initialization, total 175). Every intervention changes only its declared economic variable. Baseline retains M6B's exact economic ledger and inherited report fields.
+
+`Calibration.new(seed, configuration)` also accepts a copied, validated dictionary containing only harvest bonus, farmer target, fixed commodity prices, daily payment, and six initial balances. Prices/targets/payments are positive bounded integers; balances may be zero; the additive harvest bonus is nonnegative and bounded so the largest opportunity fits the kernel limit. Zero prices are excluded here because the unchanged policies divide by public prices; M1's underlying zero-price purchase API is preserved. Fixed instance prices govern public offers, decision validation, and agreement terms together. No runtime price changes or money injections are introduced.
+
+The report adds the configuration, matched underlying opportunities, physical food/meal bounds, per-NPC affordability/owned-food snapshots, production/business inactivity, underfunding flags, total cash circulation, and wealth concentration. These are post-run diagnostics; NPCs receive only their existing permitted observations. Existing recipes, policies, agreements, and integer inventory/money commands remain authoritative.
+
+See [M7 feasibility calculations, matched results, and limitations](docs/M7_RESULTS.md), [all 36 run summaries](docs/M7_RUNS.csv), and [all 216 NPC results](docs/M7_NPCS.csv). No preset or policy was tuned after results. Stop after M7; M8 and suggested future calibration changes are not implemented.

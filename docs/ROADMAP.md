@@ -86,7 +86,7 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 
 ## M6B: Revised Downstream Market Experiment
 
-**Status:** Implemented and verified; [M6B results](M6B_RESULTS.md) await review. Stop here; M7 has not started.
+**Status:** Completed. [M6B results](M6B_RESULTS.md) remain the downstream-demand baseline.
 
 - Separate `market_downstream` configuration: one farmer, two millers, two bakers, one laborer; 115 initial coins.
 - Reuse the existing configurable market runner and all occupation policies without duplicating simulation logic.
@@ -94,6 +94,18 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 - Predefined 30/365-day experiments for seeds 7, 42, and 99; inspect farmer response, competition, cash flow, unmet needs, and commitments.
 
 **Done when:** all regressions pass, actual outputs replay and reconcile, the farmer's four-wheat rule is explicitly examined, and results distinguish role/capacity/endowment/scheduling differences without tuning or causal improvement claims. Calibration remains deferred.
+
+## M7: Economic Foundations and Calibration Laboratory
+
+**Status:** Implemented and verified; [M7 results](M7_RESULTS.md) await review. Stop here; M8 has not started.
+
+- Separate calibration scenario with only the requested yield, target, price, wage, and initial-balance parameters.
+- Fixed M6B baseline plus five isolated interventions; unchanged population, policies, recipes, authority, and scheduling.
+- Feasibility arithmetic before agent-outcome analysis; distinguish capacity, affordability, working capital, and observed behavior.
+- Predefined seeds 7/42/99 at 30/365 days, matched environments, full accounting/replay, and per-NPC CSV results.
+- Preserve all historical outputs; report improvements, deterioration, or stalls without optimization or post-result tuning.
+
+**Done when:** configuration boundaries and accounting are verified, all prescribed experiments replay, economic limits and actual results are documented, and future calibration directions remain suggestions only.
 
 ## Later possibilities
 

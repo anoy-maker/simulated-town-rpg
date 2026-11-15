@@ -33,10 +33,10 @@ func post_request(buyer: String, item: String, quantity: Variant) -> bool:
 	if _can_sell(buyer, item):
 		return _reject("request_posted", buyer, buyer, details, "self_supply")
 	@warning_ignore("integer_division")
-	var quantity_limit: int = MAX_AMOUNT / Trading.PRICES[item]
+	var quantity_limit: int = MAX_AMOUNT / _unit_price(item)
 	if quantity > quantity_limit:
 		return _reject("request_posted", buyer, "", details, "payment_limit")
-	var payment: int = quantity * Trading.PRICES[item]
+	var payment: int = quantity * _unit_price(item)
 	if _entities[buyer].money < payment:
 		return _reject("request_posted", buyer, "", details, "insufficient_money")
 	if _entities[buyer].inventory[item] > MAX_AMOUNT - quantity:
@@ -46,7 +46,7 @@ func post_request(buyer: String, item: String, quantity: Variant) -> bool:
 			return _reject("request_posted", buyer, "", details, "active_request_exists")
 	var request_id: String = "r%d" % (_requests.size() + 1)
 	var request = {"id": request_id, "buyer": buyer, "supplier": "", "item": item,
-		"quantity": quantity, "unit_price": Trading.PRICES[item], "payment": payment, "status": "open",
+		"quantity": quantity, "unit_price": _unit_price(item), "payment": payment, "status": "open",
 		"created_day": _day, "accepted_day": null, "fulfilled_day": null, "closed_day": null, "close_reason": "",
 		"payment_event_id": null, "item_event_id": null}
 	_requests[request_id] = request
