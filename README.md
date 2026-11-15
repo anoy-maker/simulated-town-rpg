@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0/M1/M2 complete; M3 needs and decisions implemented and awaiting review
+**Status:** M0–M3 complete; M4 commercial requests and commitments implemented and awaiting review
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -60,7 +60,7 @@ A credible early demonstration is **four people who can complete—or fail to co
 
 ## Project status
 
-The headless GDScript kernel provides the original M0 simulation, M1 atomic purchases, M2 fixed trading, and a separate M3 agents scenario, with automated accounting tests. There is no main scene; use the script commands below. Licensing, public release plans, and the final title remain undecided.
+The headless GDScript kernel provides M0, atomic purchases, fixed trading, needs-based agents, and a separate M4 coordination scenario, with automated accounting tests. There is no main scene; use the script commands below. Licensing, public release plans, and the final title remain undecided.
 
 ## Run M0
 
@@ -184,4 +184,29 @@ Food purchases fill only the target shortfall, limited by cash and advertised st
 
 Every choice appends a `decision` event with actor, phase, selected action, policy reason, outcome (`executed`, `rejected`, or `wait`), execution failure reason, and the underlying command event ID where present. Decision records do not move money or goods. Reports add goal settings and decision frequencies by actor/action/reason and outcome; economic failures exclude the duplicate decision annotation.
 
-Prices, initial endowments, recipes, wage amount/timing, and the seed remain M2's. Goals and policies were fixed before examining economic results. See [M3 actual results and comparison with M2](docs/M3_RESULTS.md). Stop after M3; no later milestone has started.
+Prices, initial endowments, recipes, wage amount/timing, and the seed remain M2's. Goals and policies were fixed before examining economic results. See [M3 actual results and comparison with M2](docs/M3_RESULTS.md).
+
+## M4: Commercial Requests and Commitments
+
+```sh
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario coordination 30 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario coordination 365 42
+mkdir -p work
+godot --headless --no-header --path . --script res://scripts/tools/run_simulation.gd -- --scenario coordination 365 42 --json > work/coordination-365.json
+```
+
+All M0/M2/M3 commands and historical outputs are preserved. The same initial resources, prices, recipes, goals, two-coin employer payment, and daily harvest opportunities apply.
+
+`coordination_world.gd` adds `post_request(buyer, item, quantity)`, `accept_request(supplier, request_id)`, `fulfill_request(supplier, request_id)`, and `close_request(buyer, request_id, reason)`. An open request states quantity and payment at the existing fixed unit price. It becomes a prepaid agreement when the eligible producer voluntarily accepts: payment transfers once using the existing money operation. Delivery uses an actual item transfer, all at once, without another payment. A failed delivery leaves the obligation and prepayment intact. Only the buyer can explicitly close an unfinished request; closing a paid agreement waives the claim without a refund. Policies do not automatically close requests.
+
+There is at most one active request per buyer/commodity and one accepted agreement per supplier/commodity. Terms are immutable. Stable IDs and full records remain in `snapshot().requests` with status `open`, `accepted`, `fulfilled`, or `closed` and linked payment/delivery event IDs. Unfulfilled accepted agreements generate an end-of-day `agreement_outstanding` event, preserving split-run replay. Closed/fulfilled records remain in history.
+
+`coordination_policy.gd` remains a pure function. It can see its own active requests/obligations and eligible public open requests, in addition to M3's permitted self state and public offers. Other balances and private stock remain inaccessible. Buyers request missing inputs (or needed food) only when spot stock is unavailable and they can fund a request. Suppliers consider their own stock, one-turn production capacity, public input prices, payment coverage of missing-input costs, and existing obligations. They can decline. Buyers awaiting supply avoid redundant spot purchases.
+
+An accepted supply obligation takes priority over the supplier's normal output target and food-money reservation during the input/work turn. Funds and goods remain spendable; they are not escrowed or reserved between turns. This limited new priority supports voluntary production but does not guarantee fulfillment.
+
+Daily order: unchanged wage payment and RNG draw; then Ada's work/delivery, Bram's inputs/work/delivery, Cora's inputs/work/delivery; request decisions by Ada/Bram/Cora/Dain; acceptance decisions by those four; food decisions; meals; outstanding-agreement events. Delivery follows each producer's work so downstream NPCs can use received inputs in their own turn. Acceptance occurs after work, making its prepayment usable in the next work turn and immediately in ordinary transactions. There are 24 decision opportunities per day. The runner offers turns and executes proposals; it never orders a particular NPC to fund another.
+
+Reports distinguish spot purchases, delivered agreement quantities, prepayments, employer payments, cash flow, open/fulfilled/outstanding/waived agreements, lifecycle rejections, and decision frequencies. A prepayment is counted once as money spent/earned; fulfillment adds goods without another money movement. Outstanding payment totals describe paid claims, not a balance held in escrow.
+
+See [M4 actual results and comparison with M3](docs/M4_RESULTS.md), including the agreement that remains unfulfilled. The economy was not tuned after observing outcomes. Stop after M4; M5 has not started.

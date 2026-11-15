@@ -38,7 +38,7 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 
 ## M3: Needs and Decisions
 
-**Status:** Implemented and verified; [M3 results](M3_RESULTS.md) await review. Stop here before further milestones.
+**Status:** Completed. [M3 results](M3_RESULTS.md) remain the needs-based baseline for coordination.
 
 - Separate `agents` scenario with deterministic needs, priorities, and state-dependent economic choices.
 - Explicit separation of copied observations, goals, proposed actions, and authoritative execution.
@@ -48,13 +48,17 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 
 **Done when:** focused tests demonstrate changed choices under changed circumstances, economic/decision logs reconcile, both run lengths replay, regressions remain identical, and failures are reported without tuning economic parameters. This task replaces the earlier social-behavior M3 plan; relationships, negotiation, and recruitment remain deferred.
 
-## M4: LLM decisions as an optional capability
+## M4: Commercial Requests and Commitments
 
-- Provider-neutral adapter, credentials kept out of Git, strict tool/command validation, and per-run usage budgets.
-- Player/NPC conversations and selected high-impact autonomous decisions.
-- Model failure and budget exhaustion fall back safely to deterministic behavior.
+**Status:** Implemented and verified; [M4 results](M4_RESULTS.md) await review. Stop here; M5 has not started.
 
-**Done when:** an LLM can propose a meaningful strategy without being able to falsify inventory or historical facts.
+- Separately selected `coordination` scenario with voluntary public supply requests and prepaid acceptance.
+- Validated, one-time real-stock delivery and retained outstanding/closed obligations.
+- Pure commercial decisions from permitted observations, with no forced redistribution.
+- Ledger reconstruction, conservation, duplicate limits, and 30/365-day comparison against unchanged M3 parameters.
+- Preserve M0/M2/M3 historical outputs and all prior tests.
+
+**Done when:** independent NPC choices can form and execute valid supply agreements, failures remain auditable, all regressions pass, and actual outcomes are documented without tuning the economy. Recovery is not required. This task replaces the earlier LLM M4 plan; AI integration remains deferred.
 
 ## M5: Emergent quests and optional Director
 
