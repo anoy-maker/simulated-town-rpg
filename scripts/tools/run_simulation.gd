@@ -12,14 +12,17 @@ const Labor = preload("res://scripts/sim/labor_runner.gd")
 const Finance = preload("res://scripts/sim/finance_runner.gd")
 const Equilibrium = preload("res://scripts/sim/equilibrium_runner.gd")
 const Employer = preload("res://scripts/sim/employer_runner.gd")
+const Causality = preload("res://scripts/sim/causality_runner.gd")
+const CausalityReport = preload("res://scripts/sim/causality_report.gd")
+const STUDY_SCENARIOS = ["settlement_equilibrium_reference", "settlement_employer_choice", "settlement_fixed_owner_first", "settlement_sales_rotating"]
 
 
 func _init() -> void:
 	var args = OS.get_cmdline_user_args()
 	var scenario: String = "m0"
 	if not args.is_empty() and args[0] == "--scenario":
-		if args.size() < 2 or args[1] not in ["m0", "trading", "agents", "coordination", "planning", "market", "market_downstream", "calibration", "settlement_labor", "settlement_finance", "settlement_equilibrium_reference", "settlement_employer_choice"]:
-			_fail("Scenario must be m0, trading, agents, coordination, planning, market, market_downstream, calibration, settlement_labor, settlement_finance, settlement_equilibrium_reference, or settlement_employer_choice.")
+		if args.size() < 2 or args[1] not in ["m0", "trading", "agents", "coordination", "planning", "market", "market_downstream", "calibration", "settlement_labor", "settlement_finance", "settlement_equilibrium_reference", "settlement_employer_choice", "settlement_fixed_owner_first", "settlement_sales_rotating"]:
+			_fail("Scenario must be m0, trading, agents, coordination, planning, market, market_downstream, calibration, settlement_labor, settlement_finance, settlement_equilibrium_reference, settlement_employer_choice, settlement_fixed_owner_first, or settlement_sales_rotating.")
 			return
 		scenario = args[1]
 		args = args.slice(2)
@@ -46,8 +49,8 @@ func _init() -> void:
 		args = args.slice(2)
 	if args.size() > 3 or (args.size() > 0 and not args[0].is_valid_int()) \
 			or (args.size() > 1 and not args[1].is_valid_int()) \
-			or (args.size() > 2 and args[2] != "--json" and not (scenario in ["settlement_equilibrium_reference", "settlement_employer_choice"] and args[2] == "--report-json")):
-		_fail("Usage: run_simulation.gd -- [--scenario m0|trading|agents|coordination|planning|market|market_downstream|calibration|settlement_labor|settlement_finance|settlement_equilibrium_reference|settlement_employer_choice] [--experiment name] [--priority commitment-first|immediate-needs-first] [--distribution none|needs|half-surplus] [days (0..10000)] [seed] [--json or --report-json (M11/M12 only)]")
+			or (args.size() > 2 and args[2] != "--json" and not (scenario in STUDY_SCENARIOS and args[2] in ["--report-json", "--study-json"])):
+		_fail("Usage: run_simulation.gd -- [--scenario m0|trading|agents|coordination|planning|market|market_downstream|calibration|settlement_labor|settlement_finance|settlement_equilibrium_reference|settlement_employer_choice|settlement_fixed_owner_first|settlement_sales_rotating] [--experiment name] [--priority commitment-first|immediate-needs-first] [--distribution none|needs|half-surplus] [days (0..10000)] [seed] [--json, --report-json, or --study-json (M11–M13 only)]")
 		return
 	var days: int = int(args[0]) if args.size() > 0 else 30
 	var seed_value: int = int(args[1]) if args.size() > 1 else 42
@@ -75,9 +78,19 @@ func _init() -> void:
 		simulation = Equilibrium.new(seed_value)
 	elif scenario == "settlement_employer_choice":
 		simulation = Employer.new(seed_value)
+	elif scenario in [Causality.Treatment.FIXED_OWNER, Causality.Treatment.SALES_ROTATING]:
+		simulation = Causality.new(seed_value, scenario)
 	simulation.run(days)
 	var report: Dictionary = simulation.report()
-	if scenario in ["settlement_equilibrium_reference", "settlement_employer_choice"] and (args.size() < 3 or args[2] == "--report-json"):
+	if scenario in STUDY_SCENARIOS and args.size() > 2 and args[2] == "--study-json":
+		var history: Array = simulation.world.events()
+		var diagnostics: Dictionary = CausalityReport.project(report, history)
+		print(JSON.stringify({"report": report, "diagnostics": diagnostics,
+			"summary_sha256": (JSON.stringify({"report": report}, "", true) + "\n").sha256_text(),
+			"ledger_sha256": JSON.stringify(history, "", true).sha256_text()}, "", true))
+		quit(0)
+		return
+	if scenario in STUDY_SCENARIOS and (args.size() < 3 or args[2] == "--report-json"):
 		if args.size() > 2:
 			print(JSON.stringify({"report": report}, "", true))
 		else:
@@ -168,9 +181,13 @@ func _print_reference(report: Dictionary) -> void:
 			commodities[item] += entity.inventory[item]
 	for amount in report.unmet_meals.values():
 		missed += amount
-	if report.scenario == "settlement_employer_choice":
-		print("Simulated Town RPG M12 employer choice | days=%d seed=%d" % [report.days, report.seed])
-		print("Previous realized sales forecast; owner-first staffing; no rotation or guaranteed output.")
+	if report.scenario != "settlement_equilibrium_reference":
+		if report.scenario == "settlement_employer_choice":
+			print("Simulated Town RPG M12 employer choice | days=%d seed=%d" % [report.days, report.seed])
+			print("Previous realized sales forecast; owner-first staffing; no rotation or guaranteed output.")
+		else:
+			print("Simulated Town RPG M13 %s | days=%d seed=%d" % [report.scenario, report.days, report.seed])
+			print(report.employers.forecast_rule + "; " + report.schedule.workers)
 	else:
 		print("Simulated Town RPG M11 equilibrium reference | days=%d seed=%d" % [report.days, report.seed])
 		print("Prescribed decisions: feasibility reference, not autonomous economic stability.")
@@ -180,5 +197,5 @@ func _print_reference(report: Dictionary) -> void:
 	print("Household cash: " + JSON.stringify(household_cash, "", true))
 	print("Final commodities: " + JSON.stringify(commodities, "", true))
 	print("Failures: " + JSON.stringify(report.failures, "", true))
-	if report.scenario == "settlement_employer_choice":
+	if report.scenario != "settlement_equilibrium_reference":
 		print("First unmet meal day=%s; first bread stock shortage=%s; sustained inactivity=%s" % [str(report.employers.first_unmet_meal_day), str(report.employers.first_bread_stock_shortage_day), str(report.employers.first_sustained_inactivity_day)])

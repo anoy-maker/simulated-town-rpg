@@ -18,10 +18,14 @@ func run(days: int) -> void:
 		world.advance_day()
 		for business in Config.BUSINESS_ORDER:
 			var owner: String = _initial.businesses[business].owner
-			world.execute_plan(owner, business, EmployerPolicy.decide(world.observe(owner, business)))
+			world.execute_plan(owner, business, _employer_plan(world.observe(owner, business)))
 		for phase in ["food", "meal"]:
 			for actor in participant_ids():
 				world.execute_decision(actor, phase, Policy.decide(world.observe(actor), phase))
+
+
+func _employer_plan(observation: Dictionary) -> Dictionary:
+	return EmployerPolicy.decide(observation)
 
 
 func report() -> Dictionary:

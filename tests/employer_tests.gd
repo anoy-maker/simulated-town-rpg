@@ -6,7 +6,7 @@ const Reference = preload("res://scripts/sim/equilibrium_runner.gd")
 const LaborTests = preload("res://tests/labor_tests.gd")
 
 
-static func ledger_ok(history: Array, final: Dictionary) -> bool:
+static func ledger_ok(history: Array, final: Dictionary, prescribed: bool = false) -> bool:
 	var state: Dictionary = history[0].details.state.duplicate(true)
 	var sources: Dictionary = {}
 	var claimed: Dictionary = {}
@@ -25,7 +25,7 @@ static func ledger_ok(history: Array, final: Dictionary) -> bool:
 		valid = valid and e.day == state.day
 		if e.action == "employer_plan" and d.has("execution"):
 			var item: String = {"farm": "wheat", "mill": "flour", "bakery": "bread"}[e.target]
-			var expected: int = {"wheat": 8, "flour": 8, "bread": 12}[item] if e.day == 1 else sales.get(str(e.day - 1) + ":" + e.target + ":" + item, 0)
+			var expected: int = {"wheat": 8, "flour": 8, "bread": 12}[item] if prescribed or e.day == 1 else sales.get(str(e.day - 1) + ":" + e.target + ":" + item, 0)
 			valid = valid and d.proposal.forecast == expected and d.execution.cash_after == state.entities[e.target].money \
 				and d.execution.output_stock_after == state.entities[e.target].inventory[item]
 			for id in d.execution.work_event_ids:
