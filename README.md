@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0–M7 complete; M8 combined economic candidate implemented and awaiting review
+**Status:** M0–M8 complete; M9 workplaces and labor implemented and awaiting review
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -60,7 +60,7 @@ A credible early demonstration is **four people who can complete—or fail to co
 
 ## Project status
 
-The headless GDScript kernel provides M0, atomic purchases, fixed trading, needs-based agents, commercial coordination, and a separate planning experiment, with automated accounting tests. There is no main scene; use the script commands below. Licensing, public release plans, and the final title remain undecided.
+The headless GDScript kernel provides separate scenarios for the original economic loop, purchases, needs and planning, commercial coordination, competing markets, calibration, and workplace labor, with automated accounting tests. There is no main scene; use the script commands below. Licensing, public release plans, and the final title remain undecided.
 
 ## Run M0
 
@@ -306,4 +306,21 @@ The M8 study compares baseline, affordable bread, higher productivity, and the c
 
 M8 also exports `food_losses.csv`: event-linked incidents where an NPC owned bread at food-planning time, sold it afterward, and then failed to eat that day. This is a post-run observation, not a food reservation or policy change. Other post-planning bread transfers are excluded to avoid mixed-cause attribution. Run its six focused tests with `python3 -B -m unittest discover -s tests -p 'test_calibration_observations.py'`.
 
-See [M8 actual results and provisional-baseline assessment](docs/M8_RESULTS.md), [24 comparison summaries](docs/M8_RUNS.csv), [144 NPC outcomes](docs/M8_NPCS.csv), and [food-loss event links](docs/M8_FOOD_LOSSES.csv). Better aggregate meals alone do not establish viability or resilience. The candidate awaits review and has not been adopted. Stop after M8; M9 has not started.
+See [M8 actual results and provisional-baseline assessment](docs/M8_RESULTS.md), [24 comparison summaries](docs/M8_RUNS.csv), [144 NPC outcomes](docs/M8_NPCS.csv), and [food-loss event links](docs/M8_FOOD_LOSSES.csv). Better aggregate meals alone do not establish viability or resilience. The candidate has not been adopted; M8 results remain a historical baseline.
+
+## M9: Workplaces, Labor, and Employment
+
+```sh
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_labor 30 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_labor 365 42
+python3 -B scripts/tools/run_labor.py --output work/m9
+python3 -B -m unittest discover -s tests -p 'test_*.py'
+```
+
+This separate experiment has twelve residents, three solely owned businesses, nine employee records, and 432 initial coins. A business owns its stock and operating cash in a separate account. Occupations and skills are separate from ownership and employment. All residents have one full shift/day; owners can work but have the same labor, skill, input, and compensation constraints as employees. Fixed prices are wheat 1 / flour 2 / bread 3; a funded shift pays 3 coins. The [predeclared configuration and feasibility calculation](docs/M9_RESULTS.md) specify initial capital, inputs, productive assets, workforce allocation, targets, and ordering before experiments.
+
+Owners buy inputs and propose shifts using only their own firm's resources and authorized worker availability. Workers accept eligible paid work and independently buy food using personal holdings. Every shift is revalidated before wages and production commit together, using existing money/recipe receipts. Unfunded or resource-limited shifts perform no labor and create no debt. Offers do not reserve money, stock, or labor; daily limits also apply across businesses. No household can eat business inventory directly. The output-target policy can leave hired workers without shifts; employment does not guarantee daily earnings or meals.
+
+The standard Godot suite includes workplace/payroll/authority/privacy/replay tests. The batch runs 30/365 days for seeds 7/42/99 twice, independently reconstructs complete state and unique work/payroll/production links, and saves JSON captures plus run/resident/business CSV tables. Full histories stay in the output directory. Historical worlds, policies, prices, defaults, and M0–M8 results remain unchanged.
+
+Actual runs stop economic activity by day 13–15: household cash runs out while firms retain all 432 coins and 19–20 bread. Output targets prevent further shifts/payroll despite available operating funds. See [M9 results and limitations](docs/M9_RESULTS.md), [six run summaries](docs/M9_RUNS.csv), [resident results](docs/M9_RESIDENTS.csv), and [business results](docs/M9_BUSINESSES.csv). No configuration was adjusted to rescue this outcome. Stop after M9; no M10.
