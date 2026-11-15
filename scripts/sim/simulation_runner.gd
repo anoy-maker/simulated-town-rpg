@@ -50,7 +50,7 @@ func report() -> Dictionary:
 	var totals = {"harvested": {"wheat": 0}, "production_inputs": {"wheat": 0, "flour": 0},
 		"production_outputs": {"flour": 0, "bread": 0}, "consumed": {"bread": 0}}
 	var unmet: Dictionary = {}
-	for actor in IDS:
+	for actor in participant_ids():
 		unmet[actor] = 0
 	var failures: Dictionary = {}
 	var notable: Array = []
@@ -76,3 +76,7 @@ func report() -> Dictionary:
 	return {"seed": _seed, "days": world.snapshot().day, "initial": _initial.duplicate(true),
 		"final": world.snapshot(), "totals": totals, "unmet_meals": unmet,
 		"failures": failures, "notable_events": notable, "event_count": history.size()}
+
+
+func participant_ids() -> Array:
+	return IDS.duplicate()

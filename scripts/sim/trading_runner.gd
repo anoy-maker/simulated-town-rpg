@@ -39,7 +39,7 @@ func report() -> Dictionary:
 	for item in World.ITEMS:
 		purchases.by_item[item] = {"successful": 0, "rejected": 0, "quantity": 0, "money": 0}
 		traded[item] = 0
-	for actor in IDS:
+	for actor in participant_ids():
 		cash_flow[actor] = {"earned": 0, "spent": 0, "sales": 0, "purchases": 0,
 			"payments_received": 0, "payments_sent": 0}
 	for event in world.events():

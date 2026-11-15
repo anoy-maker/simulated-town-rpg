@@ -62,7 +62,7 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 
 ## M5: Commitment-Aware Planning
 
-**Status:** Implemented and verified; [M5 results](M5_RESULTS.md) await review. Stop here; M6 has not started.
+**Status:** Completed. [M5 results](M5_RESULTS.md) remain the commitment-aware four-person baseline.
 
 - Separate `planning` scenario with commitment-first and immediate-needs-first spending priorities.
 - Shared own-state/public-market input-cost estimates and advisory working-capital budgets.
@@ -71,6 +71,18 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 - Preserve all historical scenarios and record remaining shortages or deadlocks without tuning outcomes.
 
 **Done when:** budgeting and authoritative accounting are distinct, priority effects are reproducible and audited, all prior tests/hashes pass, and actual results/limitations are documented. Recovery is not required. This task replaces the earlier quests/Director M5 plan; those features remain deferred.
+
+## M6: Competing Producers and Multiple Market Participants
+
+**Status:** Implemented and verified; [M6 results](M6_RESULTS.md) await review. Stop here; M7 has not started.
+
+- Separate six-person `market` scenario with two farmers, one miller, two bakers, and one laborer.
+- Public multi-supplier discovery and deterministic price/stock/ID selection, without private seller finances.
+- Common occupation behavior and commitment-first planning under authoritative purchases and agreements.
+- Explicit fixed endowments/scheduling, supplier accounting, conservation, and predefined 30/365-day experiments for seeds 7, 42, and 99.
+- Preserve all historical M0/M2/M3/M4/M5 outputs and prior test coverage; report concentration, shortages, and failures without tuning.
+
+**Done when:** competing buyers cannot duplicate stock, either eligible producer can sell or fulfill agreements, reports and full ledgers reconcile, all replay/regression checks pass, and outcomes and experimental limitations are documented. Stability or improvement over a different-sized village is not required.
 
 ## Later possibilities
 

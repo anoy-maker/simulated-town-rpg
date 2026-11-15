@@ -26,7 +26,8 @@ static func decide(observation: Dictionary, goals: Dictionary, phase: String) ->
 		if not obligation.is_empty():
 			return _wait("supplier_busy")
 		for request in observation.requests:
-			if request.status == "open" and request.buyer != person.id and SELLERS[request.item] == person.id \
+			var eligible: bool = request.item in observation.supplies if observation.has("supplies") else SELLERS[request.item] == person.id
+			if request.status == "open" and request.buyer != person.id and eligible \
 					and _can_supply(observation, adjusted, request):
 				return _proposal({"type": "accept_request", "request_id": request.id}, "prepaid_production_opportunity")
 		return _wait("no_viable_public_request")

@@ -5,14 +5,15 @@ const Trading = preload("res://scripts/sim/trading_runner.gd")
 const Agents = preload("res://scripts/sim/agents_runner.gd")
 const Coordination = preload("res://scripts/sim/coordination_runner.gd")
 const Planning = preload("res://scripts/sim/planning_runner.gd")
+const Market = preload("res://scripts/sim/market_runner.gd")
 
 
 func _init() -> void:
 	var args = OS.get_cmdline_user_args()
 	var scenario: String = "m0"
 	if not args.is_empty() and args[0] == "--scenario":
-		if args.size() < 2 or args[1] not in ["m0", "trading", "agents", "coordination", "planning"]:
-			_fail("Scenario must be m0, trading, agents, coordination, or planning.")
+		if args.size() < 2 or args[1] not in ["m0", "trading", "agents", "coordination", "planning", "market"]:
+			_fail("Scenario must be m0, trading, agents, coordination, planning, or market.")
 			return
 		scenario = args[1]
 		args = args.slice(2)
@@ -26,7 +27,7 @@ func _init() -> void:
 	if args.size() > 3 or (args.size() > 0 and not args[0].is_valid_int()) \
 			or (args.size() > 1 and not args[1].is_valid_int()) \
 			or (args.size() > 2 and args[2] != "--json"):
-		_fail("Usage: run_simulation.gd -- [--scenario m0|trading|agents|coordination|planning] [--priority commitment-first|immediate-needs-first] [days (0..10000)] [seed] [--json]")
+		_fail("Usage: run_simulation.gd -- [--scenario m0|trading|agents|coordination|planning|market] [--priority commitment-first|immediate-needs-first] [days (0..10000)] [seed] [--json]")
 		return
 	var days: int = int(args[0]) if args.size() > 0 else 30
 	var seed_value: int = int(args[1]) if args.size() > 1 else 42
@@ -40,12 +41,16 @@ func _init() -> void:
 		simulation = Coordination.new(seed_value)
 	elif scenario == "planning":
 		simulation = Planning.new(seed_value, [], Planning.Policy.DEFAULT_GOALS, priority)
+	elif scenario == "market":
+		simulation = Market.new(seed_value)
 	simulation.run(days)
 	var report: Dictionary = simulation.report()
 	if args.size() > 2:
 		print(JSON.stringify({"report": report, "events": simulation.world.events()}, "\t", true))
 	else:
-		if scenario == "planning":
+		if scenario == "market":
+			print("Simulated Town RPG M6 market | days=%d seed=%d" % [days, seed_value])
+		elif scenario == "planning":
 			print("Simulated Town RPG M5 planning (%s) | days=%d seed=%d" % [priority, days, seed_value])
 		elif scenario == "coordination":
 			print("Simulated Town RPG M4 coordination | days=%d seed=%d" % [days, seed_value])
@@ -55,27 +60,30 @@ func _init() -> void:
 			print("Simulated Town RPG M2 trading | days=%d seed=%d" % [days, seed_value])
 		else:
 			print("Simulated Town RPG M0 | days=%d seed=%d" % [days, seed_value])
-		for actor in Simulation.IDS:
+		for actor in simulation.participant_ids():
 			var before: Dictionary = report.initial.entities[actor]
 			var after: Dictionary = report.final.entities[actor]
 			print("%s (%s, %s): money %d -> %d; inventory %s -> %s; unmet meals %d" % [
 				before.name, actor, before.role, before.money, after.money,
 				JSON.stringify(before.inventory), JSON.stringify(after.inventory), report.unmet_meals[actor]])
 		print("Totals: " + JSON.stringify(report.totals, "", true))
-		if scenario in ["trading", "agents", "coordination", "planning"]:
+		if scenario in ["trading", "agents", "coordination", "planning", "market"]:
 			print("Prices: " + JSON.stringify(report.prices, "", true))
 			print("Purchases: " + JSON.stringify(report.purchases, "", true))
 			print("Cash flow: " + JSON.stringify(report.cash_flow, "", true))
 			print("Employer payments: " + JSON.stringify(report.payments, "", true))
 			print("Failure groups: " + JSON.stringify(report.failure_groups, "", true))
-		if scenario in ["agents", "coordination", "planning"]:
+		if scenario in ["agents", "coordination", "planning", "market"]:
 			print("Goals: " + JSON.stringify(report.goals, "", true))
 			print("Decisions: " + JSON.stringify(report.decisions, "", true))
-		if scenario in ["coordination", "planning"]:
+		if scenario in ["coordination", "planning", "market"]:
 			print("Agreements: " + JSON.stringify(report.agreements, "", true))
-		if scenario == "planning":
+		if scenario in ["planning", "market"]:
 			print("Activity after day 26: " + JSON.stringify(report.activity_after_day_26, "", true))
 			print("Final working-capital estimates: " + JSON.stringify(report.final_working_capital, "", true))
+		if scenario == "market":
+			print("Market participants: " + JSON.stringify(report.participants, "", true))
+			print("Schedule: " + JSON.stringify(report.schedule))
 		print("Failures: " + JSON.stringify(report.failures, "", true))
 		print("Events: %d; first failures:" % report.event_count)
 		for event in report.notable_events:

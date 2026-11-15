@@ -17,7 +17,7 @@ func observe(actor: String) -> Dictionary:
 		if request.status not in ["open", "accepted"]:
 			continue
 		if request.buyer == actor or request.supplier == actor \
-				or (request.status == "open" and SELLERS[request.item] == actor):
+				or (request.status == "open" and _can_sell(actor, request.item)):
 			visible.append(request.duplicate(true))
 	observation["requests"] = visible
 	return observation
@@ -30,7 +30,7 @@ func post_request(buyer: String, item: String, quantity: Variant) -> bool:
 		reason = "unknown_item"
 	if not reason.is_empty():
 		return _reject("request_posted", buyer, "", details, reason)
-	if SELLERS[item] == buyer:
+	if _can_sell(buyer, item):
 		return _reject("request_posted", buyer, buyer, details, "self_supply")
 	@warning_ignore("integer_division")
 	var quantity_limit: int = MAX_AMOUNT / Trading.PRICES[item]
@@ -50,7 +50,7 @@ func post_request(buyer: String, item: String, quantity: Variant) -> bool:
 		"created_day": _day, "accepted_day": null, "fulfilled_day": null, "closed_day": null, "close_reason": "",
 		"payment_event_id": null, "item_event_id": null}
 	_requests[request_id] = request
-	_record("request_posted", buyer, SELLERS[item], true, {"request": request})
+	_record("request_posted", buyer, _request_target(item), true, {"request": request})
 	return true
 
 
@@ -60,7 +60,7 @@ func accept_request(supplier: String, request_id: String) -> bool:
 	if not reason.is_empty():
 		return _reject("agreement_accepted", supplier, "", details, reason)
 	var request: Dictionary = _requests[request_id]
-	if SELLERS[request.item] != supplier or request.buyer == supplier:
+	if not _can_sell(supplier, request.item) or request.buyer == supplier:
 		return _reject("agreement_accepted", supplier, request.buyer, details, "ineligible_supplier")
 	for existing in _requests.values():
 		if existing.status == "accepted" and existing.supplier == supplier and existing.item == request.item:
