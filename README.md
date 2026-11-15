@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0 complete; M1 atomic purchases implemented and awaiting review
+**Status:** M0/M1 complete; M2 trading scenario implemented and awaiting review
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -60,7 +60,7 @@ A credible early demonstration is **four people who can complete—or fail to co
 
 ## Project status
 
-The headless GDScript kernel provides the M0 daily simulation plus an independently callable M1 atomic purchase command, with automated accounting tests. There is no main scene; use the script commands below. Licensing, public release plans, and the final title remain undecided.
+The headless GDScript kernel provides the original M0 simulation, M1 atomic purchases, and a separate M2 trading scenario, with automated accounting tests. There is no main scene; use the script commands below. Licensing, public release plans, and the final title remain undecided.
 
 ## Run M0
 
@@ -129,4 +129,34 @@ The command returns `true` only after moving all four wheat to the miller and al
 
 Each attempt appends one `purchase` event: `actor` is the buyer, `target` the seller, and `details` contains `buyer`, `seller`, `item`, `quantity`, `unit_price`, and `total_price`. Rejections also contain a failure `reason`. `total_price` is null when validation stops before safe total calculation. Rejected purchases leave day, inventories, and balances unchanged.
 
-The existing test command runs all 147 M0 checks plus the purchase tests. The 30-day routine remains unchanged and never calls purchases. See [M1 verification results and exact assumptions](docs/M1_RESULTS.md). Stop after M1 until reviewed.
+The existing test command runs all 147 M0 checks plus the purchase and trading tests. The M0 routine remains unchanged and never calls purchases. See [M1 verification results and exact assumptions](docs/M1_RESULTS.md).
+
+## M2: The Trading Village
+
+Select the separate trading scenario explicitly; omitting `--scenario` still runs M0 with the original defaults and JSON format:
+
+```sh
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario trading 30 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario trading 365 42
+
+# Full reproducible report and ledger (use the writable XDG setup above if needed).
+mkdir -p work
+godot --headless --no-header --path . --script res://scripts/tools/run_simulation.gd -- --scenario trading 365 42 --json > work/trading-365.json
+```
+
+`--scenario m0` explicitly selects the original scenario. The selector precedes the existing optional day/seed/JSON arguments. Defaults remain 30 days and seed 42; supported day counts remain 0..10000. `scripts/sim/trading_runner.gd` reuses the existing runner's initialization, seeded RNG, world commands, and basic report; `tests/trading_tests.gd` verifies its accounting and replay.
+
+Trading starts with **exactly the same endowments as M0**: Ada/Bram/Cora/Dain have 30/20/20/5 coins and one bread each, with zero wheat/flour. Fixed unit prices are **wheat 1, flour 2, bread 3 coins**. Ada is Dain's employer and attempts a **2-coin daily payment**, using `transfer_money`; this does not create currency. The fixed daily order is:
+
+1. Advance the day; Ada attempts to pay Dain 2 coins, before receiving any sales revenue.
+2. Ada harvests 2–6 wheat with the seeded RNG.
+3. Bram attempts to buy four wheat from Ada, then mill twice (four wheat → four flour).
+4. Cora attempts to buy four flour from Bram, then bake twice (four flour → six bread).
+5. Ada, Bram, and Dain, in that order, each attempt to buy one bread from Cora.
+6. Ada, Bram, Cora, and Dain each attempt to eat one actual bread. Cora consumes her own production and does not buy from herself.
+
+Every goods exchange uses `world.purchase()`. These are unconditional scripted attempts, even when an NPC still has bread or an earlier operation failed. There are no adaptive purchasing decisions, partial orders, retries, arrears, rescue payments, or rule changes after observing results. A failed payment does not cancel harvest; an unfunded purchase does not create input stock; later production can use only stock already owned. Existing bread may cover a failed purchase until depleted. Unmet meals are recorded without health/death effects.
+
+The trading report includes initial/final holdings, production/consumption totals, successful/rejected purchase counts and volumes per commodity, each NPC's sales/purchase/payment cash flow, unmet meals, and failure groups with participants, resource/recipe, reason, count, and first/last day. `earned` includes sales and employer payments received; `spent` includes purchases and employer payments sent. Rejected attempts contribute no cash or goods flow. These figures are derived from the event ledger.
+
+See [M2 actual results and verification](docs/M2_RESULTS.md), including shortages and financial distress at 30 and 365 days. Stop after M2; M3 has not started.
