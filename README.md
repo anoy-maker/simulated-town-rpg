@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0–M9 complete; M10 business income and circulation implemented and awaiting review
+**Status:** M0–M10 complete; M11 prescribed equilibrium reference implemented and awaiting review
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -340,6 +340,23 @@ The separate `settlement_finance` scenario keeps every M9 endowment, labor/produ
 
 The world enforces a two-day full-capacity operating buffer: farm **24**, mill **56**, bakery **88** coins. These funds remain available for actual payroll/input spending. Withdrawals cannot breach the buffer, invent money, access unrelated accounts, or exceed the owner's money limit. Ownership income has a distinct event and cash-flow category, separate from wages, and does not require a work shift. This measures distributable **cash**, not formal inventory-valued profit; even initial capital above reserve can be withdrawn. No loans, capital refills, guaranteed work, or employee subsidies are added.
 
-The fixed study runs all three policies at 30/365 days, seeds 7/42/99, twice. Cached M9 comparisons must match published hashes and pass the shared audit; omit `--baseline` to reproduce them instead. Separate directories protect original captures. The audit reconciles each withdrawal with ownership and the actual cash reserve, as well as the original labor/production receipts. Tests cover authority, reserves, atomic failures, privacy, income classification, controls and replay. See [M10 actual results, assumptions and limitations](docs/M10_RESULTS.md). No policy or parameter is tuned after outcomes. Stop after M10; no M11.
+The fixed study runs all three policies at 30/365 days, seeds 7/42/99, twice. Cached M9 comparisons must match published hashes and pass the shared audit; omit `--baseline` to reproduce them instead. Separate directories protect original captures. The audit reconciles each withdrawal with ownership and the actual cash reserve, as well as the original labor/production receipts. Tests cover authority, reserves, atomic failures, privacy, income classification, controls and replay. See [M10 actual results, assumptions and limitations](docs/M10_RESULTS.md). No policy or parameter is tuned after outcomes; these remain historical comparison results.
 
 Actual payout runs sustain trade through day 365 and provide 812–813 annual meals versus M9's 77–82, but only Cora eats daily; most employees remain excluded. All 432 coins are conserved and every withdrawal preserves its reserve. See [18 run summaries](docs/M10_RUNS.csv), [216 resident records](docs/M10_RESIDENTS.csv), and [54 business records](docs/M10_BUSINESSES.csv). Technical validity and increased circulation do not establish economic viability.
+
+## M11: Deterministic Economic Equilibrium Reference
+
+```sh
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_equilibrium_reference 1 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_equilibrium_reference 2 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_equilibrium_reference 30 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_equilibrium_reference 365 42
+# Compact machine-readable report and complete ledger fingerprint, without events:
+godot --headless --no-header --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_equilibrium_reference 365 42 --report-json
+```
+
+This is an **intentionally prescribed feasibility reference, not autonomous economic stability**. It retains M9's twelve residents and ownership/employment relationships, starts each resident with six coins and no food, and starts each firm with 120 coins and no commodities. Only here, prices are wheat 2 / flour 4 / bread 4, wages are eight, and a completed farming shift yields four wheat deterministically. The original two-batch recipes remain authoritative. Two worker pairs per firm alternate on odd/even days; daily output is eight wheat, eight flour and twelve bread, purchased and consumed through existing transactions.
+
+The 1/2/30/365-day cases verify every event's 432-coin conservation and nonnegative holdings, every day's production/meals, the daily 120-coin business state, and the two-day household cycle. The year produces/consumes **4380 bread**, completes **2190 paid shifts**, and misses **zero meals**. Households return to six coins on even days; odd days leave six with ten and six with two. This depends on the exact prices, wages, initial buffers, prescribed rotation/order and guaranteed harvest opportunity; no autonomous policy discovers it.
+
+Default output is eight concise lines. `--report-json` is reference-only; it includes a SHA-256 of the full canonical ledger without printing that ledger. The existing `--json` diagnostic remains available for short audits, but full-year event dumps are unnecessary. Tests audit annual receipts in memory and reuse the independent Python labor auditor on a short two-day trace. Historical scenarios and the default M0 CLI remain unchanged. See [M11 results and limitations](docs/M11_RESULTS.md). Stop after M11 for review.

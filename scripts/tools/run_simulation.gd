@@ -10,14 +10,15 @@ const MarketDownstream = preload("res://scripts/sim/market_downstream_runner.gd"
 const Calibration = preload("res://scripts/sim/calibration_runner.gd")
 const Labor = preload("res://scripts/sim/labor_runner.gd")
 const Finance = preload("res://scripts/sim/finance_runner.gd")
+const Equilibrium = preload("res://scripts/sim/equilibrium_runner.gd")
 
 
 func _init() -> void:
 	var args = OS.get_cmdline_user_args()
 	var scenario: String = "m0"
 	if not args.is_empty() and args[0] == "--scenario":
-		if args.size() < 2 or args[1] not in ["m0", "trading", "agents", "coordination", "planning", "market", "market_downstream", "calibration", "settlement_labor", "settlement_finance"]:
-			_fail("Scenario must be m0, trading, agents, coordination, planning, market, market_downstream, calibration, settlement_labor, or settlement_finance.")
+		if args.size() < 2 or args[1] not in ["m0", "trading", "agents", "coordination", "planning", "market", "market_downstream", "calibration", "settlement_labor", "settlement_finance", "settlement_equilibrium_reference"]:
+			_fail("Scenario must be m0, trading, agents, coordination, planning, market, market_downstream, calibration, settlement_labor, settlement_finance, or settlement_equilibrium_reference.")
 			return
 		scenario = args[1]
 		args = args.slice(2)
@@ -44,8 +45,8 @@ func _init() -> void:
 		args = args.slice(2)
 	if args.size() > 3 or (args.size() > 0 and not args[0].is_valid_int()) \
 			or (args.size() > 1 and not args[1].is_valid_int()) \
-			or (args.size() > 2 and args[2] != "--json"):
-		_fail("Usage: run_simulation.gd -- [--scenario m0|trading|agents|coordination|planning|market|market_downstream|calibration|settlement_labor|settlement_finance] [--experiment name] [--priority commitment-first|immediate-needs-first] [--distribution none|needs|half-surplus] [days (0..10000)] [seed] [--json]")
+			or (args.size() > 2 and args[2] != "--json" and not (scenario == "settlement_equilibrium_reference" and args[2] == "--report-json")):
+		_fail("Usage: run_simulation.gd -- [--scenario m0|trading|agents|coordination|planning|market|market_downstream|calibration|settlement_labor|settlement_finance|settlement_equilibrium_reference] [--experiment name] [--priority commitment-first|immediate-needs-first] [--distribution none|needs|half-surplus] [days (0..10000)] [seed] [--json or --report-json (reference only)]")
 		return
 	var days: int = int(args[0]) if args.size() > 0 else 30
 	var seed_value: int = int(args[1]) if args.size() > 1 else 42
@@ -69,8 +70,17 @@ func _init() -> void:
 		simulation = Labor.new(seed_value)
 	elif scenario == "settlement_finance":
 		simulation = Finance.new(seed_value, distribution)
+	elif scenario == "settlement_equilibrium_reference":
+		simulation = Equilibrium.new(seed_value)
 	simulation.run(days)
 	var report: Dictionary = simulation.report()
+	if scenario == "settlement_equilibrium_reference" and (args.size() < 3 or args[2] == "--report-json"):
+		if args.size() > 2:
+			print(JSON.stringify({"report": report}, "", true))
+		else:
+			_print_reference(report)
+		quit(0)
+		return
 	if args.size() > 2:
 		print(JSON.stringify({"report": report, "events": simulation.world.events()}, "\t", true))
 	else:
@@ -138,3 +148,28 @@ func _init() -> void:
 func _fail(message: String) -> void:
 	printerr(message)
 	quit(2)
+
+
+func _print_reference(report: Dictionary) -> void:
+	var business_cash: Dictionary = {}
+	var household_cash: Dictionary = {}
+	var commodities: Dictionary = {"wheat": 0, "flour": 0, "bread": 0}
+	var missed: int = 0
+	for id in report.final.entities:
+		var entity: Dictionary = report.final.entities[id]
+		if entity.kind == "business":
+			business_cash[id] = entity.money
+		else:
+			household_cash[id] = entity.money
+		for item in commodities:
+			commodities[item] += entity.inventory[item]
+	for amount in report.unmet_meals.values():
+		missed += amount
+	print("Simulated Town RPG M11 equilibrium reference | days=%d seed=%d" % [report.days, report.seed])
+	print("Prescribed decisions: feasibility reference, not autonomous economic stability.")
+	print("Production: wheat=%d flour=%d bread=%d" % [report.totals.harvested.wheat, report.totals.production_outputs.flour, report.totals.production_outputs.bread])
+	print("Meals=%d missed=%d paid shifts=%d currency=%d circulation=%d" % [report.totals.consumed.bread, missed, report.shifts.paid, report.money.final, report.money.circulation])
+	print("Business cash: " + JSON.stringify(business_cash, "", true))
+	print("Household cash: " + JSON.stringify(household_cash, "", true))
+	print("Final commodities: " + JSON.stringify(commodities, "", true))
+	print("Failures: " + JSON.stringify(report.failures, "", true))
