@@ -95,3 +95,15 @@ Events contain `id`, `day`, `action`, `actor`, `target`, `success`, and `details
 The daily policy uses an explicit NPC order and one private `RandomNumberGenerator`, seeded once. Running 12 days then 18 days has the same result as running 30 days. JSON output sorts dictionary keys; no wall-clock timestamps or engine object IDs enter the history. Reproduction is verified on Godot 4.6.3; engine-version-independent RNG and persistence/resume are deferred.
 
 The CLI prints a compact report by default, or a complete JSON report/history with `--json`. History remains in memory and report retrieval copies it; the CLI bounds runs to 10,000 days. This is intended for small diagnostic runs, not an unbounded world server. There is no graphical main scene in M0.
+
+## M1 atomic purchase command
+
+`WorldState.purchase(buyer, seller, item, quantity, unit_price)` validates and commits one synchronous exchange. IDs and commodity names use the existing String API; quantities/prices accept Variant arguments so invalid numeric types can be rejected and logged without coercion. Quantities must be integers in 1..MAX_AMOUNT; unit prices must be integers in 0..MAX_AMOUNT. Buyer and seller must differ.
+
+The command checks total price using integer `MAX_AMOUNT / quantity` before multiplication, then checks seller stock, buyer funds, buyer inventory capacity, and seller money capacity. Total price must fit MAX_AMOUNT. Capacity checks subtract from the bound before comparing. No state is written until every check succeeds; then goods move seller → buyer and money moves buyer → seller. It does not call the separate transfer commands, which would permit intermediate state and multiple events.
+
+One event records the exchange using the existing envelope: `action="purchase"`, `actor=buyer`, `target=seller`, `success`, and `details`. Details record both named participants, commodity, quantity, unit price, and total price. `total_price` remains null if earlier validation fails or the total exceeds the bound; the original operands remain available. A rejection changes only the event log.
+
+Participant/quantity errors reuse `unknown_actor` (buyer), `unknown_target` (seller), `same_entity`, and `invalid_amount` (quantity). Other reasons are `unknown_item`, `invalid_unit_price`, `total_price_limit`, `insufficient_stock`, `insufficient_money`, `buyer_inventory_limit`, and `seller_money_limit`. Validation returns the first applicable reason in documented command order.
+
+The ledger auditor applies successful purchases as both item and money movements, ignores rejected attempts, and rejects unknown successful action types. It derives conserved money from each fixture's initial state, permitting boundary fixtures while preserving the existing 75-coin M0 audit. Purchase tests also check commodity conservation, exact events, rejection immutability, and deterministic replay interleaved with seeded ticks. The daily simulation and CLI are unchanged.

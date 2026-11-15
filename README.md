@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0 implemented; awaiting review before M1
+**Status:** M0 complete; M1 atomic purchases implemented and awaiting review
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -60,7 +60,7 @@ A credible early demonstration is **four people who can complete—or fail to co
 
 ## Project status
 
-M0 now provides a headless GDScript kernel and automated accounting tests. There is no main scene; use the script commands below. Licensing, public release plans, and the final title remain undecided.
+The headless GDScript kernel provides the M0 daily simulation plus an independently callable M1 atomic purchase command, with automated accounting tests. There is no main scene; use the script commands below. Licensing, public release plans, and the final title remain undecided.
 
 ## Run M0
 
@@ -100,6 +100,7 @@ export XDG_CACHE_HOME="$PWD/work/cache"
 - `scripts/sim/simulation_runner.gd`: seeded daily routine and report aggregation.
 - `scripts/tools/run_simulation.gd`: headless CLI and readable/JSON output.
 - `tests/run_tests.gd`: conservation, invalid operations, recipes, eating, isolation, event audit, and deterministic replay.
+- `tests/purchase_tests.gd`: atomic purchase success/rejection, conservation, arithmetic/capacity boundaries, and replay.
 
 Ada (`farmer`), Bram (`miller`), Cora (`baker`), and Dain (`laborer`) start with 30/20/20/5 coins and one bread each. IDs are independent of display names. Money and stacks are integers bounded to 0..1,000,000,000; commands require positive integer amounts.
 
@@ -112,6 +113,20 @@ Each day, in fixed order:
 5. Attempt a one-coin gift from farmer to laborer, independent of all goods transfers.
 6. Each NPC attempts to eat one actual bread. Failed meals count as unmet needs.
 
-Goods and currency gifts are separate operations. M0 has no prices, purchases, wages, debt, death, or economic planning. A failed action is logged and the routine continues. Harvest is an explicit source; recipes declare inputs/outputs; eating is an explicit sink. Initial endowments appear in the day-zero initialization event. No currency is minted during a run.
+Goods and currency gifts are separate operations. The daily routine has no prices, purchases, wages, debt, death, or economic planning. A failed action is logged and the routine continues. Harvest is an explicit source; recipes declare inputs/outputs; eating is an explicit sink. Initial endowments appear in the day-zero initialization event. No currency is minted during a run.
 
-See [actual M0 verification and 30-day results](docs/M0_RESULTS.md). Stop at M0 until those results have been reviewed.
+See [actual M0 verification and 30-day results](docs/M0_RESULTS.md).
+
+## M1 atomic purchases
+
+Call `world.purchase(buyer, seller, item, quantity, unit_price)`. For example, when the farmer owns four wheat and the miller can pay 12 coins:
+
+```gdscript
+world.purchase("miller", "farmer", "wheat", 4, 3)
+```
+
+The command returns `true` only after moving all four wheat to the miller and all 12 coins to the farmer. It checks both participants, distinct IDs, the commodity, positive integer quantity, nonnegative integer unit price, stock, affordability, and destination limits before any writes. A zero unit price is legal. Quantities, unit prices, total prices, and resulting holdings respect the existing one-billion-unit bound; a division check rejects an excessive total before multiplication. Floats (including NaN/infinity), booleans, strings, and null are rejected as quantities/prices.
+
+Each attempt appends one `purchase` event: `actor` is the buyer, `target` the seller, and `details` contains `buyer`, `seller`, `item`, `quantity`, `unit_price`, and `total_price`. Rejections also contain a failure `reason`. `total_price` is null when validation stops before safe total calculation. Rejected purchases leave day, inventories, and balances unchanged.
+
+The existing test command runs all 147 M0 checks plus the purchase tests. The 30-day routine remains unchanged and never calls purchases. See [M1 verification results and exact assumptions](docs/M1_RESULTS.md). Stop after M1 until reviewed.

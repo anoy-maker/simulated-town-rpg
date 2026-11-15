@@ -4,7 +4,7 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 
 ## M0: Project setup and simulation kernel (first Codex task)
 
-**Status:** Implemented and verified on Godot 4.6.3; [results](M0_RESULTS.md) are awaiting user review. M1 has not started.
+**Status:** Completed. [M0 results](M0_RESULTS.md) remain the regression baseline for M1.
 
 - Minimal Godot 4 project that opens without an editor-only dependency.
 - Four simulated NPCs with stable IDs, money, inventory, and a role.
@@ -14,13 +14,16 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 
 **Done when:** the tests pass (or failures are clearly reported), a 30-day headless run yields understandable events and final balances, and a repeated run with the same seed reproduces identical output.
 
-## M1: Economic robustness
+## M1: Atomic purchases
 
-- Employer/worker compensation, purchases, actual supplier stock, and basic production planning.
-- Explicit resource sinks and sources, scarcity, unmet needs, and failed payments.
-- Stress tests across many seeds and initial conditions; inspect why collapses occur.
+**Status:** Atomic transaction mechanism implemented; [verification results](M1_RESULTS.md) await review. Stop here before subsequent work.
 
-**Done when:** every transaction can be audited, and an unexpected economic result can be traced to specific events rather than guessed from a vague narrative.
+- Validated buyer/seller/item/quantity/unit-price exchange with simultaneous goods and money movement.
+- Structured success/rejection events and compatibility with ledger auditing.
+- Tests for conservation, failed-operation immutability, arithmetic boundaries, capacity, and replay.
+- Preserve all M0 checks and the exact existing 30-day output.
+
+**Done when:** atomic purchase tests and all M0 checks pass, events reconstruct purchases correctly, and the existing 30-day simulation remains byte-identical. The current task narrows the earlier economic-robustness plan to this transaction mechanism; NPC purchasing policies, wages, and production planning remain deferred.
 
 ## M2: Observable 2D village
 

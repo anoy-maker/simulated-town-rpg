@@ -2,6 +2,7 @@ extends SceneTree
 
 const World = preload("res://scripts/sim/world_state.gd")
 const Simulation = preload("res://scripts/sim/simulation_runner.gd")
+const PurchaseTests = preload("res://tests/purchase_tests.gd")
 
 var _checks: int = 0
 var _failures: int = 0
@@ -15,6 +16,8 @@ func _init() -> void:
 	_test_state_isolation()
 	_test_unmet_report()
 	_test_simulation()
+	print("M0 regression checks: %d" % _checks)
+	PurchaseTests.run(self)
 	print("Tests: %d checks, %d failures" % [_checks, _failures])
 	quit(0 if _failures == 0 else 1)
 
@@ -190,6 +193,9 @@ func _test_simulation() -> void:
 func _audit(history: Array, final_state: Dictionary) -> void:
 	# Independently reconstruct each state from the ledger, without calling commands.
 	var state: Dictionary = history[0].details.state.duplicate(true)
+	var initial_money: int = 0
+	for entity in state.entities.values():
+		initial_money += entity.money
 	var valid = true
 	for index in history.size():
 		var event: Dictionary = history[index]
@@ -200,6 +206,11 @@ func _audit(history: Array, final_state: Dictionary) -> void:
 		if event.success:
 			var details: Dictionary = event.details
 			match event.action:
+				"purchase":
+					state.entities[event.target].inventory[details.item] -= details.quantity
+					state.entities[event.actor].inventory[details.item] += details.quantity
+					state.entities[event.actor].money -= details.total_price
+					state.entities[event.target].money += details.total_price
 				"transfer_item":
 					state.entities[event.actor].inventory[details.item] -= details.amount
 					state.entities[event.target].inventory[details.item] += details.amount
@@ -215,12 +226,16 @@ func _audit(history: Array, final_state: Dictionary) -> void:
 						state.entities[event.actor].inventory[item] += details.outputs[item]
 				"consume":
 					state.entities[event.actor].inventory[details.item] -= details.amount
+				"initialize", "day_started":
+					pass
+				_:
+					valid = false
 		var money = 0
 		for entity in state.entities.values():
 			money += entity.money
 			valid = valid and entity.money >= 0
 			for amount in entity.inventory.values():
 				valid = valid and amount >= 0
-		valid = valid and money == 75
-	_check(valid, "every 30-day event has ordered identity, valid day, nonnegative stock and conserved money")
+		valid = valid and money == initial_money
+	_check(valid, "every event has ordered identity, valid day, nonnegative stock and conserved money")
 	_check(state == final_state, "structured events reconstruct the complete final state")
