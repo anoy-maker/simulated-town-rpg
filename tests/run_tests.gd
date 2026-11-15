@@ -5,6 +5,7 @@ const Simulation = preload("res://scripts/sim/simulation_runner.gd")
 const PurchaseTests = preload("res://tests/purchase_tests.gd")
 const TradingTests = preload("res://tests/trading_tests.gd")
 const AgentsTests = preload("res://tests/agents_tests.gd")
+const CoordinationTests = preload("res://tests/coordination_tests.gd")
 
 var _checks: int = 0
 var _failures: int = 0
@@ -24,6 +25,8 @@ func _init() -> void:
 	TradingTests.run(self)
 	print("M0/M1/M2 regression checks: %d" % _checks)
 	AgentsTests.run(self)
+	print("M0/M1/M2/M3 regression checks: %d" % _checks)
+	CoordinationTests.run(self)
 	print("Tests: %d checks, %d failures" % [_checks, _failures])
 	quit(0 if _failures == 0 else 1)
 
@@ -200,6 +203,7 @@ func _audit(history: Array, final_state: Dictionary) -> void:
 	# Independently reconstruct each state from the ledger, without calling commands.
 	var state: Dictionary = history[0].details.state.duplicate(true)
 	var initial_money: int = 0
+	var used_receipts: Dictionary = {}
 	for entity in state.entities.values():
 		initial_money += entity.money
 	var valid = true
@@ -212,6 +216,38 @@ func _audit(history: Array, final_state: Dictionary) -> void:
 		if event.success:
 			var details: Dictionary = event.details
 			match event.action:
+				"request_posted", "agreement_accepted", "agreement_fulfilled", "request_closed":
+					var request: Dictionary = details.request
+					var previous: Dictionary = state.requests.get(request.id, {})
+					if event.action == "request_posted":
+						valid = valid and previous.is_empty() and request.status == "open" and request.supplier == ""
+						valid = valid and request.buyer == event.actor and request.quantity > 0
+						valid = valid and request.payment == request.quantity * request.unit_price and request.created_day == event.day
+					else:
+						for field in ["id", "buyer", "item", "quantity", "unit_price", "payment", "created_day"]:
+							valid = valid and previous.get(field) == request[field]
+						if event.action == "request_closed":
+							valid = valid and previous.status in ["open", "accepted"] and request.status == "closed"
+							valid = valid and event.actor == request.buyer and not request.close_reason.is_empty()
+						else:
+							var accepting: bool = event.action == "agreement_accepted"
+							var receipt_id: int = details.payment_event_id if accepting else details.item_event_id
+							var receipt: Dictionary = history[receipt_id - 1]
+							valid = valid and not used_receipts.has(receipt_id) and receipt.success and receipt.id < event.id
+							used_receipts[receipt_id] = true
+							if accepting:
+								valid = valid and previous.status == "open" and request.status == "accepted"
+								valid = valid and receipt.action == "transfer_money" and receipt.actor == request.buyer
+								valid = valid and receipt.target == request.supplier and receipt.details.amount == request.payment
+							else:
+								valid = valid and previous.status == "accepted" and request.status == "fulfilled"
+								valid = valid and receipt.action == "transfer_item" and receipt.actor == request.supplier
+								valid = valid and receipt.target == request.buyer and receipt.details.item == request.item
+								valid = valid and receipt.details.amount == request.quantity
+							valid = valid and event.actor == request.supplier
+					state.requests[request.id] = request.duplicate(true)
+				"agreement_outstanding":
+					valid = valid and state.requests[details.request.id] == details.request and details.request.status == "accepted"
 				"purchase":
 					state.entities[event.target].inventory[details.item] -= details.quantity
 					state.entities[event.actor].inventory[details.item] += details.quantity
