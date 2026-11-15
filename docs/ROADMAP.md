@@ -157,7 +157,7 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 
 ## M12: Employer-Driven Production and Labor Scheduling
 
-**Status:** Implemented and verified; [M12 results](M12_RESULTS.md) await review. Stop after M12.
+**Status:** Completed. [M12 results](M12_RESULTS.md) remain the unchanged employer-choice control.
 
 - Isolated `settlement_employer_choice` keeps every M11 economic parameter, initial holding and employment relationship.
 - Pure own-last-sales forecasting, one-time reference startup, unsold-stock offsets and minimum funded productive shifts.
@@ -166,7 +166,19 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 - Matched 2/30/365-day control/experiment, receipt reconstruction, deterministic replay and all historical hashes preserved.
 - Document first financial exclusion, reduced realized demand/output, persistent employee unemployment and continuing owner-supported trade without tuning policies.
 
-**Done when:** technical correctness and the actual departure from M11 are documented, with physical capacity distinguished from paid food access. Further experiments or repairs require review; no M13 is implemented.
+**Done when:** technical correctness and the actual departure from M11 are documented, with physical capacity distinguished from paid food access. Its outcomes are preserved for the separately authorized M13 diagnosis.
+
+## M13: Employment Allocation versus Production Forecasting
+
+**Status:** Implemented and verified; [M13 results](M13_RESULTS.md) await review. Stop after M13.
+
+- Complete the 2×2 experiment: fixed production/owner-first staffing and sales-based production/exclusive rotating pairs, with M11/M12 as unchanged controls.
+- Reuse exact endowments, rules, authority and small existing policy components; no fixed-target stock offset or out-of-group worker substitution.
+- All four conditions at 2/7/30/365 days, seed 42, receipt reconstruction, independent process replay and historical hashes.
+- Distinguish financial food exclusion, physical availability, operating-capital limits and reduced forecast production; report individual participation and cash distribution.
+- Use matched contrasts and interaction, preserve outcomes and avoid economic repairs or general claims about employers/markets.
+
+**Done when:** concise results and limitations are documented with technical verification. No corrective policies, sector expansion or M14 before review.
 
 ## Later possibilities
 

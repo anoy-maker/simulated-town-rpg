@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0–M11 complete; M12 employer-choice experiment implemented and awaiting review
+**Status:** M0–M12 complete; M13 economic-causality experiment implemented and awaiting review
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -380,4 +380,24 @@ Pure policies see only authorized own-firm/household information, own prior-day 
 
 At 2/30/365 days M12 consumes **18/117/1122 meals** and misses **6/243/3258**, versus M11's **24/360/4380 meals** with zero misses. Annual paid shifts fall to 563; nine employees receive only nine shifts combined while all three owners eat daily. First misses are on day two, with six bread unsold because six residents cannot afford it. Currency stays 432 and trade continues, but this is not universal economic viability. No policy or parameter is tuned to repair the outcome.
 
-See [M12 actual results, causal trace and limitations](docs/M12_RESULTS.md), [six run summaries](docs/M12_RUNS.csv), [resident results](docs/M12_RESIDENTS.csv), and [business results](docs/M12_BUSINESSES.csv). Historical scenarios/default CLI remain unchanged. Stop after M12 for review; no M13 is implemented.
+See [M12 actual results, causal trace and limitations](docs/M12_RESULTS.md), [six run summaries](docs/M12_RUNS.csv), [resident results](docs/M12_RESIDENTS.csv), and [business results](docs/M12_BUSINESSES.csv). Historical scenarios/default CLI remain unchanged. This employer-choice experiment remains an unchanged control for M13.
+
+
+## M13: Employment Allocation versus Production Forecasting
+
+```sh
+# M13-A: prescribed NEW daily production, owner-first staffing (no stock offset).
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_fixed_owner_first 365 42
+# M13-B: unchanged sales forecasting, exclusive M11 alternating worker pairs.
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_sales_rotating 365 42
+# All four conditions at 2/7/30/365 days, twice each; compact summaries/tables only:
+python3 -B scripts/tools/run_causality.py --output work/m13
+# Observation-only diagnostics, plus original summary and complete-ledger hashes:
+godot --headless --no-header --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_fixed_owner_first 30 42 --study-json
+```
+
+The controlled 2×2 study keeps all M11 resources, prices, wages, skills, assets, jobs, recipes, authority and transaction ordering. M11/M12 remain unchanged controls. A always attempts 8 wheat / 8 flour / 12 new bread per day, reducing shifts only when real resources, funds or eligible capacity limit production. B uses the original one-time startup/previous-day-sales/stock-offset calculation, considering only that day's designated pair and only as much labor as needed. Both reuse M12's budgeting and world execution; no full runner or economic engine is duplicated. No policy gains private household information.
+
+Annual results: M11 and B each consume **4380 meals**, with **2190 paid shifts** and zero misses; their complete successful economic movement fingerprints match. A consumes **1182 meals**, with 631 shifts and 3198 misses; M12 consumes 1122, with 563 shifts and 3258 misses. Staffing causes the initial day-two exclusion while bread is available. Continued fixed production accumulates stock and becomes cash constrained on day six; forecasting preserves capital but further reduces employee income. These are matched findings for the specified rules, not proof about all employers or economies.
+
+`--report-json` supports all four study scenarios while preserving control bytes. `--study-json` adds a separate post-run observer with food-access/stock/financial-constraint diagnostics, plan counts/selections and a short initial trace. It never enters NPC observations. Reports stay compact and do not export annual ledgers. All currency remains 432; no policy was tuned after outcomes. See [M13 setup, causal analysis, verification and limits](docs/M13_RESULTS.md), [run table](docs/M13_RUNS.csv), [resident table](docs/M13_RESIDENTS.csv), and [business table](docs/M13_BUSINESSES.csv). Stop after M13 for review; no corrective policies or M14.

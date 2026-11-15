@@ -9,26 +9,40 @@ const STARTUP = {"wheat": 8, "flour": 8, "bread": 12}
 
 
 static func decide(observation: Dictionary) -> Dictionary:
-	var firm: Dictionary = observation.business
-	assert(not firm.is_empty())
-	var rule: Dictionary = Labor.INDUSTRIES[firm.industry]
-	var forecast: int = STARTUP[rule.output] if observation.day == 1 else firm.history.sold[rule.output]
-	var stock: int = firm.inventory[rule.output]
-	var deficit: int = maxi(0, forecast - stock)
-	var output_per_shift: int = Reference.HARVEST if rule.recipe.is_empty() else Kernel.RECIPES[rule.recipe].outputs[rule.output] * firm.assets.batches_per_shift
-	@warning_ignore("integer_division")
-	var requested: int = (deficit + output_per_shift - 1) / output_per_shift
+	return sales_plan(observation, owner_first(observation.business))
+
+
+static func owner_first(firm: Dictionary) -> Array:
 	var roster: Array = firm.workers.duplicate(true)
 	roster.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
 		if (a.id == firm.owner) != (b.id == firm.owner):
 			return a.id == firm.owner
 		return a.id < b.id)
+	return roster
+
+
+static func sales_plan(observation: Dictionary, roster: Array) -> Dictionary:
+	var rule: Dictionary = Labor.INDUSTRIES[observation.business.industry]
+	var forecast: int = STARTUP[rule.output] if observation.day == 1 else observation.business.history.sold[rule.output]
+	return production_plan(observation, forecast, true, roster,
+		"one_time_startup" if observation.day == 1 else "previous_realized_sales")
+
+
+static func production_plan(observation: Dictionary, forecast: int, offset_stock: bool, roster: Array, source: String) -> Dictionary:
+	var firm: Dictionary = observation.business
+	assert(not firm.is_empty())
+	var rule: Dictionary = Labor.INDUSTRIES[firm.industry]
+	var stock: int = firm.inventory[rule.output]
+	var deficit: int = maxi(0, forecast - stock) if offset_stock else forecast
+	var output_per_shift: int = Reference.HARVEST if rule.recipe.is_empty() else Kernel.RECIPES[rule.recipe].outputs[rule.output] * firm.assets.batches_per_shift
+	@warning_ignore("integer_division")
+	var requested: int = (deficit + output_per_shift - 1) / output_per_shift
 	var eligible: Array = roster.filter(func(w): return w.qualified and w.available and w.wage > 0)
 	var count: int = mini(requested, mini(firm.assets.daily_slots - firm.labor_used, eligible.size()))
 	var reductions: Array = []
-	if stock > 0 and forecast > 0:
+	if offset_stock and stock > 0 and forecast > 0:
 		reductions.append("unsold_inventory_offset")
-	if firm.history.previous_forecast != null and forecast < firm.history.previous_forecast:
+	if offset_stock and firm.history.previous_forecast != null and forecast < firm.history.previous_forecast:
 		reductions.append("declining_realized_sales")
 	if count < requested:
 		reductions.append("workforce_or_capacity")
@@ -57,7 +71,7 @@ static func decide(observation: Dictionary) -> Dictionary:
 		payroll = 0
 		input_cost = 0
 		missing = 0
-	var reason: String = "meet_expected_sales"
+	var reason: String = "meet_expected_sales" if offset_stock else "meet_prescribed_output"
 	if forecast == 0:
 		reason = "no_realized_sales"
 	elif deficit == 0:
@@ -81,7 +95,7 @@ static func decide(observation: Dictionary) -> Dictionary:
 	var purchase: Dictionary = {}
 	if missing > 0:
 		purchase = {"type": "purchase", "seller": supply.seller, "item": rule.input, "quantity": missing, "unit_price": supply.unit_price}
-	return {"forecast": forecast, "forecast_source": "one_time_startup" if observation.day == 1 else "previous_realized_sales",
+	return {"forecast": forecast, "forecast_source": source,
 		"unsold_stock": stock, "required_output": deficit, "requested_shifts": requested,
 		"planned_shifts": count, "planned_output": count * output_per_shift, "workers": chosen,
 		"input_purchase": purchase, "input_cost": input_cost, "payroll": payroll,

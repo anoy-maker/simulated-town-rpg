@@ -118,10 +118,31 @@ def audit(data):
             assert (state["day"], target) not in employer_turns
             employer_turns.add((state["day"], target))
             item = OUTPUTS[state["businesses"][target]["industry"]]
-            expected = dict(wheat=8, flour=8, bread=12)[item] if state["day"] == 1 else sales_by_day.get((state["day"] - 1, target, item), 0)
+            prescribed = report["scenario"] == "settlement_fixed_owner_first"
+            rotating = report["scenario"] == "settlement_sales_rotating"
+            expected = dict(wheat=8, flour=8, bread=12)[item] if prescribed or state["day"] == 1 else sales_by_day.get((state["day"] - 1, target, item), 0)
             assert d["proposal"]["forecast"] == expected, "employer forecast must use its own last realized sales"
-            assert d["proposal"]["forecast_source"] == ("one_time_startup" if state["day"] == 1 else "previous_realized_sales")
+            assert d["proposal"]["forecast_source"] == ("prescribed_daily_output" if prescribed else "one_time_startup" if state["day"] == 1 else "previous_realized_sales")
+            if prescribed:
+                assert d["proposal"]["required_output"] == expected and d["proposal"]["requested_shifts"] == 2
+                assert "unsold_inventory_offset" not in d["proposal"]["reductions"]
+            if rotating:
+                firm = state["businesses"][target]
+                roster = [firm["owner"]] + sorted(firm["employees"])
+                group = roster[:2] if state["day"] % 2 else roster[2:]
+                assert d["proposal"]["candidate_workers"] == group, "rotation must have an exclusive candidate group"
+                workers = d["proposal"]["workers"]
+                assert len(workers) == len(set(workers)) and workers == [w for w in group if w in workers], "no outside-group substitute or reordered worker"
             execution = d["execution"]
+            per_shift = 6 if item == "bread" else 4
+            opening_output = state["entities"][target]["inventory"][item] - len(execution["work_event_ids"]) * per_shift
+            plan = d["proposal"]
+            assert plan["unsold_stock"] == opening_output
+            required = expected if prescribed else max(0, expected - opening_output)
+            assert plan["required_output"] == required, "production must apply exactly its treatment's stock-offset rule"
+            assert plan["requested_shifts"] == (required + per_shift - 1) // per_shift
+            assert 0 <= plan["planned_shifts"] <= plan["requested_shifts"]
+            assert len(plan["workers"]) == plan["planned_shifts"] and plan["planned_output"] == plan["planned_shifts"] * per_shift
             assert execution["cash_after"] == state["entities"][target]["money"]
             assert execution["output_stock_after"] == state["entities"][target]["inventory"][item]
             for receipt_id in execution["work_event_ids"]:

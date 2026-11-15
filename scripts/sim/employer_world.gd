@@ -60,10 +60,13 @@ func execute_plan(owner: String, business: String, proposal: Dictionary) -> bool
 	var first: int = _events.size()
 	var input_ok: bool = true
 	if not purchase.is_empty():
-		input_ok = execute_decision(owner, "inputs", {"action": purchase, "reason": "inputs_for_expected_sales"}, business)
+		var why: String = "inputs_for_prescribed_output" if proposal.get("forecast_source") == "prescribed_daily_output" else "inputs_for_expected_sales"
+		input_ok = execute_decision(owner, "inputs", {"action": purchase, "reason": why}, business)
 	if input_ok:
 		for worker in workers:
 			var why: String = "owner_first" if worker == owner else "employee_id_order"
+			if proposal.get("staffing") == "rotating":
+				why = "rotating_group_order"
 			if execute_decision(owner, "schedule", {"action": {"type": "offer_shift"}, "reason": why}, business, worker):
 				execute_decision(worker, "work", WorkerPolicy.decide(observe(worker), "work"), business)
 	var execution = {"purchase_event_id": null, "offer_event_ids": [], "work_event_ids": [],
