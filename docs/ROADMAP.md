@@ -145,7 +145,7 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 
 ## M11: Deterministic Economic Equilibrium Reference
 
-**Status:** Implemented and verified; [M11 results](M11_RESULTS.md) await review. Stop here before further milestones.
+**Status:** Completed. [M11 results](M11_RESULTS.md) remain the unchanged prescribed control.
 
 - Isolated prescribed reference with the exact twelve-person endowments, 2/4/4 prices, eight-coin shifts and deterministic four-wheat harvest.
 - Reuse authoritative purchases, payroll and recipes; alternate two worker pairs per industry and feed everyone daily.
@@ -154,6 +154,19 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 - Preserve historical outputs; use concise reports and ledger fingerprints rather than verbose annual dumps.
 
 **Done when:** the exact reference invariants pass, actual results/deviations are documented, and feasibility under prescribed decisions remains explicitly distinct from autonomous stability. No sector expansion or new autonomous economic behavior.
+
+## M12: Employer-Driven Production and Labor Scheduling
+
+**Status:** Implemented and verified; [M12 results](M12_RESULTS.md) await review. Stop after M12.
+
+- Isolated `settlement_employer_choice` keeps every M11 economic parameter, initial holding and employment relationship.
+- Pure own-last-sales forecasting, one-time reference startup, unsold-stock offsets and minimum funded productive shifts.
+- Owner-first then stable-ID employee staffing; no rotation, guaranteed hours, management wages or rescue.
+- Read-only own-firm history, public offers and authorized workforce; original authority executes all purchases/payroll/production.
+- Matched 2/30/365-day control/experiment, receipt reconstruction, deterministic replay and all historical hashes preserved.
+- Document first financial exclusion, reduced realized demand/output, persistent employee unemployment and continuing owner-supported trade without tuning policies.
+
+**Done when:** technical correctness and the actual departure from M11 are documented, with physical capacity distinguished from paid food access. Further experiments or repairs require review; no M13 is implemented.
 
 ## Later possibilities
 

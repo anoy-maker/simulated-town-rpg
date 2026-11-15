@@ -58,13 +58,14 @@ def audit(data):
                   production_outputs={"flour": 0, "bread": 0}, consumed={"bread": 0})
     claimed, economic_receipts, decisions = set(), set(), {}
     failures, notable = {}, []
+    sales_by_day, employer_work, native_employer_work, employer_turns = {}, set(), set(), set()
     potential_wheat = circulation = 0
     shifts = dict(paid=0, rejected=0, unfunded=0, unavailable=0, wages=0)
     purchases = dict(successful=0, rejected=0)
     for index, event in enumerate(history, 1):
         assert event["id"] == index
         action, actor, target, d = (event[k] for k in ("action", "actor", "target", "details"))
-        if not event["success"] and action != "labor_decision":
+        if not event["success"] and action not in ("labor_decision", "employer_plan"):
             failure = action + ":" + d["reason"]
             failures[failure] = failures.get(failure, 0) + 1
             if len(notable) < 8:
@@ -96,6 +97,7 @@ def audit(data):
             flows[actor]["purchases_successful" if event["success"] else "purchases_failed"] += 1
         if action == "work_shift":
             if event["success"]:
+                native_employer_work.add(index)
                 shifts["paid"] += 1
                 shifts["wages"] += d["wage"]
             else:
@@ -109,6 +111,24 @@ def audit(data):
             withdrawals[result] += 1
             if target in withdrawals["by_business"]:
                 withdrawals["by_business"][target][result] += 1
+        # A rejected multi-step plan can retain earlier successful native commands.
+        # Its annotation still has to claim those real receipts, without applying them twice.
+        if action == "employer_plan" and "execution" in d:
+            assert state["businesses"][target]["owner"] == actor
+            assert (state["day"], target) not in employer_turns
+            employer_turns.add((state["day"], target))
+            item = OUTPUTS[state["businesses"][target]["industry"]]
+            expected = dict(wheat=8, flour=8, bread=12)[item] if state["day"] == 1 else sales_by_day.get((state["day"] - 1, target, item), 0)
+            assert d["proposal"]["forecast"] == expected, "employer forecast must use its own last realized sales"
+            assert d["proposal"]["forecast_source"] == ("one_time_startup" if state["day"] == 1 else "previous_realized_sales")
+            execution = d["execution"]
+            assert execution["cash_after"] == state["entities"][target]["money"]
+            assert execution["output_stock_after"] == state["entities"][target]["inventory"][item]
+            for receipt_id in execution["work_event_ids"]:
+                receipt = history[receipt_id - 1]
+                assert receipt_id not in employer_work and receipt_id < index and receipt["success"] and receipt["action"] == "work_shift" and receipt["target"] == target
+                assert receipt["day"] == state["day"] and receipt["actor"] in d["proposal"]["workers"]
+                employer_work.add(receipt_id)
         if event["success"]:
             if action == "owner_withdrawal":
                 assert state["businesses"][target]["owner"] == actor
@@ -184,6 +204,8 @@ def audit(data):
                 assert type(q) is int and q > 0 and price == report["prices"][item] and q * price == d["total_price"]
                 assert OUTPUTS[state["businesses"][target]["industry"]] == item
                 assert item == (INPUTS[state["businesses"][actor]["industry"]] if actor in state["businesses"] else "bread")
+                sales_key = (state["day"], target, item)
+                sales_by_day[sales_key] = sales_by_day.get(sales_key, 0) + q
                 state["entities"][actor]["inventory"][item] += q
                 state["entities"][target]["inventory"][item] -= q
                 state["entities"][actor]["money"] -= q * price
@@ -233,12 +255,15 @@ def audit(data):
                 flows[actor]["consumed"] += 1
                 totals["consumed"]["bread"] += 1
             else:
-                assert action in ("initialize", "day_started", "labor_decision"), action
+                assert action in ("initialize", "day_started", "labor_decision", "employer_plan"), action
         assert sum(e["money"] for e in state["entities"].values()) == initial_money
         for entity in state["entities"].values():
             assert type(entity["money"]) is int and 0 <= entity["money"] <= 1_000_000_000
             assert all(type(v) is int and 0 <= v <= 1_000_000_000 for v in entity["inventory"].values())
     assert claimed == economic_receipts, "every payroll/production receipt must fund one real shift"
+    if "employers" in report:
+        assert employer_work == native_employer_work, "every actual shift belongs to one employer decision"
+        assert len(employer_turns) == report["days"] * 3
     assert state == report["final"] and flows == report["accounts"] and totals == report["totals"]
     assert unmet == report["unmet_meals"] and shifts == report["shifts"] and purchases == report["purchases"]
     assert decisions == report["decisions"]

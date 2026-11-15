@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0–M10 complete; M11 prescribed equilibrium reference implemented and awaiting review
+**Status:** M0–M11 complete; M12 employer-choice experiment implemented and awaiting review
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -359,4 +359,25 @@ This is an **intentionally prescribed feasibility reference, not autonomous econ
 
 The 1/2/30/365-day cases verify every event's 432-coin conservation and nonnegative holdings, every day's production/meals, the daily 120-coin business state, and the two-day household cycle. The year produces/consumes **4380 bread**, completes **2190 paid shifts**, and misses **zero meals**. Households return to six coins on even days; odd days leave six with ten and six with two. This depends on the exact prices, wages, initial buffers, prescribed rotation/order and guaranteed harvest opportunity; no autonomous policy discovers it.
 
-Default output is eight concise lines. `--report-json` is reference-only; it includes a SHA-256 of the full canonical ledger without printing that ledger. The existing `--json` diagnostic remains available for short audits, but full-year event dumps are unnecessary. Tests audit annual receipts in memory and reuse the independent Python labor auditor on a short two-day trace. Historical scenarios and the default M0 CLI remain unchanged. See [M11 results and limitations](docs/M11_RESULTS.md). Stop after M11 for review.
+Default output is eight concise lines. `--report-json` supports the M11 reference and M12 employer-choice scenarios; it includes a SHA-256 of the full canonical ledger without printing that ledger. The existing `--json` diagnostic remains available for short audits, but full-year event dumps are unnecessary. Tests audit annual receipts in memory and reuse the independent Python labor auditor on a short two-day trace. Historical scenarios and the default M0 CLI remain unchanged. See [M11 results and limitations](docs/M11_RESULTS.md). This prescribed control remains unchanged.
+
+
+## M12: Employer-Driven Production and Labor Scheduling
+
+```sh
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_employer_choice 2 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_employer_choice 30 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_employer_choice 365 42
+# Compact annual report plus full ledger fingerprint, without events:
+godot --headless --no-header --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_employer_choice 365 42 --report-json
+# All six M11/M12 comparisons, twice per case; compact summaries and CSV tables only:
+python3 -B scripts/tools/run_employer.py --output work/m12
+```
+
+This isolated scenario retains every M11 initial resource, price, wage, recipe, productive asset and employment relationship. Owners forecast their own next sales from the immediately preceding day's realized sales, starting once with 8 wheat / 8 flour / 12 bread on day one. They subtract unsold stock, round to whole shifts, and jointly budget real inputs and wages. Selected labor goes to the owner first, then eligible employees in stable ID order. Contracts remain active without guaranteed hours or fair rotation. Management creates no wage; all income requires actual paid production.
+
+Pure policies see only authorized own-firm/household information, own prior-day trade aggregates and public offers. The world validates plans through existing purchases, shift offers, worker acceptance, payroll and recipes. Structured plans record demand, stock offsets, budgets, selections/skips, reasons and actual receipt links. Existing household food decisions and industry ordering remain unchanged. Neither forecasts nor staffing guarantee full employment or twelve daily bread.
+
+At 2/30/365 days M12 consumes **18/117/1122 meals** and misses **6/243/3258**, versus M11's **24/360/4380 meals** with zero misses. Annual paid shifts fall to 563; nine employees receive only nine shifts combined while all three owners eat daily. First misses are on day two, with six bread unsold because six residents cannot afford it. Currency stays 432 and trade continues, but this is not universal economic viability. No policy or parameter is tuned to repair the outcome.
+
+See [M12 actual results, causal trace and limitations](docs/M12_RESULTS.md), [six run summaries](docs/M12_RUNS.csv), [resident results](docs/M12_RESIDENTS.csv), and [business results](docs/M12_BUSINESSES.csv). Historical scenarios/default CLI remain unchanged. Stop after M12 for review; no M13 is implemented.
