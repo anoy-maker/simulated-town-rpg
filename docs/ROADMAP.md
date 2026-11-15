@@ -4,6 +4,8 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 
 ## M0: Project setup and simulation kernel (first Codex task)
 
+**Status:** Implemented and verified on Godot 4.6.3; [results](M0_RESULTS.md) are awaiting user review. M1 has not started.
+
 - Minimal Godot 4 project that opens without an editor-only dependency.
 - Four simulated NPCs with stable IDs, money, inventory, and a role.
 - Explicit inventory and money transactions with validation.

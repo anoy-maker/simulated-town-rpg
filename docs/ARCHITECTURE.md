@@ -81,3 +81,17 @@ This layout is a guide, not an instruction to create dozens of empty placeholder
 - Avoid unrelated refactoring and unnecessary dependencies.
 - Report test commands and results truthfully; do not claim execution if the runtime was unavailable.
 - Keep code easy to replace rather than tightly coupled to a particular model or UI.
+
+## Implemented M0 boundaries
+
+The first implementation intentionally combines commands, validation, and event recording in `scripts/sim/world_state.gd`. `simulation_runner.gd` holds the daily policy, seeded RNG, and report projection. There is no separate inventory framework or scene dependency.
+
+`WorldState` owns its dictionaries and event array. Initialization copies trusted, developer-supplied entity data and asserts its shape. Callers use validated commands; `snapshot()` and `events()` return deep copies. GDScript's underscore naming is a convention, not a security boundary. Untrusted save-file loading is outside M0.
+
+All command arguments representing quantities must be positive integers; stocks and money are bounded to one billion. Each command checks all preconditions, including recipient/output limits, before any mutation. A failed command returns `false`, preserves day/entities, and appends a failure event with a reason. Money uses integer coins, without float arithmetic. Recipes are fixed and role-specific. `advance_day()` records the day transition.
+
+Events contain `id`, `day`, `action`, `actor`, `target`, `success`, and `details`. Details identify exact item/currency amounts, production inputs/outputs, or a failure reason. The initialization event includes the initial state. The tests independently reconstruct the final world from events, check money and nonnegative inventories at every event, and reconcile commodity sources/sinks against the report.
+
+The daily policy uses an explicit NPC order and one private `RandomNumberGenerator`, seeded once. Running 12 days then 18 days has the same result as running 30 days. JSON output sorts dictionary keys; no wall-clock timestamps or engine object IDs enter the history. Reproduction is verified on Godot 4.6.3; engine-version-independent RNG and persistence/resume are deferred.
+
+The CLI prints a compact report by default, or a complete JSON report/history with `--json`. History remains in memory and report retrieval copies it; the CLI bounds runs to 10,000 days. This is intended for small diagnostic runs, not an unbounded world server. There is no graphical main scene in M0.

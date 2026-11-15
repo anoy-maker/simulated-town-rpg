@@ -1,6 +1,7 @@
 # Simulated Town RPG
 
-**Status:** Pre-production / simulation-first prototype  
+**Status:** M0 implemented; awaiting review before M1
+
 **Working title:** Simulated Town RPG (subject to change)
 
 ## The idea
@@ -59,4 +60,58 @@ A credible early demonstration is **four people who can complete—or fail to co
 
 ## Project status
 
-Design documents only. No running simulation is claimed yet. Licensing, public release plans, and the final title remain undecided.
+M0 now provides a headless GDScript kernel and automated accounting tests. There is no main scene; use the script commands below. Licensing, public release plans, and the final title remain undecided.
+
+## Run M0
+
+Use **Godot 4.6.x** (verified with 4.6.3). No packages, assets, API credentials, or editor import step are required. From the repository root:
+
+```sh
+# Automated tests: exit 0 on success, 1 on a failed assertion.
+godot --headless --path . --script res://tests/run_tests.gd
+
+# Readable 30-day report, seed 42 (the defaults).
+godot --headless --path . --script res://scripts/tools/run_simulation.gd
+
+# Optional positional arguments: days (0..10000), seed, then --json.
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- 30 42
+
+# Machine-readable report plus complete event history; compare independent runs.
+mkdir -p work
+godot --headless --no-header --path . --script res://scripts/tools/run_simulation.gd -- 30 42 --json > work/run-a.json
+godot --headless --no-header --path . --script res://scripts/tools/run_simulation.gd -- 30 42 --json > work/run-b.json
+cmp work/run-a.json work/run-b.json
+```
+
+If your binary is named `godot4`, substitute that name. Invalid CLI arguments exit 2. Reproducibility assumes the same Godot version, rules, initial state, seed, and command order; Godot does not promise identical RNG sequences across engine versions.
+
+In a restricted environment where Godot cannot write its normal Linux data/config/cache directories, run this once in the same shell before the commands above:
+
+```sh
+mkdir -p work/data work/config work/cache
+export XDG_DATA_HOME="$PWD/work/data"
+export XDG_CONFIG_HOME="$PWD/work/config"
+export XDG_CACHE_HOME="$PWD/work/cache"
+```
+
+## M0 structure and assumptions
+
+- `scripts/sim/world_state.gd`: state, integer accounting, validated commands, and structured events. Snapshots/history are deep copies; failed commands change only the event log.
+- `scripts/sim/simulation_runner.gd`: seeded daily routine and report aggregation.
+- `scripts/tools/run_simulation.gd`: headless CLI and readable/JSON output.
+- `tests/run_tests.gd`: conservation, invalid operations, recipes, eating, isolation, event audit, and deterministic replay.
+
+Ada (`farmer`), Bram (`miller`), Cora (`baker`), and Dain (`laborer`) start with 30/20/20/5 coins and one bread each. IDs are independent of display names. Money and stacks are integers bounded to 0..1,000,000,000; commands require positive integer amounts.
+
+Each day, in fixed order:
+
+1. Advance the day and harvest 2–6 wheat using a private seeded RNG.
+2. Attempt to give four wheat to the miller; mill twice (each batch: two wheat → two flour).
+3. Attempt to give four flour to the baker; bake twice (each batch: two flour → three bread).
+4. Attempt to give one bread each to the farmer, miller, and laborer.
+5. Attempt a one-coin gift from farmer to laborer, independent of all goods transfers.
+6. Each NPC attempts to eat one actual bread. Failed meals count as unmet needs.
+
+Goods and currency gifts are separate operations. M0 has no prices, purchases, wages, debt, death, or economic planning. A failed action is logged and the routine continues. Harvest is an explicit source; recipes declare inputs/outputs; eating is an explicit sink. Initial endowments appear in the day-zero initialization event. No currency is minted during a run.
+
+See [actual M0 verification and 30-day results](docs/M0_RESULTS.md). Stop at M0 until those results have been reviewed.
