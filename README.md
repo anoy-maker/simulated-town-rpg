@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0–M4 complete; M5 commitment-aware planning implemented and awaiting review
+**Status:** M0–M5 complete; M6 competing producers implemented and awaiting review
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -233,4 +233,25 @@ The budget is recalculated at every decision. It creates no account, escrow, loc
 
 `planning_runner.gd` inherits the M4 scheduler/authority/report and adds priority, current end-of-run cost estimates, and activity counts after historical day 26. Its `last_*_day` fields describe the latest activity over the entire run. Planning controls spending on accepted obligations, without general forecasting or goods reservation. Incoming promises are not counted as owned ingredients; the cost estimate conservatively includes missing goods even while prepaid supply is awaited. Food budgets may remain held when food is unavailable or unaffordable, so either strategy can stall.
 
-See [M5 actual comparisons, focused failure test, seeds, and limitations](docs/M5_RESULTS.md). Policies were fixed before inspecting results. Stop after M5; M6 has not started.
+See [M5 actual comparisons, focused failure test, seeds, and limitations](docs/M5_RESULTS.md). These policies and outputs remain regression baselines.
+
+## M6: Competing Producers and Multiple Market Participants
+
+```sh
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario market 30 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario market 365 42
+# Repeat both horizons with seeds 7 and 99; fixed commitment-first spending.
+godot --headless --no-header --path . --script res://scripts/tools/run_simulation.gd -- --scenario market 365 7 --json > work/market-365-7.json
+```
+
+Create `work/` before redirection and use the writable XDG setup above if needed. Default CLI behavior remains M0; all prior scenario outputs remain unchanged. `--priority` remains an M5 option; market uses commitment-first throughout.
+
+Market adds Edda (`farmer_2`, farmer, 30 coins) and Finn (`baker_2`, baker, 20 coins), each with one bread and zero wheat/flour. Ada/Bram/Cora/Dain retain their original endowments. Total starting resources are 125 coins and six bread. Prices, recipes, goals, and Ada's two-coin employer payment remain unchanged. These conditions were fixed before examining results.
+
+The public board advertises every producer's output commodity, price, and current stock, including zero stock. A pure policy chooses among positive-stock sellers by lower price, greater stock, then ascending stable seller ID. Producers retain M5's own-output rule for their own needs. No seller cash or unadvertised inventory is disclosed. Selected offers and candidates are recorded with purchase decisions; the world revalidates the actual seller, fixed price, money, and stock through the existing atomic purchase command. There is one supplier choice per action slot, without retries, split orders, or reservations.
+
+Daily order is Ada → Edda → Bram → Cora → Finn → Dain, derived from production-chain occupation order and ascending ID. After Ada's attempted wage payment, each producer chooses inputs (except farmers), work, then delivery. Farmers each receive one seeded 2–6 wheat opportunity, even when waiting. All six then choose requests, acceptance, food, and meals, followed by outstanding-agreement annotations: 37 decisions/day. Earlier actors can exhaust real stock; later actors see fresh observations. Requests are untargeted and public to all eligible producers; the first valid voluntary acceptance wins. Both farmers and both bakers use common occupation and commitment-aware rules.
+
+Reports add per-NPC production, consumption, unmet meals, successful/failed purchases and sales, quantities bought/sold, supplier selections, and accepted/fulfilled/outstanding supplier commitments. Existing inventory, cash-flow, request records, lifecycle receipts, shortages, decision frequencies, and day-26 activity reports remain available. Counts of selections include attempted purchases; successful quantities and cash exclude rejections.
+
+See [M6 actual results, all six experiments, regression hashes, and limitations](docs/M6_RESULTS.md). Population, initial resources, harvest draws, and scheduling differ from M5, so aggregate comparisons do not establish a causal improvement. Stop after M6; M7 has not started.

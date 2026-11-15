@@ -43,7 +43,11 @@ func report() -> Dictionary:
 			activity.agreements_accepted += 1
 	summary["activity_after_day_26"] = activity
 	var budgets: Dictionary = {}
-	for actor in IDS:
-		budgets[actor] = PlanningPolicy.working_capital(world.observe(actor), _goals)
+	for actor in participant_ids():
+		budgets[actor] = _working_capital(actor)
 	summary["final_working_capital"] = budgets
 	return summary
+
+
+func _working_capital(actor: String) -> Dictionary:
+	return PlanningPolicy.working_capital(world.observe(actor), _goals)

@@ -19,13 +19,25 @@ func observe(actor: String) -> Dictionary:
 			meals_due = 0
 			break
 	var person: Dictionary = _entities[actor]
+	return {"day": _day, "self": {"id": actor, "role": person.role, "money": person.money,
+		"inventory": person.inventory.duplicate(true)}, "needs": {"meals_due": meals_due}, "market": _market(actor)}
+
+
+func _market(_actor: String) -> Dictionary:
 	var market: Dictionary = {}
 	for item in SELLERS:
 		var seller: String = SELLERS[item]
 		market[item] = {"seller": seller, "unit_price": Trading.PRICES[item],
 			"stock": _entities[seller].inventory[item]}
-	return {"day": _day, "self": {"id": actor, "role": person.role, "money": person.money,
-		"inventory": person.inventory.duplicate(true)}, "needs": {"meals_due": meals_due}, "market": market}
+	return market
+
+
+func _can_sell(seller: String, item: String) -> bool:
+	return SELLERS.get(item, "") == seller
+
+
+func _request_target(item: String) -> String:
+	return SELLERS[item]
 
 
 func execute_decision(actor: String, phase: String, proposal: Dictionary, harvest_yield: int = 0) -> bool:
@@ -44,11 +56,11 @@ func execute_decision(actor: String, phase: String, proposal: Dictionary, harves
 		outcome = "wait"
 	elif action.get("type", "") == "purchase":
 		var item: Variant = action.get("item")
-		if not item is String or not SELLERS.has(item) or action.get("seller") != SELLERS[item] \
-				or action.get("unit_price") != Trading.PRICES[item]:
+		if not item is String or item not in ITEMS or not action.get("seller") is String \
+				or not _can_sell(action.seller, item) or action.get("unit_price") != Trading.PRICES[item]:
 			execution_reason = "invalid_market_offer"
 		else:
-			success = purchase(actor, SELLERS[item], item, action.get("quantity"), action.get("unit_price"))
+			success = purchase(actor, action.seller, item, action.get("quantity"), action.unit_price)
 	elif action.get("type", "") == "produce" and action.get("recipe") is String:
 		success = produce(actor, action.recipe, action.get("batches"))
 	elif action.get("type", "") == "harvest" and harvest_yield >= 2 and harvest_yield <= 6:
