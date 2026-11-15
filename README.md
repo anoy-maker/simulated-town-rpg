@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0–M5 complete; M6 competing producers implemented and awaiting review
+**Status:** M0–M6 complete; M6B downstream market experiment implemented and awaiting review
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -254,4 +254,20 @@ Daily order is Ada → Edda → Bram → Cora → Finn → Dain, derived from pr
 
 Reports add per-NPC production, consumption, unmet meals, successful/failed purchases and sales, quantities bought/sold, supplier selections, and accepted/fulfilled/outstanding supplier commitments. Existing inventory, cash-flow, request records, lifecycle receipts, shortages, decision frequencies, and day-26 activity reports remain available. Counts of selections include attempted purchases; successful quantities and cash exclude rejections.
 
-See [M6 actual results, all six experiments, regression hashes, and limitations](docs/M6_RESULTS.md). Population, initial resources, harvest draws, and scheduling differ from M5, so aggregate comparisons do not establish a causal improvement. Stop after M6; M7 has not started.
+See [M6 actual results, all six experiments, regression hashes, and limitations](docs/M6_RESULTS.md). Population, initial resources, harvest draws, and scheduling differ from M5, so aggregate comparisons do not establish a causal improvement. M6 remains an unchanged regression baseline.
+
+## M6B: Revised Downstream Market Experiment
+
+```sh
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario market_downstream 30 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario market_downstream 365 42
+# Repeat both horizons with seeds 7 and 99; add --json for the complete report/ledger.
+```
+
+This separate configuration has **Ada as the only farmer, Bram and Edda as millers, Cora and Finn as bakers, and Dain as laborer**. Original holdings are unchanged. Edda (`miller_2`) receives Bram's 20 coins and one bread; Finn (`baker_2`) receives Cora's 20 coins and one bread. Ingredients start at zero. Initial money is **115 coins**, with six bread. The original `market` still has two farmers, one miller, and 125 coins.
+
+`market_downstream_runner.gd` supplies only the initial entity array and scenario label. Existing market scheduling, reporting, public offers, world authority, and common occupation/commitment-first policies are inherited unchanged. No separate miller/baker policies or copied economic runner are introduced. Prices, recipes, output/food targets, and Ada's wage obligation remain unchanged.
+
+Occupation/ID order is Ada → Bram → Edda → Cora → Finn → Dain. There are 38 decisions/day and one seeded harvest opportunity/day, including waits. Both millers independently purchase wheat, produce and advertise flour, and consider public requests. Both bakers independently select flour suppliers and produce/sell bread. Supplier selection remains price, stock, then ID. The four-wheat farmer target is an inventory trigger: sales below four can cause another harvest on the next work turn; extra downstream producers alone do not change the target or grant another daily harvest. Existing voluntarily accepted supply obligations can raise the effective target.
+
+All existing commands and historical outputs remain preserved. See [actual M6B results, farmer-response analysis, supplier choices, and limitations](docs/M6B_RESULTS.md). Comparisons across M5/M6/M6B change money supply, capacity, roles, or scheduling and do not establish causal improvements. Stop after M6B; no calibration or M7 work.

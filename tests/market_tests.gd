@@ -228,7 +228,8 @@ static func _test_baselines(suite: SceneTree) -> void:
 			suite._check(payload.sha256_text() == hashes[priority][index], "historical M5 full JSON hash unchanged")
 
 
-static func _check_report(suite: SceneTree, runner: RefCounted) -> void:
+static func _check_report(suite: SceneTree, runner: RefCounted, expected_money: int = 125,
+		decisions_per_day: int = 37) -> void:
 	var report: Dictionary = runner.report()
 	var history: Array = runner.world.events()
 	var money: int = 0
@@ -321,7 +322,7 @@ static func _check_report(suite: SceneTree, runner: RefCounted) -> void:
 		total_unmet += actual.unmet
 		successful += actual.bought
 		failed += actual.failed
-	suite._check(money == 125 and report.final.entities.size() == 6, "exactly six participants conserve 125 initialized coins")
+	suite._check(money == expected_money and report.final.entities.size() == 6, "exactly six participants conserve initialized coins")
 	suite._check(holdings.wheat == report.totals.harvested.wheat - report.totals.production_inputs.wheat
 		and holdings.flour == report.totals.production_outputs.flour - report.totals.production_inputs.flour
 		and holdings.bread == 6 + report.totals.production_outputs.bread - total_meals, "six-person commodity sources/sinks reconcile")
@@ -329,7 +330,8 @@ static func _check_report(suite: SceneTree, runner: RefCounted) -> void:
 	suite._check(successful == report.purchases.successful and failed == report.purchases.rejected, "aggregate purchases reconcile with participants")
 	suite._check(made == report.agreements.made and fulfilled == report.agreements.fulfilled and prepaid == report.agreements.prepaid,
 		"aggregate agreement events and prepayments reconcile")
-	suite._check(report.decisions.total == 37 * report.days and valid_decisions, "37 daily decisions link commands and deterministic supplier selection")
+	suite._check(report.decisions.total == decisions_per_day * report.days and valid_decisions,
+		"daily decisions link commands and deterministic supplier selection")
 	var before: Dictionary = runner.world.snapshot()
 	report.participants.farmer.produced.wheat = -1
 	suite._check(runner.world.snapshot() == before and runner.report().participants.farmer.produced.wheat >= 0,

@@ -74,7 +74,7 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 
 ## M6: Competing Producers and Multiple Market Participants
 
-**Status:** Implemented and verified; [M6 results](M6_RESULTS.md) await review. Stop here; M7 has not started.
+**Status:** Completed. [M6 results](M6_RESULTS.md) remain the original two-farmer regression baseline.
 
 - Separate six-person `market` scenario with two farmers, one miller, two bakers, and one laborer.
 - Public multi-supplier discovery and deterministic price/stock/ID selection, without private seller finances.
@@ -83,6 +83,17 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 - Preserve all historical M0/M2/M3/M4/M5 outputs and prior test coverage; report concentration, shortages, and failures without tuning.
 
 **Done when:** competing buyers cannot duplicate stock, either eligible producer can sell or fulfill agreements, reports and full ledgers reconcile, all replay/regression checks pass, and outcomes and experimental limitations are documented. Stability or improvement over a different-sized village is not required.
+
+## M6B: Revised Downstream Market Experiment
+
+**Status:** Implemented and verified; [M6B results](M6B_RESULTS.md) await review. Stop here; M7 has not started.
+
+- Separate `market_downstream` configuration: one farmer, two millers, two bakers, one laborer; 115 initial coins.
+- Reuse the existing configurable market runner and all occupation policies without duplicating simulation logic.
+- Keep prices, targets, recipes, commitment-first priorities, wages, and all historical scenarios unchanged.
+- Predefined 30/365-day experiments for seeds 7, 42, and 99; inspect farmer response, competition, cash flow, unmet needs, and commitments.
+
+**Done when:** all regressions pass, actual outputs replay and reconcile, the farmer's four-wheat rule is explicitly examined, and results distinguish role/capacity/endowment/scheduling differences without tuning or causal improvement claims. Calibration remains deferred.
 
 ## Later possibilities
 
