@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0–M8 complete; M9 workplaces and labor implemented and awaiting review
+**Status:** M0–M9 complete; M10 business income and circulation implemented and awaiting review
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -60,7 +60,7 @@ A credible early demonstration is **four people who can complete—or fail to co
 
 ## Project status
 
-The headless GDScript kernel provides separate scenarios for the original economic loop, purchases, needs and planning, commercial coordination, competing markets, calibration, and workplace labor, with automated accounting tests. There is no main scene; use the script commands below. Licensing, public release plans, and the final title remain undecided.
+The headless GDScript kernel provides separate scenarios for the original economic loop, purchases, needs and planning, commercial coordination, competing markets, calibration, workplace labor, and ownership income, with automated accounting tests. There is no main scene; use the script commands below. Licensing, public release plans, and the final title remain undecided.
 
 ## Run M0
 
@@ -323,4 +323,23 @@ Owners buy inputs and propose shifts using only their own firm's resources and a
 
 The standard Godot suite includes workplace/payroll/authority/privacy/replay tests. The batch runs 30/365 days for seeds 7/42/99 twice, independently reconstructs complete state and unique work/payroll/production links, and saves JSON captures plus run/resident/business CSV tables. Full histories stay in the output directory. Historical worlds, policies, prices, defaults, and M0–M8 results remain unchanged.
 
-Actual runs stop economic activity by day 13–15: household cash runs out while firms retain all 432 coins and 19–20 bread. Output targets prevent further shifts/payroll despite available operating funds. See [M9 results and limitations](docs/M9_RESULTS.md), [six run summaries](docs/M9_RUNS.csv), [resident results](docs/M9_RESIDENTS.csv), and [business results](docs/M9_BUSINESSES.csv). No configuration was adjusted to rescue this outcome. Stop after M9; no M10.
+Actual runs stop economic activity by day 13–15: household cash runs out while firms retain all 432 coins and 19–20 bread. Output targets prevent further shifts/payroll despite available operating funds. See [M9 results and limitations](docs/M9_RESULTS.md), [six run summaries](docs/M9_RUNS.csv), [resident results](docs/M9_RESIDENTS.csv), and [business results](docs/M9_BUSINESSES.csv). No configuration was adjusted to rescue this outcome. These results remain the unchanged labor baseline.
+
+## M10: Business Income and Capital Circulation
+
+```sh
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_finance --distribution needs 30 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_finance --distribution needs 365 42
+# Same conditions, unchanged control or more conservative payout fraction:
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_finance --distribution none 30 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_finance --distribution half-surplus 365 42
+python3 -B scripts/tools/run_labor.py --study m10 --baseline work/m9 --output work/m10
+```
+
+The separate `settlement_finance` scenario keeps every M9 endowment, labor/production rule, wage, price, inventory target, and market rule. Its optional withdrawal phase follows work and precedes household food purchases. Owners independently propose cash transfers from their own business to cover a two-meal personal stock/cash goal. `needs` caps payment by all cash above reserve; `half-surplus` additionally caps it at half that surplus rounded down. `none` skips the phase and preserves the exact M9 ledger. The finance scenario defaults to `needs` when selected; the project default remains M0.
+
+The world enforces a two-day full-capacity operating buffer: farm **24**, mill **56**, bakery **88** coins. These funds remain available for actual payroll/input spending. Withdrawals cannot breach the buffer, invent money, access unrelated accounts, or exceed the owner's money limit. Ownership income has a distinct event and cash-flow category, separate from wages, and does not require a work shift. This measures distributable **cash**, not formal inventory-valued profit; even initial capital above reserve can be withdrawn. No loans, capital refills, guaranteed work, or employee subsidies are added.
+
+The fixed study runs all three policies at 30/365 days, seeds 7/42/99, twice. Cached M9 comparisons must match published hashes and pass the shared audit; omit `--baseline` to reproduce them instead. Separate directories protect original captures. The audit reconciles each withdrawal with ownership and the actual cash reserve, as well as the original labor/production receipts. Tests cover authority, reserves, atomic failures, privacy, income classification, controls and replay. See [M10 actual results, assumptions and limitations](docs/M10_RESULTS.md). No policy or parameter is tuned after outcomes. Stop after M10; no M11.
+
+Actual payout runs sustain trade through day 365 and provide 812–813 annual meals versus M9's 77–82, but only Cora eats daily; most employees remain excluded. All 432 coins are conserved and every withdrawal preserves its reserve. See [18 run summaries](docs/M10_RUNS.csv), [216 resident records](docs/M10_RESIDENTS.csv), and [54 business records](docs/M10_BUSINESSES.csv). Technical validity and increased circulation do not establish economic viability.
