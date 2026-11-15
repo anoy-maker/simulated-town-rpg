@@ -27,7 +27,7 @@ func _market(_actor: String) -> Dictionary:
 	var market: Dictionary = {}
 	for item in SELLERS:
 		var seller: String = SELLERS[item]
-		market[item] = {"seller": seller, "unit_price": Trading.PRICES[item],
+		market[item] = {"seller": seller, "unit_price": _unit_price(item),
 			"stock": _entities[seller].inventory[item]}
 	return market
 
@@ -38,6 +38,14 @@ func _can_sell(seller: String, item: String) -> bool:
 
 func _request_target(item: String) -> String:
 	return SELLERS[item]
+
+
+func _unit_price(item: String) -> int:
+	return Trading.PRICES[item]
+
+
+func _valid_harvest_yield(amount: int) -> bool:
+	return amount >= 2 and amount <= 6
 
 
 func execute_decision(actor: String, phase: String, proposal: Dictionary, harvest_yield: int = 0) -> bool:
@@ -57,13 +65,13 @@ func execute_decision(actor: String, phase: String, proposal: Dictionary, harves
 	elif action.get("type", "") == "purchase":
 		var item: Variant = action.get("item")
 		if not item is String or item not in ITEMS or not action.get("seller") is String \
-				or not _can_sell(action.seller, item) or action.get("unit_price") != Trading.PRICES[item]:
+				or not _can_sell(action.seller, item) or action.get("unit_price") != _unit_price(item):
 			execution_reason = "invalid_market_offer"
 		else:
 			success = purchase(actor, action.seller, item, action.get("quantity"), action.unit_price)
 	elif action.get("type", "") == "produce" and action.get("recipe") is String:
 		success = produce(actor, action.recipe, action.get("batches"))
-	elif action.get("type", "") == "harvest" and harvest_yield >= 2 and harvest_yield <= 6:
+	elif action.get("type", "") == "harvest" and _valid_harvest_yield(harvest_yield):
 		success = harvest(actor, harvest_yield)
 	elif action.get("type", "") == "consume":
 		if observe(actor).needs.meals_due == 0:

@@ -9,6 +9,7 @@ const CoordinationTests = preload("res://tests/coordination_tests.gd")
 const PlanningTests = preload("res://tests/planning_tests.gd")
 const MarketTests = preload("res://tests/market_tests.gd")
 const MarketDownstreamTests = preload("res://tests/market_downstream_tests.gd")
+const CalibrationTests = preload("res://tests/calibration_tests.gd")
 
 var _checks: int = 0
 var _failures: int = 0
@@ -36,6 +37,8 @@ func _init() -> void:
 	MarketTests.run(self)
 	print("M0–M6 regression checks: %d" % _checks)
 	MarketDownstreamTests.run(self)
+	print("M0–M6B regression checks: %d" % _checks)
+	CalibrationTests.run(self)
 	print("Tests: %d checks, %d failures" % [_checks, _failures])
 	quit(0 if _failures == 0 else 1)
 

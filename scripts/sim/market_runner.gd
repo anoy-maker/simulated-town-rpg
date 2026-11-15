@@ -39,12 +39,12 @@ func run(days: int) -> void:
 	assert(days >= 0)
 	for _index in days:
 		world.advance_day()
-		world.transfer_money("farmer", "laborer", DAILY_PAYMENT)
+		world.transfer_money("farmer", "laborer", _daily_payment())
 		for person in _participants:
 			if person.role == "laborer":
 				continue
 			# One opportunity per farmer/day, consumed even if that farmer waits.
-			var harvest_yield: int = _rng.randi_range(2, 6) if person.role == "farmer" else 0
+			var harvest_yield: int = _harvest_opportunity() if person.role == "farmer" else 0
 			if person.role != "farmer":
 				_decide(person.id, "inputs")
 			_decide(person.id, "work", harvest_yield)
@@ -53,6 +53,14 @@ func run(days: int) -> void:
 			for person in _participants:
 				_decide(person.id, phase)
 		world.record_outstanding()
+
+
+func _daily_payment() -> int:
+	return DAILY_PAYMENT
+
+
+func _harvest_opportunity() -> int:
+	return _rng.randi_range(2, 6)
 
 
 func _decide(actor: String, phase: String, harvest_yield: int = 0) -> void:
