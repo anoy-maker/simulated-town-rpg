@@ -27,7 +27,7 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 
 ## M2: The Trading Village
 
-**Status:** Implemented and verified; [M2 results](M2_RESULTS.md) await review. Stop here; M3 has not started.
+**Status:** Completed. [M2 results](M2_RESULTS.md) remain the fixed-policy comparison and regression baseline.
 
 - Separately selected deterministic scenario with fixed-price wheat/flour/bread purchases and a basic employer payment.
 - Explicit initial endowments, tick order, source/sink accounting, and failure consequences.
@@ -36,12 +36,17 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 
 **Done when:** the trading ledger reconstructs exact state, cash and commodities reconcile, both run lengths reproduce, and results document failures without economic tuning. This task replaces the earlier visual-village M2 plan; rendering and movement remain deferred.
 
-## M3: Social behavior without LLMs
+## M3: Needs and Decisions
 
-- Relationships, information sharing, personal goals, commitments, and basic negotiation.
-- NPC-to-NPC coordination and shared undertakings, initially through structured rules.
+**Status:** Implemented and verified; [M3 results](M3_RESULTS.md) await review. Stop here before further milestones.
 
-**Done when:** one NPC can recruit another into a shared goal without the player or a Director commanding the outcome.
+- Separate `agents` scenario with deterministic needs, priorities, and state-dependent economic choices.
+- Explicit separation of copied observations, goals, proposed actions, and authoritative execution.
+- Information limited to self state and explicitly advertised public market offers.
+- Structured decision/outcome annotations, accounting, and 30/365-day comparison against unchanged M2 parameters.
+- Preserve all prior coverage and historical M0/M2 outputs.
+
+**Done when:** focused tests demonstrate changed choices under changed circumstances, economic/decision logs reconcile, both run lengths replay, regressions remain identical, and failures are reported without tuning economic parameters. This task replaces the earlier social-behavior M3 plan; relationships, negotiation, and recruitment remain deferred.
 
 ## M4: LLM decisions as an optional capability
 
