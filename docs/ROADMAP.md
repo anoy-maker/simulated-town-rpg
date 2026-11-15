@@ -50,7 +50,7 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 
 ## M4: Commercial Requests and Commitments
 
-**Status:** Implemented and verified; [M4 results](M4_RESULTS.md) await review. Stop here; M5 has not started.
+**Status:** Completed. [M4 results](M4_RESULTS.md) remain the unbudgeted-commitment baseline.
 
 - Separately selected `coordination` scenario with voluntary public supply requests and prepaid acceptance.
 - Validated, one-time real-stock delivery and retained outstanding/closed obligations.
@@ -60,14 +60,17 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 
 **Done when:** independent NPC choices can form and execute valid supply agreements, failures remain auditable, all regressions pass, and actual outcomes are documented without tuning the economy. Recovery is not required. This task replaces the earlier LLM M4 plan; AI integration remains deferred.
 
-## M5: Emergent quests and optional Director
+## M5: Commitment-Aware Planning
 
-- Player commitments and state-based resolution.
-- Rumor/noticeboard/journal discovery of competing opportunities in shared crises.
-- Player-originated undertakings and NPC independent responses.
-- Director Off/Light/Active experiments with comparable scenario seeds.
+**Status:** Implemented and verified; [M5 results](M5_RESULTS.md) await review. Stop here; M6 has not started.
 
-**Done when:** one shared crisis supports multiple independent participants and at least two legitimate player approaches, while the world can progress without the player.
+- Separate `planning` scenario with commitment-first and immediate-needs-first spending priorities.
+- Shared own-state/public-market input-cost estimates and advisory working-capital budgets.
+- Identical financial parameters, opportunities, action capabilities, and authority across strategies.
+- Focused testing of the M4 prepayment-spending failure and deterministic 30/365-day comparison.
+- Preserve all historical scenarios and record remaining shortages or deadlocks without tuning outcomes.
+
+**Done when:** budgeting and authoritative accounting are distinct, priority effects are reproducible and audited, all prior tests/hashes pass, and actual results/limitations are documented. Recovery is not required. This task replaces the earlier quests/Director M5 plan; those features remain deferred.
 
 ## Later possibilities
 

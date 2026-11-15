@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0–M3 complete; M4 commercial requests and commitments implemented and awaiting review
+**Status:** M0–M4 complete; M5 commitment-aware planning implemented and awaiting review
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -60,7 +60,7 @@ A credible early demonstration is **four people who can complete—or fail to co
 
 ## Project status
 
-The headless GDScript kernel provides M0, atomic purchases, fixed trading, needs-based agents, and a separate M4 coordination scenario, with automated accounting tests. There is no main scene; use the script commands below. Licensing, public release plans, and the final title remain undecided.
+The headless GDScript kernel provides M0, atomic purchases, fixed trading, needs-based agents, commercial coordination, and a separate planning experiment, with automated accounting tests. There is no main scene; use the script commands below. Licensing, public release plans, and the final title remain undecided.
 
 ## Run M0
 
@@ -209,4 +209,28 @@ Daily order: unchanged wage payment and RNG draw; then Ada's work/delivery, Bram
 
 Reports distinguish spot purchases, delivered agreement quantities, prepayments, employer payments, cash flow, open/fulfilled/outstanding/waived agreements, lifecycle rejections, and decision frequencies. A prepayment is counted once as money spent/earned; fulfillment adds goods without another money movement. Outstanding payment totals describe paid claims, not a balance held in escrow.
 
-See [M4 actual results and comparison with M3](docs/M4_RESULTS.md), including the agreement that remains unfulfilled. The economy was not tuned after observing outcomes. Stop after M4; M5 has not started.
+See [M4 actual results and comparison with M3](docs/M4_RESULTS.md), including the agreement that remains unfulfilled. The economy was not tuned after observing outcomes.
+
+## M5: Commitment-Aware Planning
+
+```sh
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario planning --priority commitment-first 30 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario planning --priority immediate-needs-first 30 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario planning --priority commitment-first 365 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario planning --priority immediate-needs-first 365 42
+```
+
+The optional `--priority` follows `--scenario planning`, before day/seed arguments; it defaults to `commitment-first`. Add `--json` after day/seed for the complete report and ledger. Other scenarios reject `--priority`. The selected priority applies to the whole village for this comparison. All historical scenarios retain their commands and output.
+
+`planning_policy.gd` computes the same working-capital estimate for both priorities from the supplier's owned stock, accepted obligation, public recipe, and advertised input prices. Missing output determines whole batches; owned inputs reduce missing purchases. Owned deliverable stock needs no further capital. Farmer harvest requires no purchased inputs. Unavailable ingredients, insufficient cash, and pending deliveries remain real constraints.
+
+- **Commitment-first:** accepted-obligation inputs may use current cash; discretionary food or unrelated advance spending uses only cash left after the known missing-input cost.
+- **Immediate-needs-first:** missing current target food is budgeted first; accepted-obligation input spending uses cash left after that food cost. Food purchases can consume funds needed for an agreement.
+
+Both modes share the same exact-quantity ingredient acquisition and commitment production/delivery logic. They can buy only affordable available units, work only with real inputs, and fulfill only with actual output. Neither invents extra resources or accesses other NPCs' money. With no supplier obligation, both use the existing M4 policy. Accepted supply, current observations, phase order, recipes, prices, wage rules, and starting resources are identical.
+
+The budget is recalculated at every decision. It creates no account, escrow, lock, or authoritative balance. The unchanged M4 world validates all purchases/transfers/production. Existing `decision` events record explanatory `selected_action.planning` metadata (known cost, cash, missing inputs, availability, status, priority, and spending budgets) alongside reasons such as `spend_immediate_needs`, `reserve_obligation_capital`, `acquire_obligation_inputs`, `unable_to_satisfy_obligation`, and `fulfill_obligation`. Execution success/rejection still comes from the world.
+
+`planning_runner.gd` inherits the M4 scheduler/authority/report and adds priority, current end-of-run cost estimates, and activity counts after historical day 26. Its `last_*_day` fields describe the latest activity over the entire run. Planning controls spending on accepted obligations, without general forecasting or goods reservation. Incoming promises are not counted as owned ingredients; the cost estimate conservatively includes missing goods even while prepaid supply is awaited. Food budgets may remain held when food is unavailable or unaffordable, so either strategy can stall.
+
+See [M5 actual comparisons, focused failure test, seeds, and limitations](docs/M5_RESULTS.md). Policies were fixed before inspecting results. Stop after M5; M6 has not started.
