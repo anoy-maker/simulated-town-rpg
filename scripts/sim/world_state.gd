@@ -74,6 +74,43 @@ func transfer_money(actor: String, target: String, amount: Variant) -> bool:
 	return true
 
 
+func purchase(buyer: String, seller: String, item: String, quantity: Variant, unit_price: Variant) -> bool:
+	var details = {"buyer": buyer, "seller": seller, "item": item,
+		"quantity": quantity, "unit_price": unit_price, "total_price": null}
+	var reason = _transfer_error(buyer, seller, quantity)
+	if reason.is_empty() and item not in ITEMS:
+		reason = "unknown_item"
+	if reason.is_empty() and (not unit_price is int or unit_price < 0 or unit_price > MAX_AMOUNT):
+		reason = "invalid_unit_price"
+	if not reason.is_empty():
+		return _reject("purchase", buyer, seller, details, reason)
+	# Divide before multiplying: the total must fit the existing money bound.
+	# Both operands are validated integers; avoid float division/rounding.
+	@warning_ignore("integer_division")
+	var max_unit_price: int = MAX_AMOUNT / quantity
+	if unit_price > max_unit_price:
+		return _reject("purchase", buyer, seller, details, "total_price_limit")
+	var total_price: int = quantity * unit_price
+	details["total_price"] = total_price
+	if _entities[seller].inventory[item] < quantity:
+		reason = "insufficient_stock"
+	elif _entities[buyer].money < total_price:
+		reason = "insufficient_money"
+	elif _entities[buyer].inventory[item] > MAX_AMOUNT - quantity:
+		reason = "buyer_inventory_limit"
+	elif _entities[seller].money > MAX_AMOUNT - total_price:
+		reason = "seller_money_limit"
+	if not reason.is_empty():
+		return _reject("purchase", buyer, seller, details, reason)
+	# No fallible calls or nested transfer commands between these four writes.
+	_entities[seller].inventory[item] -= quantity
+	_entities[buyer].inventory[item] += quantity
+	_entities[buyer].money -= total_price
+	_entities[seller].money += total_price
+	_record("purchase", buyer, seller, true, details)
+	return true
+
+
 func harvest(actor: String, amount: Variant) -> bool:
 	var details = {"item": "wheat", "amount": amount}
 	var reason = _actor_amount_error(actor, amount)
