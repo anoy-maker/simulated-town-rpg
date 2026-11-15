@@ -39,6 +39,28 @@ static func run(suite: SceneTree) -> void:
 					summary.erase(key)
 				summary.scenario = "market_downstream"
 				suite._check(summary == old.report(), "baseline's inherited report matches M6B exactly")
+	_test_combined(suite)
+
+
+static func _test_combined(suite: SceneTree) -> void:
+	var expected: Dictionary = Config.preset("lower_food_price")
+	expected.harvest_bonus = 2
+	var config: Dictionary = Config.preset("combined_candidate")
+	suite._check(config == expected and Config.validate(config).is_empty(), "M8 combines only the two declared changes")
+	suite._check(Config.EXPERIMENTS.size() == 6 and Config.preset("baseline") == Config.DEFAULT,
+		"M7 study and all default economics remain unchanged")
+	suite._check(Config.experiment_name(config) == "combined_candidate", "combined configuration is explicitly labeled")
+	var first = Runner.new(42, config)
+	var split = Runner.new(42, config)
+	first.run(30)
+	split.run(12)
+	split.run(18)
+	suite._check(first.world.events() == split.world.events(), "combined case preserves deterministic ledger replay")
+	suite._check(first.report() == split.report(), "combined report preserves split replay")
+	suite._audit(first.world.events(), first.world.snapshot())
+	_check_environment(suite, first, 30)
+	suite._check(first.report().potential == Runner.Diagnostics.potential(42, 30, 2)
+		and first.report().calibration.wealth.total_money == 115, "combined physical opportunity and original money supply reconcile")
 
 
 static func _test_configuration(suite: SceneTree) -> void:

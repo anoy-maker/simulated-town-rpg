@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0–M6B complete; M7 economic calibration laboratory implemented and awaiting review
+**Status:** M0–M7 complete; M8 combined economic candidate implemented and awaiting review
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -289,4 +289,21 @@ Presets are `baseline`, `higher_productivity` (+2 to the same seeded harvest dra
 
 The report adds the configuration, matched underlying opportunities, physical food/meal bounds, per-NPC affordability/owned-food snapshots, production/business inactivity, underfunding flags, total cash circulation, and wealth concentration. These are post-run diagnostics; NPCs receive only their existing permitted observations. Existing recipes, policies, agreements, and integer inventory/money commands remain authoritative.
 
-See [M7 feasibility calculations, matched results, and limitations](docs/M7_RESULTS.md), [all 36 run summaries](docs/M7_RUNS.csv), and [all 216 NPC results](docs/M7_NPCS.csv). No preset or policy was tuned after results. Stop after M7; M8 and suggested future calibration changes are not implemented.
+See [M7 feasibility calculations, matched results, and limitations](docs/M7_RESULTS.md), [all 36 run summaries](docs/M7_RUNS.csv), and [all 216 NPC results](docs/M7_NPCS.csv). No preset or policy was tuned after results. These presets, results, and default economics remain unchanged.
+
+## M8: Candidate Viable Economic Baseline
+
+```sh
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario calibration --experiment combined_candidate 30 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario calibration --experiment combined_candidate 365 42
+# Reuse the full M7 JSON captures produced by the M7 batch command:
+python3 scripts/tools/run_calibration.py --study m8 --reuse work/m7 --output work/m8
+```
+
+The optional `combined_candidate` uses bread price 2 and harvest opportunities 4–8, keeping all other M6B/M7 conditions fixed, including 115 starting coins, wage 2, farmer target 4, and commitment-first. It uses the existing calibration runner and policies. No default parameters change. The default M7 batch still runs only its original six presets.
+
+The M8 study compares baseline, affordable bread, higher productivity, and the combined candidate for seeds 7/42/99 at 30/365 days. With `--reuse`, existing M7 comparison files must match the committed hashes and pass the existing ledger audit; only the six combined cases are newly simulated, each twice. Without cached captures, omit `--reuse` to reproduce all four cases. Separate output directories protect the M7 artifacts.
+
+M8 also exports `food_losses.csv`: event-linked incidents where an NPC owned bread at food-planning time, sold it afterward, and then failed to eat that day. This is a post-run observation, not a food reservation or policy change. Other post-planning bread transfers are excluded to avoid mixed-cause attribution. Run its six focused tests with `python3 -B -m unittest discover -s tests -p 'test_calibration_observations.py'`.
+
+See [M8 actual results and provisional-baseline assessment](docs/M8_RESULTS.md), [24 comparison summaries](docs/M8_RUNS.csv), [144 NPC outcomes](docs/M8_NPCS.csv), and [food-loss event links](docs/M8_FOOD_LOSSES.csv). Better aggregate meals alone do not establish viability or resilience. The candidate awaits review and has not been adopted. Stop after M8; M9 has not started.
