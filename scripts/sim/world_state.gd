@@ -96,11 +96,12 @@ func purchase(buyer: String, seller: String, item: String, quantity: Variant, un
 		return _reject("purchase", buyer, seller, details, "total_price_limit")
 	var total_price: int = quantity * unit_price
 	details["total_price"] = total_price
+	var destination: Dictionary = _purchase_inventory(buyer)
 	if _entities[seller].inventory[item] < quantity:
 		reason = "insufficient_stock"
 	elif _entities[buyer].money < total_price:
 		reason = "insufficient_money"
-	elif _entities[buyer].inventory[item] > MAX_AMOUNT - quantity:
+	elif destination[item] > MAX_AMOUNT - quantity:
 		reason = "buyer_inventory_limit"
 	elif _entities[seller].money > MAX_AMOUNT - total_price:
 		reason = "seller_money_limit"
@@ -108,11 +109,16 @@ func purchase(buyer: String, seller: String, item: String, quantity: Variant, un
 		return _reject("purchase", buyer, seller, details, reason)
 	# No fallible calls or nested transfer commands between these four writes.
 	_entities[seller].inventory[item] -= quantity
-	_entities[buyer].inventory[item] += quantity
+	destination[item] += quantity
 	_entities[buyer].money -= total_price
 	_entities[seller].money += total_price
 	_record("purchase", buyer, seller, true, details)
 	return true
+
+
+func _purchase_inventory(buyer: String) -> Dictionary:
+	# Default warehouse/personal inventory; spatial scenarios may receive in custody.
+	return _entities[buyer].inventory
 
 
 func harvest(actor: String, amount: Variant) -> bool:

@@ -29,7 +29,7 @@ static func _due(state: Dictionary, worker: String, business: String) -> bool:
 	return job.active and job.business == business and ((state.day - job.get("start_day", 1)) % job.contract.cycle_days + 1) in job.contract.phases
 
 
-static func verify(history: Array, final: Dictionary, reference: bool = false) -> Dictionary:
+static func verify(history: Array, final: Dictionary, reference: bool = false, observer: Callable = Callable()) -> Dictionary:
 	var initial: Dictionary = history[0].details.state
 	var state: Dictionary = initial.duplicate(true)
 	var checks = {"currency_each_event": true, "bounded_holdings": true, "goods_and_assets": true,
@@ -84,6 +84,7 @@ static func verify(history: Array, final: Dictionary, reference: bool = false) -
 				checks.contracts = checks.contracts and d.attempt_event_id == null and not e.success and d.reason == "employer_did_not_schedule"
 			outcomes[e.actor] = e.success
 		if not e.success:
+			if observer.is_valid(): observer.call(state,e)
 			continue
 		match e.action:
 			"purchase":
@@ -105,7 +106,11 @@ static func verify(history: Array, final: Dictionary, reference: bool = false) -
 						checks.goods_and_assets = checks.goods_and_assets and d.unit_price <= 6
 				state.entities[e.actor].money -= d.total_price
 				state.entities[e.target].money += d.total_price
-				state.entities[e.actor].inventory[d.item] += d.quantity
+				if d.has("custody") and state.has("cargo"):
+					checks.goods_and_assets = checks.goods_and_assets and d.custody.business == e.actor and state.cargo[e.actor].holder == d.custody.holder
+					state.cargo[e.actor].inventory[d.item] += d.quantity
+				else:
+					state.entities[e.actor].inventory[d.item] += d.quantity
 				state.entities[e.target].inventory[d.item] -= d.quantity
 				state.cash_results[e.target].sales += d.total_price
 				if state.businesses.has(e.actor):
@@ -295,8 +300,15 @@ static func verify(history: Array, final: Dictionary, reference: bool = false) -
 				state.commodity_quotes[e.target][quote.item] = quote.duplicate(true)
 			"pricing_decision", "buyer_decision":
 				checks.ordered_events = checks.ordered_events and state.has("commodity_quotes")
+			"spatial_deposited":
+				checks.goods_and_assets = checks.goods_and_assets and state.has("cargo") and state.cargo[e.target].holder == e.actor
+				for item in d.goods:
+					checks.goods_and_assets = checks.goods_and_assets and d.goods[item] is int and d.goods[item] >= 0
+					state.cargo[e.target].inventory[item] -= d.goods[item]
+					state.entities[e.target].inventory[item] += d.goods[item]
 			"initialize", "day_started", "contract_attempt", "contract_shift": pass
-			_: checks.ordered_events = false
+			_: checks.ordered_events = checks.ordered_events and observer.is_valid() and e.action.begins_with("spatial_")
+		if observer.is_valid(): observer.call(state,e)
 		var money: int = 0
 		for p in state.entities.values():
 			money += p.money
@@ -304,6 +316,9 @@ static func verify(history: Array, final: Dictionary, reference: bool = false) -
 			for quantity in p.inventory.values():
 				checks.bounded_holdings = checks.bounded_holdings and quantity >= 0 and quantity <= 1_000_000_000
 		checks.currency_each_event = checks.currency_each_event and money == combined
+		if state.has("cargo"):
+			for parcel in state.cargo.values():
+				checks.goods_and_assets = checks.goods_and_assets and parcel.inventory.values().all(func(q):return q is int and q >= 0 and q <= 1000000000)
 	checks.unique_receipts = checks.unique_receipts and sources == claims
 	checks.goods_and_assets = checks.goods_and_assets and state.productive_assets.keys() == initial.productive_assets.keys()
 	checks.final_state = state == final
