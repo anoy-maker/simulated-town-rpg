@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0–M13 complete; M14 profitable contractual reference implemented and awaiting review
+**Status:** M0–M14 complete; M15 open economy and business formation implemented and awaiting review
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -422,4 +422,28 @@ After household buying and consumption, actual owners receive all eligible reali
 
 All requested horizons reproduce the reference. The year has **4380 meals, 2190 employee shifts, 13140 wage coins, 4380 owner-distribution coins, zero missed meals and zero breaches**. Owners receive 1460 each without working; each firm closes daily at 120 with no inventory. Household balances repeat every three days. Every event conserves 432 coins. These prescribed results demonstrate feasibility under fixed assumptions, not autonomous stability or shock resilience.
 
-See [M14 actual results, accounting, synthetic failures and limitations](docs/M14_RESULTS.md), [five run rows](docs/M14_RUNS.csv), [resident outcomes](docs/M14_RESIDENTS.csv) and [business outcomes](docs/M14_BUSINESSES.csv). Historical worlds/default CLI and results remain unchanged. Stop after M14 for review; no M15.
+See [M14 actual results, accounting, synthetic failures and limitations](docs/M14_RESULTS.md), [five run rows](docs/M14_RUNS.csv), [resident outcomes](docs/M14_RESIDENTS.csv) and [business outcomes](docs/M14_BUSINESSES.csv). This remains an unchanged historical reference.
+
+
+## M15: Open Economy and Business Formation
+
+```sh
+# A: finite external funds, all nine employees working daily, genuine owner income.
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_external_trade_reference 1 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_external_trade_reference 3 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_external_trade_reference 30 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_external_trade_reference 365 42
+# B/C: separate prescribed fixtures, not full village simulations (fixed horizon/seed).
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario enterprise_startup_fixture 1 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario enterprise_delegation_fixture 2 42
+# All six cases twice; compact reports, accounting tables and finite asset records:
+python3 -B scripts/tools/run_enterprise.py --output work/m15
+# Annual report and canonical ledger hash; no verbose event export:
+godot --headless --no-header --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_external_trade_reference 365 42 --report-json
+```
+
+A retains M14's twelve residents, businesses, endowments, prices, recipes, workplace capacity and minimum contracts. Nine employees perform paid work daily; the third shift per three-day cycle is additional work. Visitors buy six real loaves daily from a finite 8760-coin external account. Its money belongs to the combined ledger, outside the village boundary; its consumed bread creates no household meal requirement. At day 365 the village holds **9192 coins**, visitors hold **zero**, each resident holds **736**, and each firm retains **120**. Actual receipts yield **4380 resident meals, 2190 visitor loaves, 3285 paid shifts**, and zero misses/breaches. A separate exhaustion test preserves rejected purchases and subsequent hardship without refilling the purse.
+
+B/C explicitly endow Finn with 500 coins, legitimate finite asset sellers, twelve flour at the original mill and one finite customer purse. Finn contributes 300, buys an oven/workshop for 180/60, and retains 200 personal/60 business coins. The new firm receives no free inventory, equipment, workers or sales. After authorized resignation and a self-employment transition, his real unpaid baking shift and specified sales leave **68 cash/eight operating earnings**. A public job posting, employer offer, Iona's acceptance and an actual boundary transition delegate the next shift to Iona for six coins, leaving **70 cash/ten cumulative earnings**. Finn retains ownership without a productive affiliation. Unsold goods, missing assets, conflicting work and unfulfilled old obligations remain real.
+
+Contributions, durable asset purchases, operating flows, unpaid owner labor and distributions are separately auditable. New firms default to retaining earnings with an explicit 24-coin reserve; optional half/full policies require genuine realized remaining earnings and liquidity. Contributions never become profit. The local board exposes terms rather than private business accounts. These prescribed fixtures test infrastructure, not autonomous business development or guaranteed demand. See [M15 results and limitations](docs/M15_RESULTS.md), [run fingerprints](docs/M15_RUNS.csv), [all account outcomes](docs/M15_ACCOUNTS.csv) and [fixture assets](docs/M15_ASSETS.csv). Stop after M15 for review; no M16.

@@ -182,7 +182,7 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 
 ## M14: Profitable Ownership and Contractual Employment Reference
 
-**Status:** Implemented and verified; [M14 results](M14_RESULTS.md) await review. Stop after M14.
+**Status:** Completed. [M14 results](M14_RESULTS.md) remain the unchanged contractual reference.
 
 - Isolated prescribed reference with original twelve-person ownership/assets/endowments/prices; owners manage without paid productive work.
 - Nine employees receive two six-coin productive shifts per three-day cycle; real constraints produce explicit unmet obligations rather than imaginary work, wages or debt.
@@ -190,7 +190,20 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 - Reuse native purchases/paid labor/recipes/transfers; preserve all historical scenarios and pinned outputs.
 - Verify 1/2/3/30/365 days, every-event accounting, daily business recurrence, three-day household recurrence, replay and synthetic failure behavior.
 
-**Done when:** actual results and architectural limits are documented, with prescribed feasibility clearly separated from autonomous stability. No autonomous hiring, shocks, corrective policies or M15 before review.
+**Done when:** actual results and architectural limits are documented, with prescribed feasibility clearly separated from autonomous stability. Its results remain unchanged for M15.
+
+## M15: Open Economy and Business Formation
+
+**Status:** Implemented; [M15 results](M15_RESULTS.md) await review. Stop after M15.
+
+- External-trade reference with finite visitor funds, original twelve residents/three firms, nine genuine daily employee shifts and unchanged two-of-three minimum contracts.
+- Actual paid purchases and visitor consumption, separate village/combined money boundaries, realized owner income and daily financial recurrences at 1/3/30/365 days.
+- Controlled Finn startup using personal capital, a zero-endowment firm, identifiable pre-existing assets and real inputs; distinguish capital flows from operating earnings.
+- Unpaid owner production, retained earnings and explicit bounded distribution policies with no universal 120-coin floor for new firms.
+- Public local postings, applications, employer offers, employee acceptance and boundary-effective jobs/resignations; one productive affiliation, ownership separate from labor, prior promises preserved.
+- Native and independent Python reconstruction, compact results/fingerprints, deterministic process and split replay, all M0–M14 historical results preserved.
+
+**Done when:** A/B/C and failure tests verify actual transactions and transitions, limitations and disrupted old commitments are explicit, and results are reviewable. No autonomous entrepreneurial or hiring decisions, investment optimization, additional sectors or M16.
 
 ## Later possibilities
 

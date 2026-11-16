@@ -16,6 +16,7 @@ const EquilibriumTests = preload("res://tests/equilibrium_tests.gd")
 const EmployerTests = preload("res://tests/employer_tests.gd")
 const CausalityTests = preload("res://tests/causality_tests.gd")
 const ProfitableTests = preload("res://tests/profitable_tests.gd")
+const EnterpriseTests = preload("res://tests/enterprise_tests.gd")
 
 var _checks: int = 0
 var _failures: int = 0
@@ -57,6 +58,8 @@ func _init() -> void:
 	CausalityTests.run(self)
 	print("M0–M13 regression checks: %d" % _checks)
 	ProfitableTests.run(self)
+	print("M0–M14 regression checks: %d" % _checks)
+	EnterpriseTests.run(self)
 	print("Tests: %d checks, %d failures" % [_checks, _failures])
 	quit(0 if _failures == 0 else 1)
 

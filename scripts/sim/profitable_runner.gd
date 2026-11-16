@@ -34,6 +34,14 @@ func run(days: int) -> void:
 		world.close_contract_day()
 
 
+func _report_employment() -> Dictionary:
+	return _initial.employment
+
+
+func _reference_verification(history: Array, final: Dictionary) -> Dictionary:
+	return preload("res://scripts/sim/profitable_audit.gd").verify(history, final)
+
+
 func report() -> Dictionary:
 	var summary: Dictionary = super()
 	summary.scenario = "settlement_profitable_reference"
@@ -48,7 +56,7 @@ func report() -> Dictionary:
 	for account in summary.accounts.values():
 		account["profit_distributions_received"] = 0
 		account["profit_distributions_paid"] = 0
-	for worker in _initial.employment:
+	for worker in _report_employment():
 		contracts.by_employee[worker] = {"due": 0, "attempted": 0, "completed": 0, "breaches": 0, "expected_compensation": 0, "paid_compensation": 0}
 	var days: Array = []
 	var history: Array = world.events()
@@ -79,7 +87,7 @@ func report() -> Dictionary:
 		if e.action == "contract_day_closed" and days.size() < 3:
 			days.append({"day": e.day, "business_cash": d.business_cash, "household_cash": d.household_cash,
 				"goods": d.goods, "completed": d.completed, "breaches": d.breaches})
-	for business in _initial.businesses:
+	for business in _report_businesses():
 		summary.business_activity[business].can_fund_one_shift = summary.final.entities[business].money >= Terms.WAGE
 	for key in summary.failures.keys():
 		if key.begins_with("contract_shift:") or key.begins_with("contract_attempt:"):
@@ -88,7 +96,7 @@ func report() -> Dictionary:
 	for e in history:
 		if not e.success and e.action not in ["contract_shift", "contract_attempt", "labor_decision"] and summary.notable_events.size() < 8:
 			summary.notable_events.append(e)
-	var verified: Dictionary = preload("res://scripts/sim/profitable_audit.gd").verify(history, summary.final)
+	var verified: Dictionary = _reference_verification(history, summary.final)
 	summary["profitable"] = {"mode": "prescribed reference; no autonomous scheduling", "wage": Terms.WAGE,
 		"capital_floor": Terms.CAPITAL, "household_cycle_days": 3, "contracts": contracts,
 		"distributions": income, "cash_results": summary.final.cash_results, "first_three_days": days,

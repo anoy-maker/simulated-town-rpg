@@ -18,7 +18,7 @@ var _day: int = 0
 func _init(initial_entities: Array) -> void:
 	for entity in initial_entities:
 		assert(entity.id is String and not entity.id.is_empty())
-		assert(not _entities.has(entity.id) and entity.role in ROLES)
+		assert(not _entities.has(entity.id) and _valid_entity_role(entity))
 		assert(entity.money is int and entity.money >= 0 and entity.money <= MAX_AMOUNT)
 		assert(entity.inventory.size() == ITEMS.size())
 		for item in ITEMS:
@@ -27,6 +27,10 @@ func _init(initial_entities: Array) -> void:
 			assert(entity.inventory[item] >= 0 and entity.inventory[item] <= MAX_AMOUNT)
 		_entities[entity.id] = entity.duplicate(true)
 	_record("initialize", "world", "", true, {"state": snapshot()})
+
+
+func _valid_entity_role(entity: Dictionary) -> bool:
+	return entity.role in ROLES
 
 
 func snapshot() -> Dictionary:

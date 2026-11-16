@@ -45,6 +45,14 @@ func _before_food() -> void:
 	pass
 
 
+func _report_entities() -> Dictionary:
+	return _initial.entities
+
+
+func _report_businesses() -> Dictionary:
+	return _initial.businesses
+
+
 func report() -> Dictionary:
 	var summary: Dictionary = super()
 	summary["scenario"] = "settlement_labor"
@@ -52,12 +60,12 @@ func report() -> Dictionary:
 	summary["schedule"] = {"businesses": Config.BUSINESS_ORDER.duplicate(), "workers": "owner then employee ID", "food": participant_ids()}
 	var accounts: Dictionary = {}
 	var total_money: int = 0
-	for id in _initial.entities:
+	for id in _report_entities():
 		accounts[id] = {"earned": 0, "spent": 0, "sales": 0, "purchases": 0, "wages_received": 0, "wages_paid": 0,
 			"shifts": 0, "produced": {"wheat": 0, "flour": 0, "bread": 0}, "consumed": 0,
 			"purchases_successful": 0, "purchases_failed": 0, "last_production_day": 0,
 			"last_business_day": 0, "last_work_day": 0, "schedule_reasons": {}}
-		total_money += _initial.entities[id].money
+		total_money += _report_entities()[id].money
 	var shifts = {"paid": 0, "rejected": 0, "unfunded": 0, "unavailable": 0, "wages": 0}
 	var purchases = {"successful": 0, "rejected": 0}
 	var circulation: int = 0
@@ -106,7 +114,7 @@ func report() -> Dictionary:
 			accounts[event.target].earned += d.total_price
 			accounts[event.target].sales += d.total_price
 			accounts[event.target].last_business_day = event.day
-			if _initial.entities[event.actor].kind == "business":
+			if _report_entities()[event.actor].kind == "business":
 				accounts[event.actor].last_business_day = event.day
 			circulation += d.total_price
 		elif event.action == "transfer_money":
@@ -124,11 +132,11 @@ func report() -> Dictionary:
 		elif event.action == "consume":
 			accounts[event.actor].consumed += 1
 	var businesses: Dictionary = {}
-	for id in _initial.businesses:
+	for id in _report_businesses():
 		var activity: Dictionary = accounts[id]
 		businesses[id] = {"production_idle_days_at_end": summary.days - activity.last_production_day,
 			"business_idle_days_at_end": summary.days - activity.last_business_day,
-			"can_fund_one_shift": summary.final.entities[id].money >= _initial.businesses[id].owner_compensation}
+			"can_fund_one_shift": summary.final.entities[id].money >= _report_businesses()[id].owner_compensation}
 	# Pooled horizon bound, including real initial grain/flour/bread; not a trajectory.
 	@warning_ignore("integer_division")
 	var bread_bound: int = mini((mini(potential_wheat + 16, summary.days * 16) + 12) / 2 * 3, summary.days * 24) + 18
