@@ -13,7 +13,8 @@ class ProfilingTests(unittest.TestCase):
     def test_opt_in_preserves_complete_report_and_ledger(self):
         self.assertEqual(self.plain['report'],self.profiled['report'])
         self.assertEqual(self.plain['events'],self.profiled['events'])
-        row=next(r for r in csv.DictReader((ROOT/'docs/M18_RUNS.csv').open()) if r['stage']=='D' and r['days']=='1')
+        with (ROOT/'docs/M18_RUNS.csv').open() as stream:
+            row=next(r for r in csv.DictReader(stream) if r['stage']=='D' and r['days']=='1')
         self.assertEqual(self.profiled['measurement']['canonical_sha256'],row['summary_sha256'])
     def test_disabled_instrumentation_is_empty(self):
         self.assertEqual(self.plain['measurement']['run_profile'],dict(phases={},counts={},decisions=[]))

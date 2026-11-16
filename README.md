@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0–M16 complete; M17 headless spatial town implemented and awaiting review
+**Status:** M0–M18 complete; M19 profiling and one measured numerical optimization implemented and awaiting review
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -515,3 +515,24 @@ full transient traces, compares process replay, and measures **run-only simulati
 execution** alongside corresponding existing M16 runs; timing never enters canonical
 scenario JSON. Mathematical assumptions and actual outcomes are in
 [docs/M18_RESULTS.md](docs/M18_RESULTS.md). Stop after M18 for review.
+
+
+## M19: profiling and one exact numerical reuse
+
+M19 measures startup/init, run-only execution, planning, transactions, observations,
+logging, reports/serialization, audits and full verification separately. Profiling
+is **off by default** and never enters scenario state, reports, hashes or choices.
+The only numerical change reuses a nonbinding-stock sales expectation locally within
+one continuation call; all historical outputs remain unchanged.
+
+```sh
+python3 -B scripts/tools/profile_simulation.py --label after --output work/m19/after
+python3 -B scripts/tools/check_historical.py --output work/m19/historical.csv
+godot --headless --path . --script res://tests/run_profile_tests.gd
+```
+
+[M19 results](docs/M19_RESULTS.md) contain the before/after protocol and medians,
+negative/noisy results, paired comparisons, work/RSS counts, full verification,
+remaining bottlenecks and an architectural language comparison. The recommendation
+is to continue measured GDScript work; no compiled interface or language migration
+has been implemented. Stop after M19 for review; do not begin M20.

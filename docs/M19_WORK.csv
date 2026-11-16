@@ -1,0 +1,7 @@
+label,stage,events,candidates,branches,continuation_calls,forecast_prices,beta_table_misses,traffic_component_misses,full_mean_hits,full_mean_misses,stock_limited_means
+before,A,27331,0,0,0,0,26,0,,,
+before,C,27335,119,1071,5076,4450,1352,861,,,
+before,D,27337,120,1080,9198,4510,1352,840,,,
+after,A,27331,0,0,0,0,26,0,,,
+after,C,27335,119,1071,5076,4450,1352,861,1282439,57321,172384
+after,D,27337,120,1080,9198,4510,1352,840,2353097,103648,283767

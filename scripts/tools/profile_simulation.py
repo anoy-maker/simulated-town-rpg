@@ -7,8 +7,16 @@ from spatial_audit import audit as spatial_audit
 from enterprise_audit import audit as enterprise_audit
 ROOT=Path(__file__).resolve().parents[2]
 
+def godot_environment():
+    env=dict(os.environ)
+    base=Path('/workspace/work') if Path('/workspace/work').is_dir() else ROOT/'work'
+    for name,directory in [('XDG_DATA_HOME','godot-data'),('XDG_CONFIG_HOME','godot-config'),('XDG_CACHE_HOME','cache')]:
+        if not env.get(name):
+            location=base/directory;location.mkdir(parents=True,exist_ok=True);env[name]=str(location)
+    return env
+
 def capture(root,stage,days,scenario,profile=False):
-    env=dict(os.environ,XDG_DATA_HOME='/workspace/work/godot-data',XDG_CONFIG_HOME='/workspace/work/godot-config',XDG_CACHE_HOME='/workspace/work/cache')
+    env=godot_environment()
     command=['godot','--headless','--no-header','--path',str(root),'--script','res://scripts/tools/profile_simulation.gd','--',stage,str(days),scenario]+(['profile'] if profile else [])
     start=time.perf_counter()
     # wait4 returns this child's actual Linux peak RSS; not the maximum of prior children.
@@ -37,7 +45,8 @@ def main():
     p.add_argument('--audit',action='store_true');p.add_argument('--profiles-only',action='store_true')
     a=p.parse_args();assert a.repeats>=3
     a.output.mkdir(parents=True,exist_ok=True)
-    pinned={(r['stage'],int(r['days'])):r for r in csv.DictReader((ROOT/'docs/M18_RUNS.csv').open())}
+    with (ROOT/'docs/M18_RUNS.csv').open() as stream:
+        pinned={(r['stage'],int(r['days'])):r for r in csv.DictReader(stream)}
     cases=[(s,d,'learning') for d in (1,3,30) for s in 'ACD']+[('B',30,'learning'),('A',30,'m16'),('A',30,'m17')]
     rows=[];detailed=[];audited=set()
     def run(stage,days,scenario,repeat,profile):
@@ -63,5 +72,5 @@ def main():
                 if (stage=='B' or scenario!='learning') and repeat>0:continue
                 run(stage,days,scenario,repeat+1,False)
     for stage,days,scenario in cases:run(stage,days,scenario,0,True)
-    (a.output/'host.json').write_text(json.dumps(dict(platform=platform.platform(),python=platform.python_version(),cpus=os.cpu_count(),godot=subprocess.check_output(['godot','--version'],text=True,env=dict(os.environ,XDG_DATA_HOME='/workspace/work/godot-data',XDG_CONFIG_HOME='/workspace/work/godot-config',XDG_CACHE_HOME='/workspace/work/cache')).strip(),protocol='Fresh process per case, one-day A/C/D process warm-ups, rotating order; unprofiled timings and separate profiled attribution. No concurrent verification.'),indent=2))
+    (a.output/'host.json').write_text(json.dumps(dict(platform=platform.platform(),python=platform.python_version(),cpus=os.cpu_count(),godot=subprocess.check_output(['godot','--version'],text=True,env=godot_environment()).strip(),protocol='Fresh process per case, one-day A/C/D process warm-ups, rotating order; unprofiled timings and separate profiled attribution. No concurrent verification.'),indent=2))
 if __name__=='__main__':main()

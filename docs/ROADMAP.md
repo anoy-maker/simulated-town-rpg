@@ -243,3 +243,19 @@ subjective model/financial objective and bounded EVSI. Preserve M0–M17 baselin
 This tests a provisional price-learning approximation; it does not establish optimal
 prices, viable autonomous settlement policy or structural demand identification.
 **Stop after M18. Do not begin M19.**
+
+
+## M19: profile and optimize one measured hot path
+
+**Status:** Measured and verified; [M19 results](M19_RESULTS.md) await review.
+
+- Opt-in exclusive/inclusive timing and work counters, fresh-process repeated
+  before/after benchmarks, paired follow-ups and truthful per-process RSS.
+- One exact per-call reuse of nonbinding-stock expectations in the measured
+  continuation bottleneck; preserve all economic/decision values and M0–M18 pins.
+- Complete native/Python verification and independent audits retained; noisy and
+  negative observations documented alongside gains and remaining costs.
+- Recommend further measured GDScript work; compare compiled options architecturally
+  without porting code, building FFI scaffolding or changing economic behavior.
+
+**Stop after M19 for review. Do not begin M20.**
