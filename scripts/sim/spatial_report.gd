@@ -1,8 +1,10 @@
 extends RefCounted
+const ExecutionProfile=preload("res://scripts/sim/execution_profile.gd")
 ## Small day/resident projections, excluding global private encounter histories.
 
 
 static func build(history: Array, final: Dictionary, experiment: String) -> Dictionary:
+	var _profile_scope=ExecutionProfile.scope("spatial_report") if ExecutionProfile.enabled else null
 	var days: Array=[]
 	var day: Dictionary={}
 	var agents: Dictionary={}

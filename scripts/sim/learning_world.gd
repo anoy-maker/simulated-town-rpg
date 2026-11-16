@@ -14,6 +14,7 @@ func _cohort() -> Dictionary:
 	return {"arrivals":0,"inspections":0,"eligible":0,"sales":0,"purchases":0,"declines":0,"stock_limited":0,"closed":0,"unresolved":0,"censored":false,"events":[]}
 
 func begin_memory_day() -> void:
+	var _profile_scope=ExecutionProfile.scope("memory") if ExecutionProfile.enabled else null
 	beliefs=Beliefs.hazard(beliefs)
 	_pending.clear()
 	_consulted=[]
@@ -25,6 +26,7 @@ func begin_memory_day() -> void:
 			"local":_cohort(),"visitor":_cohort(),"coverage":0,"accounting":{"sold":0,"revenue":0,"inputs":0,"payroll":0,"distributions":0,"stockout_requests":0},"receipts":[],"public_quotes":[]}
 
 func end_memory_day() -> void:
+	var _profile_scope=ExecutionProfile.scope("memory") if ExecutionProfile.enabled else null
 	for key in _pending:
 		var pending: Dictionary=_pending[key]
 		if pending.eligible:
@@ -39,6 +41,7 @@ func end_memory_day() -> void:
 	beliefs=Beliefs.update(beliefs,current.cora,current.cora.price,current.cora.complete)
 
 func _on_recorded_event(e: Dictionary) -> void:
+	var _profile_scope=ExecutionProfile.scope("memory") if ExecutionProfile.enabled else null
 	if current.is_empty(): return
 	var d: Dictionary=e.details
 	if e.action=="spatial_clock" and e.minute>=900 and e.minute<1035:

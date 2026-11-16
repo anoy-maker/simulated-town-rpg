@@ -332,3 +332,26 @@ re-evaluates conditional financial values. Existing spatial/enterprise audits st
 reconstruct every native movement, cargo, commodity and coin. No learning field is
 trusted as an economic receipt. See M18 results for the declared approximations,
 including zero terminal inventory salvage and the mean-state twelve-day tail.
+
+
+## M19: opt-in execution observation and exact continuation reuse
+
+`execution_profile.gd` keeps timing scopes, counters and per-decision measurements
+outside authoritative/model state. Conditional scopes close on function return;
+exclusive timing subtracts nested intervals. Canonical scenarios leave instrumentation
+disabled. The separate profile harness times `run()` before reports, audits or JSON,
+and the Python driver runs fresh processes, checks published M18 report hashes and
+uses per-child Linux RSS. Detailed results explain nesting and observer effects.
+
+The one mathematical optimization in `bakery_finance.gd` lazily retains full-support
+sales expectations for at most twelve tail-day rows **inside one continuation call**.
+Stock at or above a row's support gives exactly the original mean, independent of
+cash/stock magnitude; lower stock uses the original computation. Forecast rows are
+immutable for that call. No cache survives a call or crosses a price, belief, market,
+world or seed context. Arithmetic order, finance transitions and world authority are
+unchanged. Native reference tests and all historical fingerprints guard that contract.
+
+Benchmark, paired pure-calculation, independent-audit and historical-pin tools are
+verification infrastructure, not NPC information sources. No timing controls actor
+behavior and no compiled module/world refactor is introduced. See M19 results for
+measured residual work and the limited, unimplemented batch-interface proposal.

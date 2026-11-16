@@ -1,4 +1,5 @@
 extends RefCounted
+const ExecutionProfile=preload("res://scripts/sim/execution_profile.gd")
 ## Cohort-day Bayesian model. No world reference or private customer facts.
 static var _tables: Dictionary={}
 static var _components: Dictionary={}
@@ -19,6 +20,7 @@ static func fresh() -> Dictionary:
 	return b
 
 static func hazard(b: Dictionary) -> Dictionary:
+	var _profile_scope=ExecutionProfile.scope("bayes") if ExecutionProfile.enabled else null
 	var result=b.duplicate(true)
 	var p=prior()
 	for c in result:
@@ -31,6 +33,7 @@ static func q(h: int, price: int) -> float:
 static func row(h: int, price: int, n: int) -> Array:
 	var key=Vector3i(h,price,n)
 	if _tables.has(key): return _tables[key]
+	if ExecutionProfile.enabled: ExecutionProfile.count("beta_table_misses")
 	var a=2.0*q(h,price)
 	var b=2.0-a
 	var r: Array=[1.0]
@@ -43,6 +46,7 @@ static func row(h: int, price: int, n: int) -> Array:
 	return r
 
 static func update(b: Dictionary, observations: Dictionary, price: int, complete: bool) -> Dictionary:
+	var _profile_scope=ExecutionProfile.scope("bayes") if ExecutionProfile.enabled else null
 	var result=b.duplicate(true)
 	for c in ["local","visitor"]:
 		var o: Dictionary=observations[c]
@@ -62,6 +66,7 @@ static func update(b: Dictionary, observations: Dictionary, price: int, complete
 	return result
 
 static func demand(b: Dictionary, price: int, carry: int=3, minimum: Array=[0,0]) -> Array:
+	var _profile_scope=ExecutionProfile.scope("forecast_mixture") if ExecutionProfile.enabled else null
 	var pmfs: Array=[]
 	for ci in 2:
 		var c: String=["local","visitor"][ci]
@@ -72,6 +77,7 @@ static func demand(b: Dictionary, price: int, carry: int=3, minimum: Array=[0,0]
 		for n in range(minimum[ci],13): total+=b[c].alpha[n]
 		var key=str([b[c].alpha,price,carry if ci==0 else 0,minimum[ci]])
 		if not _components.has(key):
+			if ExecutionProfile.enabled: ExecutionProfile.count("traffic_component_misses")
 			var components: Array=[]
 			for h in 13:
 				var component: Array=[]
@@ -97,6 +103,7 @@ static func sales(pmf: Array, stock: int) -> Array:
 	return out
 
 static func outcomes(b: Dictionary, c: String, price: int, stock: int, carry: int, minimum: int) -> Array:
+	var _profile_scope=ExecutionProfile.scope("evsi_outcomes") if ExecutionProfile.enabled else null
 	var merged: Dictionary={}
 	var total=0.0
 	for n in range(minimum,13): total+=b[c].alpha[n]
@@ -127,6 +134,7 @@ static func _add(out: Dictionary,n: int,e: int,s: int,c: bool,p: float) -> void:
 	out[key].probability+=p
 
 static func quadrature(out: Array) -> Array:
+	var _profile_scope=ExecutionProfile.scope("evsi_outcomes") if ExecutionProfile.enabled else null
 	var result: Array=[]
 	var cumulative=0.0
 	var index=0

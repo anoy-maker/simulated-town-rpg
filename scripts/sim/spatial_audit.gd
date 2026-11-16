@@ -1,4 +1,5 @@
 extends RefCounted
+const ExecutionProfile=preload("res://scripts/sim/execution_profile.gd")
 ## Independent event reconstruction; shared native audit owns monetary/recipe checks.
 const Ledger=preload("res://scripts/sim/enterprise_audit.gd")
 const SITES={"farm":[6,1],"mill":[6,3],"bakery":[8,3]}
@@ -15,6 +16,7 @@ static func _open(s: Dictionary, business: String) -> bool:
 
 
 static func verify(history: Array, final: Dictionary, learning: bool=false) -> Dictionary:
+	var _profile_scope=ExecutionProfile.scope("native_audit") if ExecutionProfile.enabled else null
 	var checks={"clock_and_timestamps":true,"movement_and_arrivals":true,"appointments_and_presence":true,
 		"located_purchases":true,"courier_custody":true,"visitor_requests":true,"witness_boundaries":true,"goods_each_event":true,"physical_snapshot":true}
 	var expected={"wheat":0,"flour":0,"bread":0}

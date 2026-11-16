@@ -1,4 +1,5 @@
 extends RefCounted
+const ExecutionProfile=preload("res://scripts/sim/execution_profile.gd")
 ## Reconstruct only receipts/facts, independently of the command implementations/policies.
 const PRICES = {"wheat": 2, "flour": 4, "bread": 4}
 const REQUIREMENTS = {"farmer": ["workshop", "farm_tools"], "miller": ["workshop", "millstone"], "baker": ["workshop", "oven"]}
@@ -30,6 +31,7 @@ static func _due(state: Dictionary, worker: String, business: String) -> bool:
 
 
 static func verify(history: Array, final: Dictionary, reference: bool = false, observer: Callable = Callable()) -> Dictionary:
+	var _profile_scope=ExecutionProfile.scope("native_audit") if ExecutionProfile.enabled else null
 	var initial: Dictionary = history[0].details.state
 	var state: Dictionary = initial.duplicate(true)
 	var checks = {"currency_each_event": true, "bounded_holdings": true, "goods_and_assets": true,

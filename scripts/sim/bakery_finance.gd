@@ -1,4 +1,5 @@
 extends RefCounted
+const ExecutionProfile=preload("res://scripts/sim/execution_profile.gd")
 ## Read-only conditional business cash flows. State: cash, flour, bread, retained earnings.
 static func operate(state: Array, procure: bool, supply: int=12, input_price: int=4) -> Dictionary:
 	var s=state.duplicate()
@@ -32,11 +33,20 @@ static func mean_sales(pmf: Array, stock: float) -> float:
 	return value
 
 static func continuation(state: Array, price: int, forecasts: Array, supply: int) -> float:
+	var _profile_scope=ExecutionProfile.scope("continuation") if ExecutionProfile.enabled else null
+	if ExecutionProfile.enabled: ExecutionProfile.count("continuation_calls")
 	var first=operate(state,true,supply)
 	var totals: Array=[]
 	totals.resize(mini(24,int(first.state[2]))+1)
 	totals.fill(0.0)
 	for quantity in forecasts[0].size(): totals[mini(quantity,int(first.state[2]))]+=forecasts[0][quantity]
+	# Forecast rows are immutable during this call. Full-support expectations do
+	# not depend on nonbinding stock; retain the original summation order once.
+	var full_stock_means: Array=[]
+	full_stock_means.resize(forecasts.size())
+	var mean_hits: int=0
+	var mean_misses: int=0
+	var limited_means: int=0
 	var value=0.0
 	for sold in totals.size():
 		if totals[sold]<0.000000000001: continue
@@ -46,10 +56,25 @@ static func continuation(state: Array, price: int, forecasts: Array, supply: int
 		var discount=0.99
 		for t in range(1,13):
 			var operation=operate(s,true,supply)
-			result=close(operation.state,price,mean_sales(forecasts[t],operation.state[2]))
+			var expected: float
+			var support: int=forecasts[t].size()-1
+			if operation.state[2]>=support:
+				if full_stock_means[t]==null:
+					full_stock_means[t]=mean_sales(forecasts[t],support)
+					if ExecutionProfile.enabled: mean_misses+=1
+				elif ExecutionProfile.enabled: mean_hits+=1
+				expected=full_stock_means[t]
+			else:
+				expected=mean_sales(forecasts[t],operation.state[2])
+				if ExecutionProfile.enabled: limited_means+=1
+			result=close(operation.state,price,expected)
 			branch+=discount*result.payout
 			s=result.state
 			discount*=0.99
 		branch+=pow(0.99,12)*s[0]
 		value+=totals[sold]*branch
+	if ExecutionProfile.enabled:
+		ExecutionProfile.count("full_mean_hits",mean_hits)
+		ExecutionProfile.count("full_mean_misses",mean_misses)
+		ExecutionProfile.count("stock_limited_means",limited_means)
 	return value

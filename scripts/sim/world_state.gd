@@ -1,4 +1,5 @@
 extends RefCounted
+const ExecutionProfile=preload("res://scripts/sim/execution_profile.gd")
 ## Authoritative state. Callers receive copies; commands validate before writing.
 
 const ITEMS = ["wheat", "flour", "bread"]
@@ -34,10 +35,12 @@ func _valid_entity_role(entity: Dictionary) -> bool:
 
 
 func snapshot() -> Dictionary:
+	var _profile_scope=ExecutionProfile.scope("state_copy") if ExecutionProfile.enabled else null
 	return {"day": _day, "entities": _entities.duplicate(true)}
 
 
 func events() -> Array:
+	var _profile_scope=ExecutionProfile.scope("state_copy") if ExecutionProfile.enabled else null
 	return _events.duplicate(true)
 
 
@@ -47,6 +50,7 @@ func advance_day() -> void:
 
 
 func transfer_item(actor: String, target: String, item: String, amount: Variant) -> bool:
+	var _profile_scope=ExecutionProfile.scope("transactions") if ExecutionProfile.enabled else null
 	var details = {"item": item, "amount": amount}
 	var reason = _transfer_error(actor, target, amount)
 	if reason.is_empty() and item not in ITEMS:
@@ -64,6 +68,7 @@ func transfer_item(actor: String, target: String, item: String, amount: Variant)
 
 
 func transfer_money(actor: String, target: String, amount: Variant) -> bool:
+	var _profile_scope=ExecutionProfile.scope("transactions") if ExecutionProfile.enabled else null
 	var details = {"amount": amount}
 	var reason = _transfer_error(actor, target, amount)
 	if reason.is_empty() and _entities[actor].money < amount:
@@ -79,6 +84,7 @@ func transfer_money(actor: String, target: String, amount: Variant) -> bool:
 
 
 func purchase(buyer: String, seller: String, item: String, quantity: Variant, unit_price: Variant) -> bool:
+	var _profile_scope=ExecutionProfile.scope("transactions") if ExecutionProfile.enabled else null
 	var details = {"buyer": buyer, "seller": seller, "item": item,
 		"quantity": quantity, "unit_price": unit_price, "total_price": null}
 	var reason = _transfer_error(buyer, seller, quantity)
@@ -122,6 +128,7 @@ func _purchase_inventory(buyer: String) -> Dictionary:
 
 
 func harvest(actor: String, amount: Variant) -> bool:
+	var _profile_scope=ExecutionProfile.scope("transactions") if ExecutionProfile.enabled else null
 	var details = {"item": "wheat", "amount": amount}
 	var reason = _actor_amount_error(actor, amount)
 	if reason.is_empty() and _entities[actor].role != "farmer":
@@ -136,6 +143,7 @@ func harvest(actor: String, amount: Variant) -> bool:
 
 
 func produce(actor: String, recipe_id: String, batches: Variant = 1) -> bool:
+	var _profile_scope=ExecutionProfile.scope("transactions") if ExecutionProfile.enabled else null
 	var details = {"recipe": recipe_id, "batches": batches}
 	var reason = _actor_amount_error(actor, batches)
 	if reason.is_empty() and not RECIPES.has(recipe_id):
@@ -167,6 +175,7 @@ func produce(actor: String, recipe_id: String, batches: Variant = 1) -> bool:
 
 
 func consume(actor: String, amount: Variant = 1) -> bool:
+	var _profile_scope=ExecutionProfile.scope("transactions") if ExecutionProfile.enabled else null
 	var details = {"item": "bread", "amount": amount}
 	var reason = _actor_amount_error(actor, amount)
 	if reason.is_empty() and _entities[actor].inventory.bread < amount:
@@ -204,6 +213,8 @@ func _reject(action: String, actor: String, target: String, details: Dictionary,
 
 
 func _record(action: String, actor: String, target: String, success: bool, details: Dictionary) -> void:
+	var _profile_scope=ExecutionProfile.scope("logging") if ExecutionProfile.enabled else null
+	if ExecutionProfile.enabled: ExecutionProfile.count("events")
 	_events.append({
 		"id": _events.size() + 1, "day": _day, "action": action,
 		"actor": actor, "target": target, "success": success,
