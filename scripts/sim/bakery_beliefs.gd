@@ -66,7 +66,7 @@ static func update(b: Dictionary, observations: Dictionary, price: int, complete
 	return result
 
 static func demand(b: Dictionary, price: int, carry: int=3, minimum: Array=[0,0]) -> Array:
-	var _profile_scope=ExecutionProfile.scope("forecast") if ExecutionProfile.enabled else null
+	var _profile_scope=ExecutionProfile.scope("forecast_mixture") if ExecutionProfile.enabled else null
 	var pmfs: Array=[]
 	for ci in 2:
 		var c: String=["local","visitor"][ci]

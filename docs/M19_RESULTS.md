@@ -14,4 +14,14 @@ No optimization has been chosen before the baseline profile. One measured pure h
 
 ## Measurements and findings
 
-Pending baseline measurement.
+Phase 1 completed before economic/math edits. Unprofiled 30-day medians: A 2.815194 s, C 32.864863 s, D 45.310453 s (three independent processes each). The separate profiled C30/D30 runs take 33.714726/42.271652 s. Their largest isolated-function times differ: C spends 14.690 s in demand mixtures versus 10.747 s in continuation; D spends 19.229 s in continuation versus 14.704 s in mixtures. D is the slowest stage; continuation is its largest actionable function (45.49% of run), and combined C/D continuation self-time is 29.976 s. Forecast matrix+mixture work is also substantial and remains untouched in this milestone.
+
+C30 evaluates 119 candidates, 1071 observable branches and 5076 continuation projections. D30 evaluates 120, 1080 and 9198 respectively. Per-decision work stabilizes at four candidates/36 branches after day 3, even as raw memory grows from two to 29 previous days. D's day-3/15/30 continuation count stays exactly 306; C's stays 171. There is no forecast scan proportional to raw memory length. Cold beta-table misses fall to zero by day 15; traffic-component misses also decline. Finance branch count and repeated fixed-size numerical work dominate, not growing remembered-event queries.
+
+## Single optimization chosen after measurement
+
+Inspect only the measured continuation hot path. Its twelve-day tail repeatedly computes the same full-stock sales expectation for a given forecast row across first-day sales branches. When stock >= PMF.size()-1, min(stock, quantity) is exactly quantity for every supported outcome. Reusing the original mean_sales result at that support bound therefore preserves its floating-point additions/multiplications in the same order, including boundary cases; stock-limited paths still execute the original calculation.
+
+Add a lazy table with one entry per forecast tail day **local to one continuation call**. Each slot is bound to that call's exact immutable forecast row. No cross-call state, rounded keys, persistent model cache, finance-state cache, approximation, candidate pruning or arithmetic reassociation is introduced. Different beliefs/price/market context produce different forecast arguments and fresh tables; different cash/inventories continue through the original integer/mean-state transitions. The table is discarded on return. Profile counters will record reused evaluations and misses; expected-value/EVSI parity and published canonical JSON hashes remain mandatory.
+
+Before/after tables and final verification pending.

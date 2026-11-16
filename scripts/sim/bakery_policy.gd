@@ -11,7 +11,7 @@ static func candidates(current: int, posted: Array) -> Array:
 	return out
 
 static func forecasts(b: Dictionary, prices: Array, carry: int) -> Dictionary:
-	var _profile_scope=ExecutionProfile.scope("forecast") if ExecutionProfile.enabled else null
+	var _profile_scope=ExecutionProfile.scope("forecast_matrix") if ExecutionProfile.enabled else null
 	if ExecutionProfile.enabled: ExecutionProfile.count("forecast_prices",prices.size())
 	var cache: Dictionary={}
 	for p in prices: cache[p]=[]
