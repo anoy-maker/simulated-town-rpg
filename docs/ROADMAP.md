@@ -194,7 +194,7 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 
 ## M15: Open Economy and Business Formation
 
-**Status:** Implemented; [M15 results](M15_RESULTS.md) await review. Stop after M15.
+**Status:** Completed. [M15 results](M15_RESULTS.md) remain the unchanged open-economy and formation reference.
 
 - External-trade reference with finite visitor funds, original twelve residents/three firms, nine genuine daily employee shifts and unchanged two-of-three minimum contracts.
 - Actual paid purchases and visitor consumption, separate village/combined money boundaries, realized owner income and daily financial recurrences at 1/3/30/365 days.
@@ -203,7 +203,19 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 - Public local postings, applications, employer offers, employee acceptance and boundary-effective jobs/resignations; one productive affiliation, ownership separate from labor, prior promises preserved.
 - Native and independent Python reconstruction, compact results/fingerprints, deterministic process and split replay, all M0–M14 historical results preserved.
 
-**Done when:** A/B/C and failure tests verify actual transactions and transitions, limitations and disrupted old commitments are explicit, and results are reviewable. No autonomous entrepreneurial or hiring decisions, investment optimization, additional sectors or M16.
+**Done when:** A/B/C and failure tests verify actual transactions and transitions, limitations and disrupted old commitments are explicit, and results are reviewable. No autonomous entrepreneurial or hiring decisions, investment optimization or additional sectors were introduced.
+
+## M16: Dynamic Pricing and Rational Market Competition
+
+**Status:** Implemented and verified; [M16 results](M16_RESULTS.md) await review. Stop after M16.
+
+- Isolated seller-specific versioned commodity quotes, owner authorization, one revision/item/day, actual stock and atomic purchase authority.
+- Pure essential/input buyer selection, affordable cheapest offers, rotating ties, legitimate stale/stock retry and finite visitors with private reservation prices.
+- Restricted own/public pricing observations, explicit demand priors/sensitivity, current±1 candidates and independently checked one-period cash objective; fixed and reserved personality interfaces.
+- Predeclared A fixed / B bakery / C mill-bakery / D whole-chain stages, preserving M15 production, jobs, wages, prices at initialization, assets, money and distributions.
+- Separate finite-stock competition fixture, 1/3/30-day process/split replay, full financial/labor/quote/decision auditing, daily reports and all historical outputs unchanged.
+
+**Done when:** actual trade, price choices, unmet demand, inventory/cash consequences and contractual failures are documented without economic rescue or tuning. Correct decisions under a limited belief do not imply accurate forecasts or stability. No autonomous entrepreneurship, production/staffing optimization, new sectors or M17.
 
 ## Later possibilities
 

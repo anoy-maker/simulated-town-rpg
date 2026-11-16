@@ -61,6 +61,8 @@ static func verify(history: Array, final: Dictionary, reference: bool = false) -
 			state.contract_day_closed = false
 			for key in ["labor_used", "business_labor", "offers", "harvest_opportunities", "meals"]:
 				state[key].clear()
+			if state.has("commodity_quotes"):
+				state.market_bought.clear()
 			daily_work.clear()
 			due.clear()
 			outcomes.clear()
@@ -85,9 +87,22 @@ static func verify(history: Array, final: Dictionary, reference: bool = false) -
 			continue
 		match e.action:
 			"purchase":
+				var price_valid: bool = PRICES[d.item] == d.unit_price
+				if state.has("commodity_quotes"):
+					var quote: Dictionary = state.commodity_quotes[e.target][d.item]
+					price_valid = quote.active and d.unit_price == quote.unit_price and d.quantity <= quote.limit
+					for key in quote:
+						price_valid = price_valid and d.quote.get(key) == quote[key]
+					price_valid = price_valid and d.quote.available == mini(quote.limit, state.entities[e.target].inventory[d.item])
 				checks.goods_and_assets = checks.goods_and_assets and e.actor != e.target and d.quantity is int and d.quantity > 0 \
-					and PRICES[d.item] == d.unit_price and d.total_price == d.quantity * d.unit_price
-				checks.goods_and_assets = checks.goods_and_assets and {"farmer": "wheat", "miller": "flour", "baker": "bread"}[state.businesses[e.target].industry] == d.item
+					and price_valid and d.total_price == d.quantity * d.unit_price
+				if not state.has("commodity_quotes"):
+					checks.goods_and_assets = checks.goods_and_assets and {"farmer": "wheat", "miller": "flour", "baker": "bread"}[state.businesses[e.target].industry] == d.item
+				elif state.entities[e.actor].kind != "business" and d.item == "bread":
+					state.market_bought[e.actor] = state.market_bought.get(e.actor, 0) + d.quantity
+					checks.goods_and_assets = checks.goods_and_assets and state.market_bought[e.actor] <= (6 if state.entities[e.actor].kind == "external" else 1)
+					if state.entities[e.actor].kind == "external":
+						checks.goods_and_assets = checks.goods_and_assets and d.unit_price <= 6
 				state.entities[e.actor].money -= d.total_price
 				state.entities[e.target].money += d.total_price
 				state.entities[e.actor].inventory[d.item] += d.quantity
@@ -267,6 +282,19 @@ static func verify(history: Array, final: Dictionary, reference: bool = false) -
 				post.active = post.filled < post.vacancies
 				state.applications[pending.application_id].status = "started"
 				state.pending_hires.erase(e.actor)
+			"quote_revised":
+				var quote: Dictionary = d.quote
+				var old: Dictionary = state.commodity_quotes.get(e.target, {}).get(quote.item, {})
+				checks.goods_and_assets = checks.goods_and_assets and state.businesses[e.target].owner == e.actor and quote.seller == e.target \
+					and quote.unit_price is int and quote.unit_price >= 1 and quote.unit_price <= 1000000000 \
+					and quote.active is bool and quote.limit is int and quote.limit >= 0 and quote.limit <= 1000000000 and quote.version is int \
+					and old.get("revised_day", -1) != state.day and quote.revised_day == state.day and quote.effective_day == state.day \
+					and quote.version == old.get("version", 0) + 1 and d.previous_version == old.get("version", 0)
+				if not state.commodity_quotes.has(e.target):
+					state.commodity_quotes[e.target] = {}
+				state.commodity_quotes[e.target][quote.item] = quote.duplicate(true)
+			"pricing_decision", "buyer_decision":
+				checks.ordered_events = checks.ordered_events and state.has("commodity_quotes")
 			"initialize", "day_started", "contract_attempt", "contract_shift": pass
 			_: checks.ordered_events = false
 		var money: int = 0
