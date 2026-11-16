@@ -98,6 +98,11 @@ func _account_transfer(actor: String, target: String, amount: Variant) -> bool:
 	return super.transfer_money(actor, target, amount)
 
 
+func _commodity_purchase(buyer: String, seller: String, item: String, quantity: Variant, price: Variant) -> bool:
+	# Protected adapter for scenarios with their own validated market authority.
+	return super.purchase(buyer, seller, item, quantity, price)
+
+
 func _wage(worker: String, business: String) -> int:
 	if _businesses[business].owner == worker:
 		return _businesses[business].owner_compensation

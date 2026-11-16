@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0–M14 complete; M15 open economy and business formation implemented and awaiting review
+**Status:** M0–M15 complete; M16 pricing and market competition implemented and awaiting review
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -446,4 +446,27 @@ A retains M14's twelve residents, businesses, endowments, prices, recipes, workp
 
 B/C explicitly endow Finn with 500 coins, legitimate finite asset sellers, twelve flour at the original mill and one finite customer purse. Finn contributes 300, buys an oven/workshop for 180/60, and retains 200 personal/60 business coins. The new firm receives no free inventory, equipment, workers or sales. After authorized resignation and a self-employment transition, his real unpaid baking shift and specified sales leave **68 cash/eight operating earnings**. A public job posting, employer offer, Iona's acceptance and an actual boundary transition delegate the next shift to Iona for six coins, leaving **70 cash/ten cumulative earnings**. Finn retains ownership without a productive affiliation. Unsold goods, missing assets, conflicting work and unfulfilled old obligations remain real.
 
-Contributions, durable asset purchases, operating flows, unpaid owner labor and distributions are separately auditable. New firms default to retaining earnings with an explicit 24-coin reserve; optional half/full policies require genuine realized remaining earnings and liquidity. Contributions never become profit. The local board exposes terms rather than private business accounts. These prescribed fixtures test infrastructure, not autonomous business development or guaranteed demand. See [M15 results and limitations](docs/M15_RESULTS.md), [run fingerprints](docs/M15_RUNS.csv), [all account outcomes](docs/M15_ACCOUNTS.csv) and [fixture assets](docs/M15_ASSETS.csv). Stop after M15 for review; no M16.
+Contributions, durable asset purchases, operating flows, unpaid owner labor and distributions are separately auditable. New firms default to retaining earnings with an explicit 24-coin reserve; optional half/full policies require genuine realized remaining earnings and liquidity. Contributions never become profit. The local board exposes terms rather than private business accounts. These prescribed fixtures test infrastructure, not autonomous business development or guaranteed demand. See [M15 results and limitations](docs/M15_RESULTS.md), [run fingerprints](docs/M15_RUNS.csv), [all account outcomes](docs/M15_ACCOUNTS.csv) and [fixture assets](docs/M15_ASSETS.csv). M15 remains an unchanged historical reference.
+
+
+## M16: Dynamic Pricing and Rational Market Competition
+
+```sh
+# A fixed; B bakery adaptive; C mill/bakery adaptive; D entire chain adaptive.
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_pricing --stage A 30 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_pricing --stage B 30 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_pricing --stage C 30 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_pricing --stage D 30 42
+# Two finite bakery stocks, independently priced at three/five coins (fixed 1 day/seed 42):
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario pricing_competition_fixture 1 42
+# Twelve preflight/30-day runs twice, independent receipt audits and compact CSV/JSON:
+python3 -B scripts/tools/run_pricing.py --output work/m16
+```
+
+All commodity purchases in M16 bind an authorized seller-specific, versioned public quote and revalidate real stock/funds. Owners can post different positive integer wheat/flour/bread prices, at most once per item/day. Quotes expose offered availability, not private business accounts. Buyers satisfy only their actual requirement, choose affordable cheapest offers with a deterministic day/buyer rotation for equal prices, and reconsider legitimate alternatives after stale/stock failures. Visitors retain finite funds and a private six-coin bread ceiling. Historical purchases and default M0 behavior remain unchanged.
+
+The separate pure pricing policy considers current−1/current/current+1 under a declared linear demand belief, choosing maximum estimated one-period operating cash with fixed production/payroll. It sees own prior transactions, resources and public offers; no customer finances, private visitor ceiling or future arrivals. All stages retain M15's exact production, labor, endowments and distribution treatment. `fixed` is the control, `rational_pricing` uses the stated belief, and `personality` is a reserved, unimplemented interface. The world executes all monetary, goods and labor operations.
+
+Actual 30-day resident meals/misses are **A 360/0, B 257/103, C 210/150, D 102/258**; contractual breaches are **0/2/41/116**. Accounting and decision-objective audits pass, but the adaptive treatments reduce food access under these particular beliefs and fixed commitments. D eventually posts one-coin prices yet loses productive working capital; no meals occur after day fourteen. No resources, demand or prices were adjusted to repair outcomes. The competition fixture and tests show real order-dependent allocation rather than assigned customers. These mechanisms do not establish autonomous stability or globally optimal pricing.
+
+`--report-json` includes daily business/household results and complete ledger fingerprints without verbose events; `--json` supports short trace inspection. See [M16 choices, actual results and limitations](docs/M16_RESULTS.md), [run fingerprints](docs/M16_RUNS.csv), [daily business results](docs/M16_BUSINESS_DAYS.csv), [village days](docs/M16_DAYS.csv) and [all final account outcomes](docs/M16_ACCOUNTS.csv). Stop after M16 for review; no M17.

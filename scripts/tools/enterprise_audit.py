@@ -9,6 +9,7 @@ def audit(data):
     state = copy.deepcopy(history[0]["details"]["state"])
     entities, books, assets = state["entities"], state["cash_results"], state["productive_assets"]
     affiliations, jobs = state["affiliations"], state["employment"]
+    quotes = state.get("commodity_quotes")
     combined = sum(p["money"] for p in entities.values())
     receipts, claimed, worked = set(), set(), set()
     consumed = {}
@@ -20,7 +21,15 @@ def audit(data):
             worked.clear()
         if not e["success"]:
             continue
-        if action == "business_founded":
+        if action == "quote_revised":
+            q = d["quote"]
+            previous = quotes.get(target, {}).get(q["item"], {})
+            assert state["businesses"][target]["owner"] == actor and q["seller"] == target
+            assert type(q["unit_price"]) is int and 1 <= q["unit_price"] <= 1_000_000_000
+            assert previous.get("revised_day", -1) != e["day"] and q["revised_day"] == q["effective_day"] == e["day"]
+            assert q["version"] == previous.get("version", 0) + 1
+            quotes.setdefault(target, {})[q["item"]] = copy.deepcopy(q)
+        elif action == "business_founded":
             assert target not in entities and d["entity"]["money"] == 0
             assert all(n == 0 for n in d["entity"]["inventory"].values())
             assert d["business"]["owner"] == actor and not d["business"]["employees"]
@@ -30,7 +39,14 @@ def audit(data):
             books[target] = copy.deepcopy(d["book"])
         elif action == "purchase":
             item, qty, price = (d[k] for k in ("item", "quantity", "unit_price"))
-            assert type(qty) is int and qty > 0 and price == {"wheat": 2, "flour": 4, "bread": 4}[item]
+            assert type(qty) is int and qty > 0
+            if quotes is None:
+                assert price == {"wheat": 2, "flour": 4, "bread": 4}[item]
+            else:
+                q = quotes[target][item]
+                assert q["active"] and price == q["unit_price"] and qty <= q["limit"]
+                assert all(d["quote"][k] == v for k, v in q.items())
+                assert d["quote"]["available"] == min(q["limit"], entities[target]["inventory"][item])
             assert d["total_price"] == qty * price
             entities[actor]["money"] -= qty * price
             entities[target]["money"] += qty * price
@@ -129,6 +145,8 @@ def audit(data):
     assert receipts == claimed and entities == r["final"]["entities"] and books == r["final"]["cash_results"]
     assert assets == r["final"]["productive_assets"] and set(assets) == set(r["initial"]["productive_assets"])
     assert affiliations == r["final"]["affiliations"]
+    if quotes is not None:
+        assert quotes == r["final"]["commodity_quotes"]
     for actor, entity in entities.items():
         account = r["accounts"][actor]
         assert account["consumed"] == consumed.get(actor, 0)
