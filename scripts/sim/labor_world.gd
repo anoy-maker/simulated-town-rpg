@@ -19,7 +19,7 @@ func _init(seed_value: int = 42, initial: Dictionary = Config.initial()) -> void
 	var people: Dictionary = {}
 	for entity in initial.entities:
 		people[entity.id] = entity
-		assert(entity.kind in ["resident", "business"])
+		assert(entity.kind in _account_kinds())
 		if entity.kind == "resident":
 			assert(entity.labor_capacity == 1 and entity.skills is Array)
 			for skill in entity.skills:
@@ -44,6 +44,14 @@ func _init(seed_value: int = 42, initial: Dictionary = Config.initial()) -> void
 		assert(worker in _businesses[job.business].employees)
 		assert(job.wage is int and job.wage > 0 and job.wage <= MAX_AMOUNT)
 	super(initial.entities)
+
+
+func _account_kinds() -> Array:
+	return ["resident", "business"]
+
+
+func _consume_account_goods(actor: String, amount: Variant) -> bool:
+	return super.consume(actor, amount)
 
 
 func snapshot() -> Dictionary:
@@ -98,6 +106,10 @@ func _wage(worker: String, business: String) -> int:
 
 
 func _shift_error(worker: String, business: String) -> String:
+	return _paid_shift_error(worker, business)
+
+
+func _paid_shift_error(worker: String, business: String) -> String:
 	if not _entities.has(worker) or _entities[worker].kind != "resident":
 		return "unknown_worker"
 	if not _businesses.has(business):
@@ -108,6 +120,11 @@ func _shift_error(worker: String, business: String) -> String:
 	var wage: int = _wage(worker, business)
 	if wage == 0:
 		return "not_employed"
+	return _productive_shift_error(worker, business, wage)
+
+
+func _productive_shift_error(worker: String, business: String, wage: int) -> String:
+	var firm: Dictionary = _businesses[business]
 	if firm.industry not in _entities[worker].skills:
 		return "missing_skill"
 	if _labor_used.get(worker, 0) >= _entities[worker].labor_capacity:
@@ -170,12 +187,7 @@ func work_shift(worker: String, business: String) -> bool:
 	var paid: bool = _account_transfer(business, worker, wage)
 	assert(paid)
 	var payment_id: int = _events.back().id
-	var rule: Dictionary = Config.INDUSTRIES[_businesses[business].industry]
-	var produced: bool
-	if _businesses[business].industry == "farmer":
-		produced = super.harvest(business, _harvests[worker])
-	else:
-		produced = super.produce(business, rule.recipe, rule.batches)
+	var produced: bool = _produce_for_shift(worker, business)
 	assert(produced)
 	var production_id: int = _events.back().id
 	_labor_used[worker] = _labor_used.get(worker, 0) + 1
@@ -184,6 +196,11 @@ func work_shift(worker: String, business: String) -> bool:
 	_record("work_shift", worker, business, true, {"worker": worker, "labor": 1, "wage": wage,
 		"offer_id": key, "payment_event_id": payment_id, "production_event_id": production_id})
 	return true
+
+
+func _produce_for_shift(worker: String, business: String) -> bool:
+	var rule: Dictionary = Config.INDUSTRIES[_businesses[business].industry]
+	return super.harvest(business, _harvests[worker]) if _businesses[business].industry == "farmer" else super.produce(business, rule.recipe, rule.batches)
 
 
 func harvest(actor: String, amount: Variant) -> bool:

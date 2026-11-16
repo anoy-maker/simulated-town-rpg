@@ -12,6 +12,9 @@ const Labor = preload("res://scripts/sim/labor_runner.gd")
 const Finance = preload("res://scripts/sim/finance_runner.gd")
 const Equilibrium = preload("res://scripts/sim/equilibrium_runner.gd")
 const Employer = preload("res://scripts/sim/employer_runner.gd")
+const ExternalTrade = preload("res://scripts/sim/external_trade_runner.gd")
+const EnterpriseFixtures = preload("res://scripts/sim/enterprise_fixtures.gd")
+const ENTERPRISE_SCENARIOS = ["settlement_external_trade_reference", "enterprise_startup_fixture", "enterprise_delegation_fixture"]
 const Profitable = preload("res://scripts/sim/profitable_runner.gd")
 const Causality = preload("res://scripts/sim/causality_runner.gd")
 const CausalityReport = preload("res://scripts/sim/causality_report.gd")
@@ -22,8 +25,8 @@ func _init() -> void:
 	var args = OS.get_cmdline_user_args()
 	var scenario: String = "m0"
 	if not args.is_empty() and args[0] == "--scenario":
-		if args.size() < 2 or args[1] not in ["m0", "trading", "agents", "coordination", "planning", "market", "market_downstream", "calibration", "settlement_labor", "settlement_finance", "settlement_equilibrium_reference", "settlement_employer_choice", "settlement_fixed_owner_first", "settlement_sales_rotating", "settlement_profitable_reference"]:
-			_fail("Scenario must be m0, trading, agents, coordination, planning, market, market_downstream, calibration, settlement_labor, settlement_finance, settlement_equilibrium_reference, settlement_employer_choice, settlement_fixed_owner_first, settlement_sales_rotating, or settlement_profitable_reference.")
+		if args.size() < 2 or args[1] not in ["m0", "trading", "agents", "coordination", "planning", "market", "market_downstream", "calibration", "settlement_labor", "settlement_finance", "settlement_equilibrium_reference", "settlement_employer_choice", "settlement_fixed_owner_first", "settlement_sales_rotating", "settlement_profitable_reference", "settlement_external_trade_reference", "enterprise_startup_fixture", "enterprise_delegation_fixture"]:
+			_fail("Scenario must be m0, trading, agents, coordination, planning, market, market_downstream, calibration, settlement_labor, settlement_finance, settlement_equilibrium_reference, settlement_employer_choice, settlement_fixed_owner_first, settlement_sales_rotating, settlement_profitable_reference, settlement_external_trade_reference, enterprise_startup_fixture, or enterprise_delegation_fixture.")
 			return
 		scenario = args[1]
 		args = args.slice(2)
@@ -50,14 +53,20 @@ func _init() -> void:
 		args = args.slice(2)
 	if args.size() > 3 or (args.size() > 0 and not args[0].is_valid_int()) \
 			or (args.size() > 1 and not args[1].is_valid_int()) \
-			or (args.size() > 2 and args[2] != "--json" and not ((scenario in STUDY_SCENARIOS and args[2] in ["--report-json", "--study-json"]) or (scenario == "settlement_profitable_reference" and args[2] == "--report-json"))):
-		_fail("Usage: run_simulation.gd -- [--scenario m0|trading|agents|coordination|planning|market|market_downstream|calibration|settlement_labor|settlement_finance|settlement_equilibrium_reference|settlement_employer_choice|settlement_fixed_owner_first|settlement_sales_rotating|settlement_profitable_reference] [--experiment name] [--priority commitment-first|immediate-needs-first] [--distribution none|needs|half-surplus] [days (0..10000)] [seed] [--json, --report-json, or --study-json (M11–M14 reports; M11–M13 study)]")
+			or (args.size() > 2 and args[2] != "--json" and not ((scenario in STUDY_SCENARIOS and args[2] in ["--report-json", "--study-json"]) or (scenario in ["settlement_profitable_reference"] + ENTERPRISE_SCENARIOS and args[2] == "--report-json"))):
+		_fail("Usage: run_simulation.gd -- [--scenario m0|trading|agents|coordination|planning|market|market_downstream|calibration|settlement_labor|settlement_finance|settlement_equilibrium_reference|settlement_employer_choice|settlement_fixed_owner_first|settlement_sales_rotating|settlement_profitable_reference|settlement_external_trade_reference|enterprise_startup_fixture|enterprise_delegation_fixture] [--experiment name] [--priority commitment-first|immediate-needs-first] [--distribution none|needs|half-surplus] [days (0..10000)] [seed] [--json, --report-json, or --study-json (M11–M15 reports; M11–M13 study)]")
 		return
 	var days: int = int(args[0]) if args.size() > 0 else 30
 	var seed_value: int = int(args[1]) if args.size() > 1 else 42
 	if days < 0 or days > 10000:
 		_fail("Days must be between 0 and 10000.")
 		return
+	if scenario in ["enterprise_startup_fixture", "enterprise_delegation_fixture"]:
+		var fixture_days: int = 1 if scenario == "enterprise_startup_fixture" else 2
+		if (args.size() > 0 and days != fixture_days) or seed_value != 42:
+			_fail("Transaction fixtures use their fixed %d-day sequence and seed 42." % fixture_days)
+			return
+		days = fixture_days
 	var simulation = Trading.new(seed_value) if scenario == "trading" else Simulation.new(seed_value)
 	if scenario == "agents":
 		simulation = Agents.new(seed_value)
@@ -79,11 +88,18 @@ func _init() -> void:
 		simulation = Equilibrium.new(seed_value)
 	elif scenario == "settlement_employer_choice":
 		simulation = Employer.new(seed_value)
+	elif scenario == "settlement_external_trade_reference":
+		simulation = ExternalTrade.new(seed_value)
+	elif scenario == "enterprise_startup_fixture":
+		simulation = EnterpriseFixtures.owner_sale()
+	elif scenario == "enterprise_delegation_fixture":
+		simulation = EnterpriseFixtures.delegation()
 	elif scenario == "settlement_profitable_reference":
 		simulation = Profitable.new(seed_value)
 	elif scenario in [Causality.Treatment.FIXED_OWNER, Causality.Treatment.SALES_ROTATING]:
 		simulation = Causality.new(seed_value, scenario)
-	simulation.run(days)
+	if scenario not in ["enterprise_startup_fixture", "enterprise_delegation_fixture"]:
+		simulation.run(days)
 	var report: Dictionary = simulation.report()
 	if scenario in STUDY_SCENARIOS and args.size() > 2 and args[2] == "--study-json":
 		var history: Array = simulation.world.events()
@@ -93,11 +109,13 @@ func _init() -> void:
 			"ledger_sha256": JSON.stringify(history, "", true).sha256_text()}, "", true))
 		quit(0)
 		return
-	if scenario in STUDY_SCENARIOS + ["settlement_profitable_reference"] and (args.size() < 3 or args[2] == "--report-json"):
+	if scenario in STUDY_SCENARIOS + ["settlement_profitable_reference"] + ENTERPRISE_SCENARIOS and (args.size() < 3 or args[2] == "--report-json"):
 		if args.size() > 2:
 			print(JSON.stringify({"report": report}, "", true))
 		else:
-			if scenario == "settlement_profitable_reference":
+			if scenario in ENTERPRISE_SCENARIOS:
+				_print_enterprise(report)
+			elif scenario == "settlement_profitable_reference":
 				_print_profitable(report)
 			else:
 				_print_reference(report)
@@ -220,4 +238,14 @@ func _print_profitable(report: Dictionary) -> void:
 		cash[id] = report.final.entities[id].money
 	print("Cash: " + JSON.stringify(cash, "", true))
 	print("Realized operating cash: " + JSON.stringify(report.profitable.cash_results, "", true))
+	print("Verification: " + JSON.stringify(report.profitable.verification, "", true))
+
+
+func _print_enterprise(report: Dictionary) -> void:
+	print("Simulated Town RPG M15 | %s days=%d seed=%d" % [report.scenario, report.days, report.seed])
+	print("Prescribed reference/transaction fixtures; no autonomous entrepreneurship.")
+	print("Boundary and activity: " + JSON.stringify(report.open_economy, "", true))
+	print("Paid shifts=%d wages=%d distributions=%d" % [report.shifts.paid, report.shifts.wages, report.profitable.distributions.amount])
+	print("Goods: " + JSON.stringify(report.totals, "", true))
+	print("Contracts: due=%d fulfilled=%d breaches=%d" % [report.profitable.contracts.due, report.profitable.contracts.completed, report.profitable.contracts.breaches])
 	print("Verification: " + JSON.stringify(report.profitable.verification, "", true))

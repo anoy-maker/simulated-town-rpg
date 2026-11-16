@@ -9,13 +9,17 @@ var _day_start: int = 0
 
 func _init(seed_value: int = 42, initial: Dictionary = Terms.initial()) -> void:
 	for business in initial.businesses:
-		_cash_results[business] = {"sales": 0, "inputs": 0, "payroll": 0, "distributions": 0}
+		_cash_results[business] = _new_cash_book()
 	for job in initial.employment.values():
 		var employees: Array = initial.businesses[job.business].employees.duplicate()
 		employees.sort()
 		assert(job.wage == Terms.WAGE and job.contract == {"cycle_days": 3, "shifts_per_cycle": 2,
 			"cycle_compensation": 12, "phases": Terms.PHASES[employees.find(job.worker)]})
 	super(seed_value, initial)
+
+
+func _new_cash_book() -> Dictionary:
+	return {"sales": 0, "inputs": 0, "payroll": 0, "distributions": 0}
 
 
 func _minimum_owner_compensation() -> int:
@@ -41,9 +45,29 @@ func _record(action: String, actor: String, target: String, success: bool, detai
 		if _cash_results.has(target):
 			_cash_results[target].sales += details.total_price
 	elif success and action == "transfer_money" and _cash_results.has(actor):
-		var category: String = "distributions" if target == _businesses[actor].owner else "payroll"
-		_cash_results[actor][category] += details.amount
+		_book_transfer(actor, target, details.amount)
 	super(action, actor, target, success, details)
+
+
+func _book_transfer(actor: String, target: String, amount: int) -> void:
+	var category: String = "distributions" if target == _businesses[actor].owner else "payroll"
+	_cash_results[actor][category] += amount
+
+
+func _contract_business_ids() -> Array:
+	return Config.BUSINESS_ORDER
+
+
+func _contract_workers(business: String) -> Array:
+	return Terms.workers(_businesses[business], _day)
+
+
+func _contract_wage(worker: String) -> int:
+	return Terms.WAGE
+
+
+func _contract_phase(worker: String) -> int:
+	return (_day - 1) % 3 + 1
 
 
 func advance_day() -> void:
@@ -52,10 +76,10 @@ func advance_day() -> void:
 	_contract_day_closed = false
 	_day_start = _events.size()
 	super()
-	for business in Config.BUSINESS_ORDER:
-		for worker in Terms.workers(_businesses[business], _day):
+	for business in _contract_business_ids():
+		for worker in _contract_workers(business):
 			_record("contract_due", worker, business, true, {"contract_id": _contract_id(business, worker),
-				"employer": _businesses[business].owner, "expected_compensation": Terms.WAGE, "phase": (_day - 1) % 3 + 1})
+				"employer": _businesses[business].owner, "expected_compensation": _contract_wage(worker), "phase": _contract_phase(worker)})
 
 
 func _contract_id(business: String, worker: String) -> String:
@@ -80,7 +104,7 @@ func _shift_error(worker: String, business: String) -> String:
 	if reason.is_empty():
 		if _contract_day_closed or _settlement_ready():
 			return "productive_day_finished"
-		if worker not in Terms.workers(_businesses[business], _day):
+		if worker not in _contract_workers(business):
 			return "no_contract_shift_due"
 	return reason
 
@@ -99,7 +123,7 @@ func _constraints(business: String, worker: String) -> Dictionary:
 func offer_shift(owner: String, business: String, worker: String) -> bool:
 	var before: Dictionary = _constraints(business, worker)
 	var authorized: bool = _businesses.has(business) and _businesses[business].owner == owner \
-		and _day > 0 and worker in Terms.workers(_businesses[business], _day)
+		and _day > 0 and worker in _contract_workers(business)
 	var success: bool = super(owner, business, worker)
 	var command: Dictionary = _events.back()
 	_record("contract_attempt", owner, business, success, {"worker": worker, "authorized_attempt": authorized,
@@ -148,8 +172,8 @@ func close_contract_day() -> void:
 	var due: int = 0
 	var completed: int = 0
 	var history: Array = _events.slice(_day_start)
-	for business in Config.BUSINESS_ORDER:
-		for worker in Terms.workers(_businesses[business], _day):
+	for business in _contract_business_ids():
+		for worker in _contract_workers(business):
 			due += 1
 			var attempt: Dictionary = {}
 			var work: Dictionary = {}
@@ -173,7 +197,7 @@ func close_contract_day() -> void:
 			var reason: String = "fulfilled" if fulfilled else ("employer_did_not_schedule" if attempt.is_empty() else failure if not failure.is_empty() else "offered_not_completed")
 			_record("contract_shift", worker, business, fulfilled, {"contract_id": _contract_id(business, worker),
 				"employer": _businesses[business].owner, "attempted": not attempt.is_empty(), "completed": fulfilled,
-				"expected_compensation": Terms.WAGE, "actual_compensation": work.details.wage if fulfilled else 0,
+				"expected_compensation": _contract_wage(worker), "actual_compensation": work.details.wage if fulfilled else 0,
 				"reason": reason, "attempt_event_id": null if attempt.is_empty() else attempt.id,
 				"shift_event_id": null if work.is_empty() else work.id,
 				"constraints": failure_constraints if not fulfilled and not failure_constraints.is_empty() else _constraints(business, worker) if attempt.is_empty() else attempt.details.constraints})
@@ -185,7 +209,7 @@ func close_contract_day() -> void:
 		var entity: Dictionary = _entities[id]
 		if entity.kind == "business":
 			business_cash[id] = entity.money
-		else:
+		elif entity.kind == "resident":
 			household_cash[id] = entity.money
 		for item in goods:
 			goods[item] += entity.inventory[item]

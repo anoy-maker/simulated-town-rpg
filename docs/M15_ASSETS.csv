@@ -1,0 +1,17 @@
+scenario,asset_id,capacity,for_sale,holder,industry,kind,price
+enterprise_startup_fixture,bakery:oven,4,False,bakery,baker,oven,0
+enterprise_startup_fixture,bakery:workshop,4,False,bakery,baker,workshop,0
+enterprise_startup_fixture,farm:farm_tools,4,False,farm,farmer,farm_tools,0
+enterprise_startup_fixture,farm:workshop,4,False,farm,farmer,workshop,0
+enterprise_startup_fixture,mill:millstone,4,False,mill,miller,millstone,0
+enterprise_startup_fixture,mill:workshop,4,False,mill,miller,workshop,0
+enterprise_startup_fixture,spare_oven,1,False,finn_bakery,baker,oven,180
+enterprise_startup_fixture,spare_workshop,1,False,finn_bakery,baker,workshop,60
+enterprise_delegation_fixture,bakery:oven,4,False,bakery,baker,oven,0
+enterprise_delegation_fixture,bakery:workshop,4,False,bakery,baker,workshop,0
+enterprise_delegation_fixture,farm:farm_tools,4,False,farm,farmer,farm_tools,0
+enterprise_delegation_fixture,farm:workshop,4,False,farm,farmer,workshop,0
+enterprise_delegation_fixture,mill:millstone,4,False,mill,miller,millstone,0
+enterprise_delegation_fixture,mill:workshop,4,False,mill,miller,workshop,0
+enterprise_delegation_fixture,spare_oven,1,False,finn_bakery,baker,oven,180
+enterprise_delegation_fixture,spare_workshop,1,False,finn_bakery,baker,workshop,60
