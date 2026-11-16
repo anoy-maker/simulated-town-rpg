@@ -1,4 +1,5 @@
 extends RefCounted
+const ExecutionProfile=preload("res://scripts/sim/execution_profile.gd")
 ## Read-only conditional business cash flows. State: cash, flour, bread, retained earnings.
 static func operate(state: Array, procure: bool, supply: int=12, input_price: int=4) -> Dictionary:
 	var s=state.duplicate()
@@ -32,6 +33,8 @@ static func mean_sales(pmf: Array, stock: float) -> float:
 	return value
 
 static func continuation(state: Array, price: int, forecasts: Array, supply: int) -> float:
+	var _profile_scope=ExecutionProfile.scope("continuation") if ExecutionProfile.enabled else null
+	if ExecutionProfile.enabled: ExecutionProfile.count("continuation_calls")
 	var first=operate(state,true,supply)
 	var totals: Array=[]
 	totals.resize(mini(24,int(first.state[2]))+1)

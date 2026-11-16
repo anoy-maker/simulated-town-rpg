@@ -1,4 +1,5 @@
 extends "res://scripts/sim/spatial_runner.gd"
+const ExecutionProfile=preload("res://scripts/sim/execution_profile.gd")
 const LearningWorld=preload("res://scripts/sim/learning_world.gd")
 const LearningPolicy=preload("res://scripts/sim/bakery_policy.gd")
 const ShortMemory=preload("res://scripts/sim/pricing_policy.gd")
@@ -21,6 +22,7 @@ func _day_completed() -> void:
 
 func _after_appointments(minute: int) -> void:
 	if minute!=745: return
+	var profile_start: Dictionary=ExecutionProfile.decision_start() if ExecutionProfile.enabled else {}
 	var o: Dictionary=world.planning_observation(posted)
 	var proposal: Dictionary={"selected_price":4,"reason":"fixed","candidates":[]}
 	if stage=="B":
@@ -33,6 +35,7 @@ func _after_appointments(minute: int) -> void:
 	if proposal.selected_price!=o.current_price: success=world.revise_quote("cora","bakery","bread",proposal.selected_price)
 	decisions.append({"day":o.day,"observation":o,"beliefs":world.beliefs.duplicate(true),"proposal":proposal,"success":success})
 	if success and proposal.selected_price not in posted: posted.append(proposal.selected_price)
+	if ExecutionProfile.enabled: ExecutionProfile.decision_end(profile_start,o.day,world.memory.cora.size())
 
 func _reference_verification(history: Array,final: Dictionary) -> Dictionary:
 	return preload("res://scripts/sim/spatial_audit.gd").verify(history,final,true)

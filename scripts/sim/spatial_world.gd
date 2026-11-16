@@ -18,6 +18,7 @@ func _init(seed_value: int=42, experiment: String="control") -> void:
 
 
 func snapshot() -> Dictionary:
+	var _profile_scope=ExecutionProfile.scope("state_copy") if ExecutionProfile.enabled else null
 	var state: Dictionary=super()
 	state["spatial"]=_space.duplicate(true)
 	state["cargo"]=_cargo.duplicate(true)
@@ -33,6 +34,7 @@ func _body(account: String) -> String:
 
 
 func _record(action: String, actor: String, target: String, success: bool, details: Dictionary) -> void:
+	var _profile_scope=ExecutionProfile.scope("logging") if ExecutionProfile.enabled else null
 	details=details.duplicate(true)
 	var physical: String=_completing if not _completing.is_empty() else _external_consumer if not _external_consumer.is_empty() else _body(actor)
 	if success and action=="purchase" and _businesses.has(actor):
@@ -117,6 +119,7 @@ func depart(id: String, destination: Variant, arrive_by: Variant=1440) -> bool:
 
 
 func move_step(id: String, tile: Variant) -> bool:
+	var _profile_scope=ExecutionProfile.scope("spatial") if ExecutionProfile.enabled else null
 	if not _valid_tile(tile) or not _space.presences.has(id):
 		return _reject("spatial_moved",id,"",{},"invalid_step")
 	var p: Dictionary=_space.presences[id]
@@ -138,6 +141,7 @@ func move_step(id: String, tile: Variant) -> bool:
 
 
 func advance_time(target: Variant) -> bool:
+	var _profile_scope=ExecutionProfile.scope("spatial") if ExecutionProfile.enabled else null
 	if _day==0 or not target is int or target<_space.minute or target>1440 or target%5!=0:
 		return _reject("spatial_clock", "world","",{},"invalid_clock_target")
 	while _space.minute<target:
@@ -240,6 +244,7 @@ func buyer_observation(buyer: String, item: String, requested: int) -> Dictionar
 
 
 func purchase_quote(buyer: String, supplied: Variant, quantity: Variant) -> bool:
+	var _profile_scope=ExecutionProfile.scope("transactions") if ExecutionProfile.enabled else null
 	var seller: String=supplied.get("seller","") if supplied is Dictionary and supplied.get("seller") is String else ""
 	var id: String=_body(buyer)
 	var reason: String=""
@@ -276,6 +281,7 @@ func procure(owner: String, business: String, seller: String, item: String) -> b
 
 
 func deposit(owner: String, business: String) -> bool:
+	var _profile_scope=ExecutionProfile.scope("spatial") if ExecutionProfile.enabled else null
 	var reason: String=""
 	if not _cargo.has(business) or _cargo[business].holder!=owner or _businesses[business].owner!=owner: reason="unauthorized_courier"
 	elif not _at(owner,Town.SITES[business]) or not _available(owner): reason="not_available_at_warehouse"

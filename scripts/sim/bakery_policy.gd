@@ -1,4 +1,5 @@
 extends RefCounted
+const ExecutionProfile=preload("res://scripts/sim/execution_profile.gd")
 const Beliefs=preload("res://scripts/sim/bakery_beliefs.gd")
 const Finance=preload("res://scripts/sim/bakery_finance.gd")
 
@@ -10,6 +11,8 @@ static func candidates(current: int, posted: Array) -> Array:
 	return out
 
 static func forecasts(b: Dictionary, prices: Array, carry: int) -> Dictionary:
+	var _profile_scope=ExecutionProfile.scope("forecast") if ExecutionProfile.enabled else null
+	if ExecutionProfile.enabled: ExecutionProfile.count("forecast_prices",prices.size())
 	var cache: Dictionary={}
 	for p in prices: cache[p]=[]
 	var next=Beliefs.hazard(b)
@@ -32,6 +35,7 @@ static func best_continuation(state: Array, current: int, prices: Array, cache: 
 	return {"price":selected,"value":best}
 
 static func decide(o: Dictionary, b: Dictionary, stage: String) -> Dictionary:
+	var _profile_scope=ExecutionProfile.scope("price_search") if ExecutionProfile.enabled else null
 	var prices=candidates(o.current_price,o.posted)
 	var operated=Finance.operate(o.state,false)
 	var stock: int=int(operated.state[2])
@@ -39,6 +43,7 @@ static func decide(o: Dictionary, b: Dictionary, stage: String) -> Dictionary:
 	var selected: int=o.current_price
 	var maximum=-INF
 	for p in prices:
+		if ExecutionProfile.enabled: ExecutionProfile.count("candidates")
 		var next_prices=candidates(p,o.posted+[p])
 		var frozen=forecasts(b,next_prices,o.carry)
 		var ordinary=0.0
@@ -48,6 +53,7 @@ static func decide(o: Dictionary, b: Dictionary, stage: String) -> Dictionary:
 		for l in local:
 			var visitors=Beliefs.quadrature(Beliefs.outcomes(b,"visitor",p,stock-l.sales,0,o.minimum[1]))
 			for v in visitors:
+				if ExecutionProfile.enabled: ExecutionProfile.count("observable_branches")
 				var probability: float=l.probability*v.probability
 				var closing=Finance.close(operated.state,p,l.sales+v.sales)
 				var old=best_continuation(closing.state,p,next_prices,frozen,o.supply)
