@@ -32,7 +32,7 @@ func _init(seed_value: int = 42, initial: Dictionary = Config.initial()) -> void
 		assert(business.assets.daily_slots is int and business.assets.daily_slots in range(1, 13))
 		assert(business.assets.batches_per_shift == Config.INDUSTRIES[business.industry].batches)
 		assert(business.output_target is int and business.output_target > 0 and business.output_target <= MAX_AMOUNT)
-		assert(business.owner_compensation is int and business.owner_compensation > 0 and business.owner_compensation <= MAX_AMOUNT)
+		assert(business.owner_compensation is int and business.owner_compensation >= _minimum_owner_compensation() and business.owner_compensation <= MAX_AMOUNT)
 		var unique: Array = []
 		for worker in business.employees:
 			assert(worker not in unique and people[worker].kind == "resident")
@@ -79,6 +79,15 @@ func _harvest_opportunity() -> int:
 
 func _unit_price(item: String) -> int:
 	return Config.PRICES[item]
+
+
+func _minimum_owner_compensation() -> int:
+	return 1
+
+
+func _account_transfer(actor: String, target: String, amount: Variant) -> bool:
+	# Protected command adapter: public ordinary money transfers remain forbidden.
+	return super.transfer_money(actor, target, amount)
 
 
 func _wage(worker: String, business: String) -> int:
@@ -158,7 +167,7 @@ func work_shift(worker: String, business: String) -> bool:
 	var wage: int = _wage(worker, business)
 	# All wage, stock, capacity and labor checks precede every write. These native
 	# commands cannot fail after the checks above in this synchronous execution.
-	var paid: bool = super.transfer_money(business, worker, wage)
+	var paid: bool = _account_transfer(business, worker, wage)
 	assert(paid)
 	var payment_id: int = _events.back().id
 	var rule: Dictionary = Config.INDUSTRIES[_businesses[business].industry]

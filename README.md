@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0–M12 complete; M13 economic-causality experiment implemented and awaiting review
+**Status:** M0–M13 complete; M14 profitable contractual reference implemented and awaiting review
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -400,4 +400,26 @@ The controlled 2×2 study keeps all M11 resources, prices, wages, skills, assets
 
 Annual results: M11 and B each consume **4380 meals**, with **2190 paid shifts** and zero misses; their complete successful economic movement fingerprints match. A consumes **1182 meals**, with 631 shifts and 3198 misses; M12 consumes 1122, with 563 shifts and 3258 misses. Staffing causes the initial day-two exclusion while bread is available. Continued fixed production accumulates stock and becomes cash constrained on day six; forecasting preserves capital but further reduces employee income. These are matched findings for the specified rules, not proof about all employers or economies.
 
-`--report-json` supports all four study scenarios while preserving control bytes. `--study-json` adds a separate post-run observer with food-access/stock/financial-constraint diagnostics, plan counts/selections and a short initial trace. It never enters NPC observations. Reports stay compact and do not export annual ledgers. All currency remains 432; no policy was tuned after outcomes. See [M13 setup, causal analysis, verification and limits](docs/M13_RESULTS.md), [run table](docs/M13_RUNS.csv), [resident table](docs/M13_RESIDENTS.csv), and [business table](docs/M13_BUSINESSES.csv). Stop after M13 for review; no corrective policies or M14.
+`--report-json` supports all four study scenarios while preserving control bytes. `--study-json` adds a separate post-run observer with food-access/stock/financial-constraint diagnostics, plan counts/selections and a short initial trace. It never enters NPC observations. Reports stay compact and do not export annual ledgers. All currency remains 432; no policy was tuned after outcomes. See [M13 setup, causal analysis, verification and limits](docs/M13_RESULTS.md), [run table](docs/M13_RUNS.csv), [resident table](docs/M13_RESIDENTS.csv), and [business table](docs/M13_BUSINESSES.csv). The M13 results remain an unchanged historical comparison.
+
+
+## M14: Profitable Ownership and Contractual Employment Reference
+
+```sh
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_profitable_reference 1 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_profitable_reference 2 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_profitable_reference 3 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_profitable_reference 30 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_profitable_reference 365 42
+python3 -B scripts/tools/run_profitable.py --output work/m14
+# Compact annual report, verification flags and complete-ledger fingerprint:
+godot --headless --no-header --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_profitable_reference 365 42 --report-json
+```
+
+This isolated prescribed reference retains M11's twelve residents, ownership, skills, assets, 432 starting coins, empty inventories, 2/4/4 prices and paid production recipes. The three owners manage without productive shifts or wages. Nine employees earn six coins per completed shift, working two shifts per three-day cycle under the exact fixed rotation. Required work is attempted regardless of sales or unsold stock; real stock, wages, eligibility and capacity still constrain execution. Explicit due/attempt/outcome records distinguish fulfilled work, constrained breaches and failure to schedule, without debt, substitutions or catch-up shifts.
+
+After household buying and consumption, actual owners receive all eligible realized operating cash above the original 120-coin capital floor. Cumulative sales minus input spending, payroll and prior distributions must support every payment. Unsold goods and initial capital create no income. A linked native transfer moves existing coins; ownership income is reported separately from wages. This is restricted cash-surplus accounting, not inventory-valued accrual profit or M10's discretionary capital withdrawal policy.
+
+All requested horizons reproduce the reference. The year has **4380 meals, 2190 employee shifts, 13140 wage coins, 4380 owner-distribution coins, zero missed meals and zero breaches**. Owners receive 1460 each without working; each firm closes daily at 120 with no inventory. Household balances repeat every three days. Every event conserves 432 coins. These prescribed results demonstrate feasibility under fixed assumptions, not autonomous stability or shock resilience.
+
+See [M14 actual results, accounting, synthetic failures and limitations](docs/M14_RESULTS.md), [five run rows](docs/M14_RUNS.csv), [resident outcomes](docs/M14_RESIDENTS.csv) and [business outcomes](docs/M14_BUSINESSES.csv). Historical worlds/default CLI and results remain unchanged. Stop after M14 for review; no M15.

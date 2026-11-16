@@ -44,6 +44,17 @@ def audit(data):
     flows = {a: dict(earned=0, spent=0, sales=0, purchases=0, wages_received=0, wages_paid=0,
                      shifts=0, produced=dict.fromkeys(ITEMS, 0), consumed=0, purchases_successful=0, purchases_failed=0,
                      last_production_day=0, last_business_day=0, last_work_day=0, schedule_reasons={}) for a in state["entities"]}
+    profitable = report["scenario"] == "settlement_profitable_reference"
+    contract_due, contract_outcomes, profit_before = {}, {}, {}
+    contract_totals = dict(due=0, attempted=0, completed=0, breaches=0, expected_compensation=0, paid_compensation=0,
+                           by_employee={}, breach_reasons={})
+    income = dict(transactions=0, amount=0, rejected=0)
+    if profitable:
+        for account in flows.values():
+            account.update(profit_distributions_received=0, profit_distributions_paid=0)
+        for worker in state["employment"]:
+            contract_totals["by_employee"][worker] = dict(due=0, attempted=0, completed=0, breaches=0,
+                                                       expected_compensation=0, paid_compensation=0)
     finance = "finance" in report
     withdrawals = dict(successful=0, rejected=0, amount=0, without_shift=0, by_business={})
     if finance:
@@ -65,13 +76,18 @@ def audit(data):
     for index, event in enumerate(history, 1):
         assert event["id"] == index
         action, actor, target, d = (event[k] for k in ("action", "actor", "target", "details"))
-        if not event["success"] and action not in ("labor_decision", "employer_plan"):
+        if not event["success"] and action not in ("labor_decision", "employer_plan", "contract_attempt", "contract_shift"):
             failure = action + ":" + d["reason"]
             failures[failure] = failures.get(failure, 0) + 1
             if len(notable) < 8:
                 notable.append(event)
         if action == "day_started":
             state["day"] += 1
+            if profitable:
+                assert state["contract_day_closed"]
+                state["contract_day_closed"] = False
+                contract_due.clear()
+                contract_outcomes.clear()
             for field in ("labor_used", "business_labor", "offers", "harvest_opportunities", "meals"):
                 state[field].clear()
         assert event["day"] == state["day"]
@@ -111,6 +127,36 @@ def audit(data):
             withdrawals[result] += 1
             if target in withdrawals["by_business"]:
                 withdrawals["by_business"][target][result] += 1
+        if profitable and action == "profit_distribution" and not event["success"]:
+            income["rejected"] += 1
+        if profitable and action == "contract_attempt":
+            command = history[d["command_event_id"] - 1]
+            assert command["id"] == index - 1 and command["action"] == "shift_offered"
+            assert command["actor"] == actor and command["target"] == target and command["success"] == event["success"]
+        if profitable and action == "contract_shift":
+            assert actor in contract_due and actor not in contract_outcomes and contract_due[actor] == target
+            assert d["contract_id"] == f"{state['day']}:{target}:{actor}" and d["employer"] == state["businesses"][target]["owner"]
+            assert d["completed"] == event["success"] and d["expected_compensation"] == 6 and d["actual_compensation"] == (6 if event["success"] else 0)
+            assert d["attempted"] == (d["attempt_event_id"] is not None)
+            if d["attempted"]:
+                attempt = history[d["attempt_event_id"] - 1]
+                assert attempt["action"] == "contract_attempt" and attempt["actor"] == d["employer"] and attempt["target"] == target
+                assert attempt["details"]["worker"] == actor and attempt["details"]["authorized_attempt"]
+            if event["success"]:
+                shift = history[d["shift_event_id"] - 1]
+                assert shift["action"] == "work_shift" and shift["success"] and shift["actor"] == actor and shift["target"] == target and shift["day"] == state["day"]
+            else:
+                assert d["shift_event_id"] is None and (d["attempted"] or d["reason"] == "employer_did_not_schedule")
+                reasons = contract_totals["breach_reasons"]
+                reasons[d["reason"]] = reasons.get(d["reason"], 0) + 1
+            contract_outcomes[actor] = event["success"]
+            for row in (contract_totals, contract_totals["by_employee"][actor]):
+                row["due"] += 1
+                row["attempted"] += d["attempted"]
+                row["completed"] += event["success"]
+                row["breaches"] += not event["success"]
+                row["expected_compensation"] += d["expected_compensation"]
+                row["paid_compensation"] += d["actual_compensation"]
         # A rejected multi-step plan can retain earlier successful native commands.
         # Its annotation still has to claim those real receipts, without applying them twice.
         if action == "employer_plan" and "execution" in d:
@@ -181,7 +227,8 @@ def audit(data):
                 assert set(d["opportunities"]) == eligible and all(type(n) is int and 2 <= n <= 6 for n in d["opportunities"].values())
                 assert not state["harvest_opportunities"]
                 state["harvest_opportunities"] = copy.deepcopy(d["opportunities"])
-                potential_wheat += sum(d["opportunities"].values())
+                potential_wheat += sum(amount for worker, amount in d["opportunities"].items()
+                                       if not profitable or worker in state["employment"])
             elif action == "shift_offered":
                 offer = d["offer"]
                 assert state["businesses"][target]["owner"] == actor and offer["id"] not in state["offers"]
@@ -189,6 +236,10 @@ def audit(data):
                 state["offers"][offer["id"]] = copy.deepcopy(offer)
             elif action == "work_shift":
                 firm, person = state["businesses"][target], state["entities"][actor]
+                if profitable:
+                    roster = sorted(firm["employees"])
+                    pair = ((0, 2), (0, 1), (1, 2))[(state["day"] - 1) % 3]
+                    assert actor != firm["owner"] and actor in [roster[i] for i in pair]
                 offer = state["offers"][d["offer_id"]]
                 assert offer["status"] == "offered" and offer["worker"] == actor and offer["business"] == target
                 assert offer["day"] == state["day"] and offer["industry"] == firm["industry"]
@@ -231,6 +282,10 @@ def audit(data):
                 state["entities"][target]["inventory"][item] -= q
                 state["entities"][actor]["money"] -= q * price
                 state["entities"][target]["money"] += q * price
+                if profitable:
+                    state["cash_results"][target]["sales"] += q * price
+                    if actor in state["cash_results"]:
+                        state["cash_results"][actor]["inputs"] += q * price
                 flows[actor]["spent"] += q * price
                 flows[actor]["purchases"] += q * price
                 flows[target]["earned"] += q * price
@@ -241,12 +296,16 @@ def audit(data):
                 circulation += q * price
             elif action == "transfer_money":
                 assert type(d["amount"]) is int and d["amount"] > 0
+                distribution = profitable and state["businesses"][actor]["owner"] == target
+                if profitable:
+                    profit_before[index] = (state["entities"][actor]["money"], copy.deepcopy(state["cash_results"][actor]))
+                    state["cash_results"][actor]["distributions" if distribution else "payroll"] += d["amount"]
                 state["entities"][actor]["money"] -= d["amount"]
                 state["entities"][target]["money"] += d["amount"]
                 flows[actor]["spent"] += d["amount"]
-                flows[actor]["wages_paid"] += d["amount"]
+                flows[actor]["profit_distributions_paid" if distribution else "wages_paid"] += d["amount"]
                 flows[target]["earned"] += d["amount"]
-                flows[target]["wages_received"] += d["amount"]
+                flows[target]["profit_distributions_received" if distribution else "wages_received"] += d["amount"]
                 circulation += d["amount"]
                 economic_receipts.add(index)
             elif action in ("harvest", "produce"):
@@ -275,8 +334,35 @@ def audit(data):
                 state["meals"][actor] = True
                 flows[actor]["consumed"] += 1
                 totals["consumed"]["bread"] += 1
+            elif profitable and action == "profit_distribution":
+                assert state["businesses"][target]["owner"] == actor
+                receipt_id = d["payment_event_id"]
+                receipt = history[receipt_id - 1]
+                cash, book = profit_before[receipt_id]
+                realized = book["sales"] - book["inputs"] - book["payroll"] - book["distributions"]
+                assert d["amount"] == max(0, min(realized, cash - 120)) > 0
+                assert receipt_id == index - 1 and receipt_id not in claimed and receipt["success"]
+                assert receipt["action"] == "transfer_money" and receipt["actor"] == target and receipt["target"] == actor and receipt["details"]["amount"] == d["amount"]
+                assert d["capital_floor"] == 120 and d["cash_before"] == cash and d["realized_before"] == realized and d["cumulative_before"] == book
+                assert state["entities"][target]["money"] == d["business_cash_after"] >= 120
+                claimed.add(receipt_id)
+                income["transactions"] += 1
+                income["amount"] += d["amount"]
+            elif profitable and action == "contract_due":
+                roster = sorted(state["businesses"][target]["employees"])
+                pair = ((0, 2), (0, 1), (1, 2))[(state["day"] - 1) % 3]
+                assert actor in [roster[i] for i in pair] and actor not in contract_due and d["expected_compensation"] == 6
+                contract_due[actor] = target
+            elif profitable and action == "contract_day_closed":
+                assert not state["contract_day_closed"] and len(contract_due) == len(contract_outcomes) == d["due"] == 6
+                assert d["completed"] == sum(contract_outcomes.values()) and d["breaches"] == 6 - d["completed"]
+                assert d["cash_results"] == state["cash_results"]
+                assert d["household_cash"] == {a: p["money"] for a, p in state["entities"].items() if a not in state["businesses"]}
+                assert d["business_cash"] == {a: state["entities"][a]["money"] for a in state["businesses"]}
+                assert d["goods"] == {item: sum(p["inventory"][item] for p in state["entities"].values()) for item in ITEMS}
+                state["contract_day_closed"] = True
             else:
-                assert action in ("initialize", "day_started", "labor_decision", "employer_plan"), action
+                assert action in ("initialize", "day_started", "labor_decision", "employer_plan", "contract_attempt", "contract_shift"), action
         assert sum(e["money"] for e in state["entities"].values()) == initial_money
         for entity in state["entities"].values():
             assert type(entity["money"]) is int and 0 <= entity["money"] <= 1_000_000_000
@@ -296,8 +382,12 @@ def audit(data):
         assert settings == dict(policy=settings["policy"], payout_divisor=PAYOUTS[settings["policy"]],
                                 reserve_days=2, household_meals=2, withdrawals=withdrawals)
     assert report["money"] == dict(initial=initial_money, final=initial_money, circulation=circulation)
+    if profitable:
+        assert report["profitable"]["contracts"] == contract_totals and report["profitable"]["distributions"] == income
+        assert report["profitable"]["cash_results"] == state["cash_results"]
     assert report["potential"]["wheat"] == potential_wheat
-    assert report["potential"]["bread_including_initial_bound"] == min((min(potential_wheat + initial_stock["wheat"], state["day"] * 16) + initial_stock["flour"]) // 2 * 3, state["day"] * 24) + initial_stock["bread"]
+    mill_capacity, bake_capacity = (12, 18) if profitable else (16, 24)
+    assert report["potential"]["bread_including_initial_bound"] == min((min(potential_wheat + initial_stock["wheat"], state["day"] * mill_capacity) + initial_stock["flour"]) // 2 * 3, state["day"] * bake_capacity) + initial_stock["bread"]
     for actor, p in state["entities"].items():
         assert p["money"] == report["initial"]["entities"][actor]["money"] + flows[actor]["earned"] - flows[actor]["spent"]
         if actor in unmet:
@@ -309,7 +399,7 @@ def audit(data):
     for firm, activity in report["business_activity"].items():
         assert activity == dict(production_idle_days_at_end=state["day"] - flows[firm]["last_production_day"],
                                 business_idle_days_at_end=state["day"] - flows[firm]["last_business_day"],
-                                can_fund_one_shift=state["entities"][firm]["money"] >= state["businesses"][firm]["owner_compensation"])
+                                can_fund_one_shift=state["entities"][firm]["money"] >= (6 if profitable else state["businesses"][firm]["owner_compensation"]))
 
 
 def tables(data, digest):

@@ -12,6 +12,7 @@ const Labor = preload("res://scripts/sim/labor_runner.gd")
 const Finance = preload("res://scripts/sim/finance_runner.gd")
 const Equilibrium = preload("res://scripts/sim/equilibrium_runner.gd")
 const Employer = preload("res://scripts/sim/employer_runner.gd")
+const Profitable = preload("res://scripts/sim/profitable_runner.gd")
 const Causality = preload("res://scripts/sim/causality_runner.gd")
 const CausalityReport = preload("res://scripts/sim/causality_report.gd")
 const STUDY_SCENARIOS = ["settlement_equilibrium_reference", "settlement_employer_choice", "settlement_fixed_owner_first", "settlement_sales_rotating"]
@@ -21,8 +22,8 @@ func _init() -> void:
 	var args = OS.get_cmdline_user_args()
 	var scenario: String = "m0"
 	if not args.is_empty() and args[0] == "--scenario":
-		if args.size() < 2 or args[1] not in ["m0", "trading", "agents", "coordination", "planning", "market", "market_downstream", "calibration", "settlement_labor", "settlement_finance", "settlement_equilibrium_reference", "settlement_employer_choice", "settlement_fixed_owner_first", "settlement_sales_rotating"]:
-			_fail("Scenario must be m0, trading, agents, coordination, planning, market, market_downstream, calibration, settlement_labor, settlement_finance, settlement_equilibrium_reference, settlement_employer_choice, settlement_fixed_owner_first, or settlement_sales_rotating.")
+		if args.size() < 2 or args[1] not in ["m0", "trading", "agents", "coordination", "planning", "market", "market_downstream", "calibration", "settlement_labor", "settlement_finance", "settlement_equilibrium_reference", "settlement_employer_choice", "settlement_fixed_owner_first", "settlement_sales_rotating", "settlement_profitable_reference"]:
+			_fail("Scenario must be m0, trading, agents, coordination, planning, market, market_downstream, calibration, settlement_labor, settlement_finance, settlement_equilibrium_reference, settlement_employer_choice, settlement_fixed_owner_first, settlement_sales_rotating, or settlement_profitable_reference.")
 			return
 		scenario = args[1]
 		args = args.slice(2)
@@ -49,8 +50,8 @@ func _init() -> void:
 		args = args.slice(2)
 	if args.size() > 3 or (args.size() > 0 and not args[0].is_valid_int()) \
 			or (args.size() > 1 and not args[1].is_valid_int()) \
-			or (args.size() > 2 and args[2] != "--json" and not (scenario in STUDY_SCENARIOS and args[2] in ["--report-json", "--study-json"])):
-		_fail("Usage: run_simulation.gd -- [--scenario m0|trading|agents|coordination|planning|market|market_downstream|calibration|settlement_labor|settlement_finance|settlement_equilibrium_reference|settlement_employer_choice|settlement_fixed_owner_first|settlement_sales_rotating] [--experiment name] [--priority commitment-first|immediate-needs-first] [--distribution none|needs|half-surplus] [days (0..10000)] [seed] [--json, --report-json, or --study-json (M11–M13 only)]")
+			or (args.size() > 2 and args[2] != "--json" and not ((scenario in STUDY_SCENARIOS and args[2] in ["--report-json", "--study-json"]) or (scenario == "settlement_profitable_reference" and args[2] == "--report-json"))):
+		_fail("Usage: run_simulation.gd -- [--scenario m0|trading|agents|coordination|planning|market|market_downstream|calibration|settlement_labor|settlement_finance|settlement_equilibrium_reference|settlement_employer_choice|settlement_fixed_owner_first|settlement_sales_rotating|settlement_profitable_reference] [--experiment name] [--priority commitment-first|immediate-needs-first] [--distribution none|needs|half-surplus] [days (0..10000)] [seed] [--json, --report-json, or --study-json (M11–M14 reports; M11–M13 study)]")
 		return
 	var days: int = int(args[0]) if args.size() > 0 else 30
 	var seed_value: int = int(args[1]) if args.size() > 1 else 42
@@ -78,6 +79,8 @@ func _init() -> void:
 		simulation = Equilibrium.new(seed_value)
 	elif scenario == "settlement_employer_choice":
 		simulation = Employer.new(seed_value)
+	elif scenario == "settlement_profitable_reference":
+		simulation = Profitable.new(seed_value)
 	elif scenario in [Causality.Treatment.FIXED_OWNER, Causality.Treatment.SALES_ROTATING]:
 		simulation = Causality.new(seed_value, scenario)
 	simulation.run(days)
@@ -90,11 +93,14 @@ func _init() -> void:
 			"ledger_sha256": JSON.stringify(history, "", true).sha256_text()}, "", true))
 		quit(0)
 		return
-	if scenario in STUDY_SCENARIOS and (args.size() < 3 or args[2] == "--report-json"):
+	if scenario in STUDY_SCENARIOS + ["settlement_profitable_reference"] and (args.size() < 3 or args[2] == "--report-json"):
 		if args.size() > 2:
 			print(JSON.stringify({"report": report}, "", true))
 		else:
-			_print_reference(report)
+			if scenario == "settlement_profitable_reference":
+				_print_profitable(report)
+			else:
+				_print_reference(report)
 		quit(0)
 		return
 	if args.size() > 2:
@@ -199,3 +205,19 @@ func _print_reference(report: Dictionary) -> void:
 	print("Failures: " + JSON.stringify(report.failures, "", true))
 	if report.scenario != "settlement_equilibrium_reference":
 		print("First unmet meal day=%s; first bread stock shortage=%s; sustained inactivity=%s" % [str(report.employers.first_unmet_meal_day), str(report.employers.first_bread_stock_shortage_day), str(report.employers.first_sustained_inactivity_day)])
+
+
+func _print_profitable(report: Dictionary) -> void:
+	print("Simulated Town RPG M14 profitable reference | days=%d seed=%d" % [report.days, report.seed])
+	print("Prescribed three-day contracts; managing owners; realized cash distributions.")
+	print("Production: " + JSON.stringify(report.totals.production_outputs.merged({"wheat": report.totals.harvested.wheat}), "", true))
+	print("Meals=%d missed=%d paid shifts=%d wages=%d distributions=%d currency=%d" % [report.totals.consumed.bread,
+		report.unmet_meals.values().reduce(func(a, b): return a + b, 0), report.shifts.paid, report.shifts.wages,
+		report.profitable.distributions.amount, report.money.final])
+	print("Contract due/completed/breached: %d/%d/%d" % [report.profitable.contracts.due, report.profitable.contracts.completed, report.profitable.contracts.breaches])
+	var cash: Dictionary = {}
+	for id in report.final.entities:
+		cash[id] = report.final.entities[id].money
+	print("Cash: " + JSON.stringify(cash, "", true))
+	print("Realized operating cash: " + JSON.stringify(report.profitable.cash_results, "", true))
+	print("Verification: " + JSON.stringify(report.profitable.verification, "", true))

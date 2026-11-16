@@ -170,7 +170,7 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 
 ## M13: Employment Allocation versus Production Forecasting
 
-**Status:** Implemented and verified; [M13 results](M13_RESULTS.md) await review. Stop after M13.
+**Status:** Completed. [M13 results](M13_RESULTS.md) remain unchanged.
 
 - Complete the 2×2 experiment: fixed production/owner-first staffing and sales-based production/exclusive rotating pairs, with M11/M12 as unchanged controls.
 - Reuse exact endowments, rules, authority and small existing policy components; no fixed-target stock offset or out-of-group worker substitution.
@@ -178,7 +178,19 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 - Distinguish financial food exclusion, physical availability, operating-capital limits and reduced forecast production; report individual participation and cash distribution.
 - Use matched contrasts and interaction, preserve outcomes and avoid economic repairs or general claims about employers/markets.
 
-**Done when:** concise results and limitations are documented with technical verification. No corrective policies, sector expansion or M14 before review.
+**Done when:** concise results and limitations are documented with technical verification. The separately authorized M14 is a prescribed reference, not a repair to these policies.
+
+## M14: Profitable Ownership and Contractual Employment Reference
+
+**Status:** Implemented and verified; [M14 results](M14_RESULTS.md) await review. Stop after M14.
+
+- Isolated prescribed reference with original twelve-person ownership/assets/endowments/prices; owners manage without paid productive work.
+- Nine employees receive two six-coin productive shifts per three-day cycle; real constraints produce explicit unmet obligations rather than imaginary work, wages or debt.
+- Cumulative realized sales/input/payroll cash supports bounded owner distributions after household consumption, retaining all 120 business capital.
+- Reuse native purchases/paid labor/recipes/transfers; preserve all historical scenarios and pinned outputs.
+- Verify 1/2/3/30/365 days, every-event accounting, daily business recurrence, three-day household recurrence, replay and synthetic failure behavior.
+
+**Done when:** actual results and architectural limits are documented, with prescribed feasibility clearly separated from autonomous stability. No autonomous hiring, shocks, corrective policies or M15 before review.
 
 ## Later possibilities
 
