@@ -41,6 +41,13 @@ func _init() -> void:
 			return
 		stage = args[1]
 		args = args.slice(2)
+	var backend: String="gdscript"
+	if not args.is_empty() and args[0]=="--backend":
+		if scenario!="settlement_spatial_learning" or args.size()<2 or args[1] not in ["gdscript","cpp","rust"]:
+			_fail("Use --scenario settlement_spatial_learning --stage A|B|C|D --backend gdscript|cpp|rust")
+			return
+		backend=args[1]
+		args=args.slice(2)
 	var spatial_case: String = "control"
 	if not args.is_empty() and args[0] == "--spatial-case":
 		if scenario != "settlement_spatial" or args.size() < 2 or args[1] not in Spatial.Town.CASES:
@@ -129,6 +136,11 @@ func _init() -> void:
 		simulation = Profitable.new(seed_value)
 	elif scenario in [Causality.Treatment.FIXED_OWNER, Causality.Treatment.SALES_ROTATING]:
 		simulation = Causality.new(seed_value, scenario)
+	if scenario=="settlement_spatial_learning":
+		var backend_error: String=simulation.select_backend(backend)
+		if not backend_error.is_empty():
+			_fail(backend_error)
+			return
 	if scenario not in ["enterprise_startup_fixture", "enterprise_delegation_fixture", "pricing_competition_fixture"]:
 		simulation.run(days)
 	var report: Dictionary = simulation.report()

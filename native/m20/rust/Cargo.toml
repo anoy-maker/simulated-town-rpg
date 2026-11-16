@@ -1,0 +1,11 @@
+[package]
+name = "m20_math"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.91.1"
+[lib]
+crate-type = ["cdylib"]
+[profile.release]
+opt-level = 3
+codegen-units = 1
+panic = "abort"

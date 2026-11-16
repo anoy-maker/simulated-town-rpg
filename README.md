@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0–M18 complete; M19 profiling and one measured numerical optimization implemented and awaiting review
+**Status:** M0–M19 complete; M20 native numerical comparison implemented for review; GDScript remains the default
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -536,3 +536,22 @@ negative/noisy results, paired comparisons, work/RSS counts, full verification,
 remaining bottlenecks and an architectural language comparison. The recommendation
 is to continue measured GDScript work; no compiled interface or language migration
 has been implemented. Stop after M19 for review; do not begin M20.
+
+
+## M20: optional native numerical comparison
+
+C++ and Rust implement the same pure forecast/continuation batches behind one
+optional official Godot C++ bridge. GDScript retains policy ranking, authoritative
+transactions, observations and all economic behavior. Build instructions and
+pinned tools are in [native/m20/README.md](native/m20/README.md).
+
+```sh
+# Requires the optional local build; no backend option retains historical GDScript.
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_spatial_learning --stage D --backend cpp 30 42 --report-json
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_spatial_learning --stage D --backend rust 30 42 --report-json
+```
+
+[M20 results](docs/M20_RESULTS.md) distinguish pure computation, conversion, full
+execution and main-thread decision latency. No historical defaults are replaced,
+no permanent migration is chosen, and no game responsiveness claim is made from
+headless throughput alone. Stop after M20 for review; no M21.

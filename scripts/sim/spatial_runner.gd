@@ -2,6 +2,8 @@ extends "res://scripts/sim/external_trade_runner.gd"
 ## Prescribed appointments, not autonomous spatial planning or price learning.
 const SpatialWorld=preload("res://scripts/sim/spatial_world.gd")
 const Town=preload("res://scripts/sim/spatial_config.gd")
+var measure_appointments: bool=false
+var appointment_timings: Array=[]
 var experiment: String
 
 
@@ -26,6 +28,7 @@ func run(days: int) -> void:
 		world.advance_day()
 		_day_started()
 		for minute in [480,540,610,615,625,660,730,735,745,840,930,960,1020,1025,1030,1035,1110,1140,1440]:
+			var appointment_start: int=Time.get_ticks_usec() if measure_appointments else 0
 			world.advance_time(minute)
 			for actor in participant_ids():
 				var schedule: Dictionary=_initial.spatial.presences[actor].schedule
@@ -66,6 +69,7 @@ func run(days: int) -> void:
 					world.close_contract_day()
 
 			_after_appointments(minute)
+			if measure_appointments: appointment_timings.append({"day":world._day,"minute":minute,"usec":Time.get_ticks_usec()-appointment_start})
 		_day_completed()
 
 

@@ -70,6 +70,7 @@ func _init() -> void:
 	print("M0–M16 regression checks: %d" % _checks)
 	SpatialTests.run(self)
 	LearningTests.run(self)
+	preload("res://tests/native_math_tests.gd").run(self)
 	ProfileTests.run(self)
 	ContinuationTests.run(self)
 	print("Tests: %d checks, %d failures" % [_checks, _failures])

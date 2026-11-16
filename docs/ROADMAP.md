@@ -259,3 +259,16 @@ prices, viable autonomous settlement policy or structural demand identification.
   without porting code, building FFI scaffolding or changing economic behavior.
 
 **Stop after M19 for review. Do not begin M20.**
+
+## M20: equivalent C++ / Rust numerical experiment
+
+**Status:** Experimental opt-in backends; [M20 results](M20_RESULTS.md) for review.
+
+- Versioned packed whole-decision batches for the two measured pure math families;
+  independently built C++ and Rust libraries, one shared official Godot bridge.
+- Same-host repeated kernel/boundary/full-run benchmarks, per-decision/tick tails,
+  exact economic parity and all historical regressions/audits.
+- Preserve default GDScript and world authority; no permanent language decision,
+  renderer, scheduler, additional population or economic policy.
+
+**Stop after M20 for review. Do not begin M21.**

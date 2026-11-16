@@ -1,0 +1,7 @@
+import os
+bindings=os.environ['GODOT_CPP']
+env=SConscript(bindings+'/SConstruct', {'api_version':'4.6'})
+env.Append(CXXFLAGS=['-ffp-contract=off','-fno-fast-math'])
+env.Append(LIBPATH=['bin'],LIBS=['m20_cpp','m20_math'])
+env.Append(RPATH=[Literal('$$ORIGIN')])
+Default(env.SharedLibrary('bin/m20_bridge',Glob('bridge/*.cpp')))

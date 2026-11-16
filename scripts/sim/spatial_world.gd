@@ -140,11 +140,15 @@ func move_step(id: String, tile: Variant) -> bool:
 	return true
 
 
+var measure_ticks: bool=false
+var tick_timings: Array=[]
+
 func advance_time(target: Variant) -> bool:
 	var _profile_scope=ExecutionProfile.scope("spatial") if ExecutionProfile.enabled else null
 	if _day==0 or not target is int or target<_space.minute or target>1440 or target%5!=0:
 		return _reject("spatial_clock", "world","",{},"invalid_clock_target")
 	while _space.minute<target:
+		var tick_start: int=Time.get_ticks_usec() if measure_ticks else 0
 		var before: int=_space.minute
 		_space.minute+=5
 		_record("spatial_clock","world","",true,{"from":before,"to":_space.minute})
@@ -171,6 +175,7 @@ func advance_time(target: Variant) -> bool:
 				_record("spatial_activity_ended",id,"",true,{"kind":kind,"result_event_id":result})
 		if _space.minute==_space.retail_close:
 			_record("spatial_shop_closed","world","bakery",true,{"tile":Town.SITES.bakery.duplicate()})
+		if measure_ticks: tick_timings.append({"day":_day,"minute":_space.minute,"usec":Time.get_ticks_usec()-tick_start})
 	return true
 
 
