@@ -6,6 +6,17 @@ const ShortMemory=preload("res://scripts/sim/pricing_policy.gd")
 var stage: String
 var decisions: Array=[]
 var posted: Array=[4]
+var numerical_backend: RefCounted
+var decision_timings: Array=[]
+
+func select_backend(name: String) -> String:
+	if name=="gdscript":
+		numerical_backend=null
+		return ""
+	var math=preload("res://scripts/sim/native_math.gd").new(name)
+	if not math.error.is_empty(): return math.error
+	numerical_backend=math
+	return ""
 
 func _init(seed_value: int=42, selected_stage: String="A") -> void:
 	super(seed_value)
@@ -22,6 +33,7 @@ func _day_completed() -> void:
 
 func _after_appointments(minute: int) -> void:
 	if minute!=745: return
+	var decision_started: int=Time.get_ticks_usec()
 	var profile_start: Dictionary=ExecutionProfile.decision_start() if ExecutionProfile.enabled else {}
 	var o: Dictionary=world.planning_observation(posted)
 	var proposal: Dictionary={"selected_price":4,"reason":"fixed","candidates":[]}
@@ -30,11 +42,13 @@ func _after_appointments(minute: int) -> void:
 		proposal=ShortMemory.decide({"current_price":o.current_price,"reference_price":o.current_price,
 			"reference_demand":recent.sold+recent.stockout_requests,"sensitivity":1,
 			"available":int(o.state[2])+18,"planned_inputs":48,"planned_payroll":18})
-	elif stage in ["C","D"]: proposal=LearningPolicy.decide(o,world.beliefs,stage)
+	elif stage in ["C","D"]:
+		proposal=LearningPolicy.decide(o,world.beliefs,stage) if numerical_backend==null else preload("res://scripts/sim/batched_bakery_policy.gd").decide(o,world.beliefs,stage,numerical_backend)
 	var success: bool=true
 	if proposal.selected_price!=o.current_price: success=world.revise_quote("cora","bakery","bread",proposal.selected_price)
 	decisions.append({"day":o.day,"observation":o,"beliefs":world.beliefs.duplicate(true),"proposal":proposal,"success":success})
 	if success and proposal.selected_price not in posted: posted.append(proposal.selected_price)
+	decision_timings.append({"day":o.day,"minute":minute,"usec":Time.get_ticks_usec()-decision_started})
 	if ExecutionProfile.enabled: ExecutionProfile.decision_end(profile_start,o.day,world.memory.cora.size())
 
 func _reference_verification(history: Array,final: Dictionary) -> Dictionary:

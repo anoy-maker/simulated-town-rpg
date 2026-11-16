@@ -355,3 +355,23 @@ Benchmark, paired pure-calculation, independent-audit and historical-pin tools a
 verification infrastructure, not NPC information sources. No timing controls actor
 behavior and no compiled module/world refactor is introduced. See M19 results for
 measured residual work and the limited, unimplemented batch-interface proposal.
+
+## M20: optional pure numerical backends
+
+The historical learning policy remains the default. Opt-in C++/Rust selection
+uses `batched_bakery_policy.gd` to arrange the same candidate/observable-branch
+graph in three passes: all forecast matrices, frozen continuations, posterior
+continuations. `native_math.gd` packs permitted numeric data under the versioned
+[M20 schema](../native/m20/SCHEMA.md). A single pinned official godot-cpp bridge
+calls either independent release library through a checked C ABI. It never sees
+a world, ledger, resident, hidden customer finance or event. All selected quote
+revisions still use the original authoritative command.
+
+Loading is explicit; unavailable native requests fail closed. Default scripts,
+historical tests and reports require no native tools/artifacts. Timing sidecars
+for decisions, appointments and five-minute ticks are excluded from canonical
+state/reports and never control actions. The native experiments keep original
+financial approximations, candidates, probabilities, order, tie tolerance and
+accounting audits. No full-world port, scheduler or migration is introduced.
+See [M20 results](M20_RESULTS.md) for measured parity, latency, boundary costs,
+build requirements and platform/maintenance limitations.

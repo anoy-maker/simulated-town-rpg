@@ -1,0 +1,22 @@
+{
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "cpus": 3,
+  "godot": "4.6.3.stable.official.7d41c59c4",
+  "protocol": "Fresh process per case, one-day A/C/D process warm-ups, rotating order; unprofiled timings and separate profiled attribution. No concurrent verification.",
+  "godot_cpp": "abb196939767b7bbee0b3a380faefdcbdb118a54",
+  "api_sha256": "c7a3f647d9a6d6e7f3361d8a88ffc7486a708b59262ab2f0ceae54a3d87df74d",
+  "gcc": "g++ (Debian 14.2.0-19) 14.2.0",
+  "rustc": "rustc 1.91.1 (ed61e7d7e 2025-11-07)",
+  "scons": "4.9.1",
+  "cpu_max": "200000 100000",
+  "memory_max": "8589934592",
+  "binaries": {
+    "libm20_cpp.so": "be38631f2039ab12920d723d91498ae70d9bcb3409eab74ea6ad2a4910d2853b",
+    "libm20_cpp_sanitize.so": "7e00dec3179695b6dbd2e7ea2611ed8f8c9dc7221e3592d99b766870bee1a2ca",
+    "libm20_bridge.so": "feee66ececa02b22294955e587447a3b52a9eb33503d0d5c19bcf5275f827cc3",
+    "libm20_math.so": "a7c9f739c84aa83fcbd4f1c9554080d53932d2ba69144e77054615e72bc3c462"
+  },
+  "performance_runs": 69,
+  "isolated_samples": 105
+}
