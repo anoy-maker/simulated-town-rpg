@@ -303,3 +303,32 @@ Temporary visitors have independently identifiable presences and one-loaf reques
 Physical encounters distinguish arrival, on-site inspection, purchase, no-purchase and closed attempt. Potential witnesses are exactly active co-located presences at that point in the deterministic event sequence. A nearby different tile grants no observation. No arrival grants no encounter; an unsubmitted filtered request is not automatically a visible refusal. `observe()` and `witnessed_encounters()` return copies of own/local/public facts and the observer's actual potential encounters. Customer money/private ceilings and future intentions remain absent. Administrative traces may contain true private accounting for verification; those traces are not policy inputs. This is an observation foundation rather than M18 memory, attention or value-of-information learning.
 
 `spatial_audit.gd` augments the existing enterprise audit through an optional event observer. Native reconstruction handles cash/goods/quotes/assets/contracts and cargo receipt/deposit effects; the observer reconstructs physical state, clock, movement budgets, continuous appointments, transaction locations, visitor aliases and witness sets, checking global goods plus custody each event and full final-snapshot equality. Its default is absent for historical scenarios, preserving their audit outputs. Independent Python `spatial_audit.py` combines the existing receipt auditor with a separate physical replay. `spatial_report.gd` derives compact day/resident/encounter counts; `run_spatial.py` repeats five cases, audits full traces in memory and verifies matched pinned M15/M16-A controls. No verbose annual spatial history, parallel purchase kernel or graphics framework is needed.
+
+
+## M18: incremental observations and pure bakery planning
+
+`learning_runner.gd` extends the existing spatial runner through no-op appointment/day
+hooks. Its `learning_world.gd` retains identical economic state and native receipts;
+a post-receipt protected hook incrementally projects permitted owner observations
+and legitimate accounting into separate day records. Transient inspection/outcome
+joins disappear at day end. No price decision scans the movement ledger. Learning
+memory is a derived sidecar, outside native snapshots, so Stage A's full ledger and
+native state exactly equal M17. Policies receive copies of own-business finances,
+cohort summaries, and genuinely inspected public input information. They never
+receive the world, customer funds, private ceilings or future visitor requests.
+
+`bakery_beliefs.gd` implements categorical traffic, thirteen-pattern beta-binomial
+response, daily hazard, finite-stock outcomes and deterministic bounded quadrature.
+`bakery_finance.gd` projects the actual bakery procurement/payroll/distribution order
+without executing transactions. `bakery_policy.gd` evaluates fourteen-day financial
+continuations and, in D, adaptation after hypothetical observable feedback. The only
+native economic command it can propose is a Cora bread quote revision, validated
+through the original quoted-market authority. Farm and mill revisions remain blocked.
+
+`learning_audit.py` independently uses log-gamma beta-binomial calculations, rebuilds
+raw memories from authorized witnesses and own receipts, checks decision-time capital
+and public information, reconstructs forecast distributions and quadrature, and
+re-evaluates conditional financial values. Existing spatial/enterprise audits still
+reconstruct every native movement, cargo, commodity and coin. No learning field is
+trusted as an economic receipt. See M18 results for the declared approximations,
+including zero terminal inventory salvage and the mean-state twelve-day tail.

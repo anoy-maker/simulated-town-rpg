@@ -492,3 +492,26 @@ The separate 10×7 data grid retains M15/M16-A's twelve residents, original busi
 Control runs at 1/3/30 days reproduce actual M15/M16-A accounting. The 30-day case has **360 resident meals, 180 visitor loaves, 270 paid shifts, zero breaches and 6600 actual movement steps**, with every resident ending at home holding 66 coins and every firm holding 120. All movement, time, custody, work, purchase and witness constraints are authoritative and independently reconstructed. Encounter views expose only personally co-located observations, without private customer balances, reservation prices or hidden future requests.
 
 The one-day late-worker fixture loses three productive shifts and all visitor sales through real input shortages; early closure leaves eighteen bread unsold and all twelve resident meals unmet. No replacement worker, remote purchase or free stock repairs either outcome. These are prescribed feasibility/failure experiments, not autonomous planning or pricing-learning results. See [M17 map, schedule, actual results and limitations](docs/M17_RESULTS.md), [run fingerprints](docs/M17_RUNS.csv), [daily results](docs/M17_DAYS.csv), [resident summaries](docs/M17_RESIDENTS.csv) and [business summaries](docs/M17_BUSINESSES.csv). Stop after M17 for review; no M18.
+
+
+## M18: Bayesian bakery learning (isolated experiment)
+
+Start from the unchanged M17 town. Only Cora's bread pricing differs: A fixed,
+B original M16 short-memory policy, C Bayesian financial continuation, D the same
+model with bounded one-step EVSI. Farm/mill prices, staffing, movement, resources,
+visitors and distributions remain unchanged.
+
+```sh
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_spatial_learning --stage D 30 42 --report-json
+python3 -B scripts/tools/run_learning.py --output /workspace/work/m18
+python3 -B -m unittest discover -s tests -p 'test_learning.py'
+godot --headless --path . --script res://scripts/tools/learning_fixtures.gd
+```
+
+Reports separate append-only witnessed cohort memory from own-business accounting,
+include Bayesian beliefs and each price candidate's subjective values, sales PMF,
+conditional finances and information value. The matrix driver independently audits
+full transient traces, compares process replay, and measures **run-only simulation
+execution** alongside corresponding existing M16 runs; timing never enters canonical
+scenario JSON. Mathematical assumptions and actual outcomes are in
+[docs/M18_RESULTS.md](docs/M18_RESULTS.md). Stop after M18 for review.
