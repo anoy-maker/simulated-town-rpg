@@ -24,6 +24,7 @@ func run(days: int) -> void:
 	assert(days>=0)
 	for _index in days:
 		world.advance_day()
+		_day_started()
 		for minute in [480,540,610,615,625,660,730,735,745,840,930,960,1020,1025,1030,1035,1110,1140,1440]:
 			world.advance_time(minute)
 			for actor in participant_ids():
@@ -63,6 +64,21 @@ func run(days: int) -> void:
 				1140:
 					for business in Config.BUSINESS_ORDER: world.settle_profit(_initial.businesses[business].owner,business)
 					world.close_contract_day()
+
+			_after_appointments(minute)
+		_day_completed()
+
+
+func _day_started() -> void:
+	pass
+
+
+func _day_completed() -> void:
+	pass
+
+
+func _after_appointments(_minute: int) -> void:
+	pass
 
 
 func _reference_verification(history: Array, final: Dictionary) -> Dictionary:

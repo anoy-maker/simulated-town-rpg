@@ -233,3 +233,13 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 ## Later possibilities
 
 Trade networks, land ownership, politics, combat, multi-town travel, long-term families, complex crafting, polished art, and a commercial release are potential expansions—not preconditions for learning whether the premise is fun.
+
+
+## M18: Bayesian bakery memory and capital-aware discovery
+
+**Status:** Implemented experiment; [M18 results](M18_RESULTS.md) await review.
+Isolated spatial A–D pricing treatments, exact permitted cohort memory, explicit
+subjective model/financial objective and bounded EVSI. Preserve M0–M17 baselines.
+This tests a provisional price-learning approximation; it does not establish optimal
+prices, viable autonomous settlement policy or structural demand identification.
+**Stop after M18. Do not begin M19.**

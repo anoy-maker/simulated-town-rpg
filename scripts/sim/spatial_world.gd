@@ -50,6 +50,16 @@ func _record(action: String, actor: String, target: String, success: bool, detai
 	_events.back()["absolute_minute"]=_absolute()
 	_events.back()["physical_actor"]=physical if _space.presences.has(physical) else ""
 
+	_on_recorded_event(_events.back())
+
+
+func _on_recorded_event(_event: Dictionary) -> void:
+	pass
+
+
+func _revise_market_quote(owner: String, business: String, item: String, price: Variant, active: Variant=true, limit: Variant=MAX_AMOUNT) -> bool:
+	return super.revise_quote(owner,business,item,price,active,limit)
+
 
 func _valid_tile(tile: Variant) -> bool:
 	return tile is Array and tile.size()==2 and tile[0] is int and tile[1] is int and tile[0]>=0 and tile[0]<10 and tile[1]>=0 and tile[1]<7

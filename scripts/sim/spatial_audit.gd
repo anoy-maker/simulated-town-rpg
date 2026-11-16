@@ -14,7 +14,7 @@ static func _open(s: Dictionary, business: String) -> bool:
 	return business in TRADE and s.minute>=TRADE[business][0] and s.minute<(s.retail_close if business=="bakery" else TRADE[business][1])
 
 
-static func verify(history: Array, final: Dictionary) -> Dictionary:
+static func verify(history: Array, final: Dictionary, learning: bool=false) -> Dictionary:
 	var checks={"clock_and_timestamps":true,"movement_and_arrivals":true,"appointments_and_presence":true,
 		"located_purchases":true,"courier_custody":true,"visitor_requests":true,"witness_boundaries":true,"goods_each_event":true,"physical_snapshot":true}
 	var expected={"wheat":0,"flour":0,"bread":0}
@@ -139,7 +139,7 @@ static func verify(history: Array, final: Dictionary) -> Dictionary:
 					elif d.kind=="arrived": checks.witness_boundaries=checks.witness_boundaries and arrival.has(e.actor) and history[arrival[e.actor]-1].minute==s.minute
 					elif d.kind=="closed_attempt": checks.witness_boundaries=checks.witness_boundaries and not _open(s,e.target)
 					elif d.kind!="busy_attempt": checks.witness_boundaries=false
-				"quote_revised": checks.located_purchases=false
+				"quote_revised": checks.located_purchases=checks.located_purchases and learning and e.actor=="cora" and e.target=="bakery" and d.quote.item=="bread"
 				"spatial_clock","spatial_shop_closed": pass
 				_:
 					if e.action.begins_with("spatial_"): checks.physical_snapshot=false
