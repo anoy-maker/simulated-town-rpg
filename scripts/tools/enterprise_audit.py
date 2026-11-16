@@ -10,6 +10,8 @@ def audit(data):
     entities, books, assets = state["entities"], state["cash_results"], state["productive_assets"]
     affiliations, jobs = state["affiliations"], state["employment"]
     quotes = state.get("commodity_quotes")
+    cargo = state.get("cargo")
+    expected_goods = {item: sum(p["inventory"][item] for p in entities.values()) for item in ("wheat", "flour", "bread")}
     combined = sum(p["money"] for p in entities.values())
     receipts, claimed, worked = set(), set(), set()
     consumed = {}
@@ -50,7 +52,11 @@ def audit(data):
             assert d["total_price"] == qty * price
             entities[actor]["money"] -= qty * price
             entities[target]["money"] += qty * price
-            entities[actor]["inventory"][item] += qty
+            if cargo is not None and "custody" in d:
+                assert d["custody"] == dict(business=actor, holder=cargo[actor]["holder"])
+                cargo[actor]["inventory"][item] += qty
+            else:
+                entities[actor]["inventory"][item] += qty
             entities[target]["inventory"][item] -= qty
             books[target]["sales"] += qty * price
             if actor in books:
@@ -83,8 +89,10 @@ def audit(data):
                 assert d["inputs"] == inputs and d["outputs"] == outputs and d["batches"] == 2
             for item, amount in inputs.items():
                 entities[actor]["inventory"][item] -= amount
+                expected_goods[item] -= amount
             for item, amount in outputs.items():
                 entities[actor]["inventory"][item] += amount
+                expected_goods[item] += amount
             receipts.add(index)
         elif action in ("owner_work_shift", "work_shift"):
             own = action == "owner_work_shift"
@@ -104,6 +112,7 @@ def audit(data):
             worked.add(actor)
         elif action == "consume":
             entities[actor]["inventory"]["bread"] -= d["amount"]
+            expected_goods["bread"] -= d["amount"]
             consumed[actor] = consumed.get(actor, 0) + d["amount"]
         elif action in ("capital_contribution", "asset_purchased", "profit_distribution"):
             pay = d.get("payment_event_id")
@@ -128,6 +137,12 @@ def audit(data):
                 assert d["amount"] == min(portion, max(0, cash-policy["reserve"])) > 0
                 assert d["cumulative_before"] == book and state["businesses"][target]["owner"] == actor
                 assert history[pay-1]["details"] == dict(amount=d["amount"], purpose="distribution")
+        elif action == "spatial_deposited":
+            assert cargo[target]["holder"] == actor
+            for item, amount in d["goods"].items():
+                assert type(amount) is int and amount >= 0
+                cargo[target]["inventory"][item] -= amount
+                entities[target]["inventory"][item] += amount
         elif action == "employment_ended":
             assert affiliations.pop(actor) == d["affiliation"]
             if d["affiliation"]["kind"] == "employee":
@@ -142,11 +157,17 @@ def audit(data):
         assert sum(p["money"] for p in entities.values()) == combined
         assert all(type(p["money"]) is int and 0 <= p["money"] <= 1_000_000_000 for p in entities.values())
         assert all(type(n) is int and 0 <= n <= 1_000_000_000 for p in entities.values() for n in p["inventory"].values())
+        if cargo is not None:
+            assert all(type(n) is int and 0 <= n <= 1_000_000_000 for p in cargo.values() for n in p["inventory"].values())
+            for item, amount in expected_goods.items():
+                assert amount == sum(p["inventory"][item] for p in entities.values()) + sum(p["inventory"][item] for p in cargo.values())
     assert receipts == claimed and entities == r["final"]["entities"] and books == r["final"]["cash_results"]
     assert assets == r["final"]["productive_assets"] and set(assets) == set(r["initial"]["productive_assets"])
     assert affiliations == r["final"]["affiliations"]
     if quotes is not None:
         assert quotes == r["final"]["commodity_quotes"]
+    if cargo is not None:
+        assert cargo == r["final"]["cargo"]
     for actor, entity in entities.items():
         account = r["accounts"][actor]
         assert account["consumed"] == consumed.get(actor, 0)

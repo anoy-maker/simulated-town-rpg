@@ -207,7 +207,7 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 
 ## M16: Dynamic Pricing and Rational Market Competition
 
-**Status:** Implemented and verified; [M16 results](M16_RESULTS.md) await review. Stop after M16.
+**Status:** Completed. [M16 results](M16_RESULTS.md) remain the unchanged pricing experiment.
 
 - Isolated seller-specific versioned commodity quotes, owner authorization, one revision/item/day, actual stock and atomic purchase authority.
 - Pure essential/input buyer selection, affordable cheapest offers, rotating ties, legitimate stale/stock retry and finite visitors with private reservation prices.
@@ -215,7 +215,20 @@ Each milestone must leave the repository in a runnable, testable state. Do not i
 - Predeclared A fixed / B bakery / C mill-bakery / D whole-chain stages, preserving M15 production, jobs, wages, prices at initialization, assets, money and distributions.
 - Separate finite-stock competition fixture, 1/3/30-day process/split replay, full financial/labor/quote/decision auditing, daily reports and all historical outputs unchanged.
 
-**Done when:** actual trade, price choices, unmet demand, inventory/cash consequences and contractual failures are documented without economic rescue or tuning. Correct decisions under a limited belief do not imply accurate forecasts or stability. No autonomous entrepreneurship, production/staffing optimization, new sectors or M17.
+**Done when:** actual trade, price choices, unmet demand, inventory/cash consequences and contractual failures are documented without economic rescue or tuning. Correct decisions under a limited belief do not imply accurate forecasts or stability. No autonomous entrepreneurship, production/staffing optimization or new sectors were introduced.
+
+## M17: Headless Spatial Town and Scheduling
+
+**Status:** Implemented and verified; [M17 results](M17_RESULTS.md) await review. Stop after M17.
+
+- Isolated 10×7 integer map, deterministic shared housing, persistent positions/schedules, five-minute adjacent movement and a render-independent clock.
+- Actual non-overlapping commutes, one-hour employee work and unpaid owner management; on-site quote purchases and warehouse-ready inputs through authorized owner cargo custody.
+- Six temporary visitor requests use one unchanged finite account, arrive/inspect/shop/consume/exit physically, and never create currency or permanent residents.
+- Personally co-located arrival/inspection/purchase/no-purchase encounter views; no private customer finances, remote sightings or future-demand disclosure.
+- Fixed-price 1/3/30-day controls reproduce M15/M16-A financial/goods outcomes; one-day late-worker/early-close fixtures preserve real consequences without economic repairs.
+- Full accounting/custody/location/time/witness audits, independent process and split replay, complete native/Python suites and all historical fingerprints unchanged.
+
+**Done when:** map/routes/schedules, actual parity/failures, authority extensions and limits are documented for review. No M18 memory/value-of-information pricing, autonomous staffing/investment, economic calibration, additional sectors or graphics.
 
 ## Later possibilities
 

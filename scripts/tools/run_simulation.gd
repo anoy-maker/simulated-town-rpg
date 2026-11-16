@@ -14,6 +14,7 @@ const Equilibrium = preload("res://scripts/sim/equilibrium_runner.gd")
 const Employer = preload("res://scripts/sim/employer_runner.gd")
 const ExternalTrade = preload("res://scripts/sim/external_trade_runner.gd")
 const PricingFixture = preload("res://scripts/sim/pricing_fixtures.gd")
+const Spatial = preload("res://scripts/sim/spatial_runner.gd")
 const Pricing = preload("res://scripts/sim/pricing_runner.gd")
 const EnterpriseFixtures = preload("res://scripts/sim/enterprise_fixtures.gd")
 const ENTERPRISE_SCENARIOS = ["settlement_external_trade_reference", "enterprise_startup_fixture", "enterprise_delegation_fixture"]
@@ -27,8 +28,8 @@ func _init() -> void:
 	var args = OS.get_cmdline_user_args()
 	var scenario: String = "m0"
 	if not args.is_empty() and args[0] == "--scenario":
-		if args.size() < 2 or args[1] not in ["m0", "trading", "agents", "coordination", "planning", "market", "market_downstream", "calibration", "settlement_labor", "settlement_finance", "settlement_equilibrium_reference", "settlement_employer_choice", "settlement_fixed_owner_first", "settlement_sales_rotating", "settlement_profitable_reference", "settlement_external_trade_reference", "enterprise_startup_fixture", "enterprise_delegation_fixture", "settlement_pricing", "pricing_competition_fixture"]:
-			_fail("Scenario must be m0, trading, agents, coordination, planning, market, market_downstream, calibration, settlement_labor, settlement_finance, settlement_equilibrium_reference, settlement_employer_choice, settlement_fixed_owner_first, settlement_sales_rotating, settlement_profitable_reference, settlement_external_trade_reference, enterprise_startup_fixture, enterprise_delegation_fixture, settlement_pricing, or pricing_competition_fixture.")
+		if args.size() < 2 or args[1] not in ["m0", "trading", "agents", "coordination", "planning", "market", "market_downstream", "calibration", "settlement_labor", "settlement_finance", "settlement_equilibrium_reference", "settlement_employer_choice", "settlement_fixed_owner_first", "settlement_sales_rotating", "settlement_profitable_reference", "settlement_external_trade_reference", "enterprise_startup_fixture", "enterprise_delegation_fixture", "settlement_pricing", "pricing_competition_fixture", "settlement_spatial"]:
+			_fail("Scenario must be m0, trading, agents, coordination, planning, market, market_downstream, calibration, settlement_labor, settlement_finance, settlement_equilibrium_reference, settlement_employer_choice, settlement_fixed_owner_first, settlement_sales_rotating, settlement_profitable_reference, settlement_external_trade_reference, enterprise_startup_fixture, enterprise_delegation_fixture, settlement_pricing, pricing_competition_fixture, or settlement_spatial.")
 			return
 		scenario = args[1]
 		args = args.slice(2)
@@ -38,6 +39,13 @@ func _init() -> void:
 			_fail("Use --scenario settlement_pricing --stage A|B|C|D")
 			return
 		stage = args[1]
+		args = args.slice(2)
+	var spatial_case: String = "control"
+	if not args.is_empty() and args[0] == "--spatial-case":
+		if scenario != "settlement_spatial" or args.size() < 2 or args[1] not in Spatial.Town.CASES:
+			_fail("Use --scenario settlement_spatial --spatial-case control|late_worker|early_close")
+			return
+		spatial_case = args[1]
 		args = args.slice(2)
 	var experiment: String = "baseline"
 	if not args.is_empty() and args[0] == "--experiment":
@@ -62,8 +70,8 @@ func _init() -> void:
 		args = args.slice(2)
 	if args.size() > 3 or (args.size() > 0 and not args[0].is_valid_int()) \
 			or (args.size() > 1 and not args[1].is_valid_int()) \
-			or (args.size() > 2 and args[2] != "--json" and not ((scenario in STUDY_SCENARIOS and args[2] in ["--report-json", "--study-json"]) or (scenario in ["settlement_profitable_reference", "settlement_pricing", "pricing_competition_fixture"] + ENTERPRISE_SCENARIOS and args[2] == "--report-json"))):
-		_fail("Usage: run_simulation.gd -- [--scenario m0|trading|agents|coordination|planning|market|market_downstream|calibration|settlement_labor|settlement_finance|settlement_equilibrium_reference|settlement_employer_choice|settlement_fixed_owner_first|settlement_sales_rotating|settlement_profitable_reference|settlement_external_trade_reference|enterprise_startup_fixture|enterprise_delegation_fixture|settlement_pricing|pricing_competition_fixture] [--stage A|B|C|D] [--experiment name] [--priority commitment-first|immediate-needs-first] [--distribution none|needs|half-surplus] [days (0..10000)] [seed] [--json, --report-json, or --study-json (M11–M16 reports; M11–M13 study)]")
+			or (args.size() > 2 and args[2] != "--json" and not ((scenario in STUDY_SCENARIOS and args[2] in ["--report-json", "--study-json"]) or (scenario in ["settlement_profitable_reference", "settlement_pricing", "pricing_competition_fixture", "settlement_spatial"] + ENTERPRISE_SCENARIOS and args[2] == "--report-json"))):
+		_fail("Usage: run_simulation.gd -- [--scenario m0|trading|agents|coordination|planning|market|market_downstream|calibration|settlement_labor|settlement_finance|settlement_equilibrium_reference|settlement_employer_choice|settlement_fixed_owner_first|settlement_sales_rotating|settlement_profitable_reference|settlement_external_trade_reference|enterprise_startup_fixture|enterprise_delegation_fixture|settlement_pricing|pricing_competition_fixture|settlement_spatial] [--spatial-case control|late_worker|early_close] [--stage A|B|C|D] [--experiment name] [--priority commitment-first|immediate-needs-first] [--distribution none|needs|half-surplus] [days (0..10000)] [seed] [--json, --report-json, or --study-json (M11–M17 reports; M11–M13 study)]")
 		return
 	var days: int = int(args[0]) if args.size() > 0 else 30
 	var seed_value: int = int(args[1]) if args.size() > 1 else 42
@@ -76,6 +84,11 @@ func _init() -> void:
 			_fail("Transaction fixtures use their fixed %d-day sequence and seed 42." % fixture_days)
 			return
 		days = fixture_days
+	if scenario == "settlement_spatial" and spatial_case != "control":
+		if (args.size() > 0 and days != 1) or seed_value != 42:
+			_fail("Spatial disruption fixtures use one day and seed 42.")
+			return
+		days = 1
 	var simulation = Trading.new(seed_value) if scenario == "trading" else Simulation.new(seed_value)
 	if scenario == "agents":
 		simulation = Agents.new(seed_value)
@@ -99,6 +112,8 @@ func _init() -> void:
 		simulation = Employer.new(seed_value)
 	elif scenario == "pricing_competition_fixture":
 		simulation = PricingFixture.run()
+	elif scenario == "settlement_spatial":
+		simulation = Spatial.new(seed_value, spatial_case)
 	elif scenario == "settlement_pricing":
 		simulation = Pricing.new(seed_value, stage)
 	elif scenario == "settlement_external_trade_reference":
@@ -122,11 +137,13 @@ func _init() -> void:
 			"ledger_sha256": JSON.stringify(history, "", true).sha256_text()}, "", true))
 		quit(0)
 		return
-	if scenario in STUDY_SCENARIOS + ["settlement_profitable_reference", "settlement_pricing", "pricing_competition_fixture"] + ENTERPRISE_SCENARIOS and (args.size() < 3 or args[2] == "--report-json"):
+	if scenario in STUDY_SCENARIOS + ["settlement_profitable_reference", "settlement_pricing", "pricing_competition_fixture", "settlement_spatial"] + ENTERPRISE_SCENARIOS and (args.size() < 3 or args[2] == "--report-json"):
 		if args.size() > 2:
 			print(JSON.stringify({"report": report}, "", true))
 		else:
-			if scenario in ["settlement_pricing", "pricing_competition_fixture"]:
+			if scenario == "settlement_spatial":
+				_print_spatial(report)
+			elif scenario in ["settlement_pricing", "pricing_competition_fixture"]:
 				_print_pricing(report)
 			elif scenario in ENTERPRISE_SCENARIOS:
 				_print_enterprise(report)
@@ -274,3 +291,13 @@ func _print_pricing(r: Dictionary) -> void:
 	print("Price revisions: " + JSON.stringify(r.pricing.price_changes,"",true))
 	print("Paid shifts=%d wages=%d owner distributions=%d contract breaches=%d" % [r.shifts.paid,r.shifts.wages,r.profitable.distributions.amount,r.profitable.contracts.breaches])
 	print("Verification: " + JSON.stringify(r.profitable.verification,"",true))
+
+
+func _print_spatial(r: Dictionary) -> void:
+	print("Simulated Town RPG M17 | case=%s days=%d seed=%d" % [r.spatial.case,r.days,r.seed])
+	print("Headless 10x7 grid; x then y; one orthogonal step per five minutes.")
+	print("Resident meals=%d missed=%d visitor loaves=%d" % [r.open_economy.resident_meals,r.unmet_meals.values().reduce(func(a,b):return a+b,0),r.open_economy.visitor_bread])
+	print("Paid shifts=%d wages=%d owner distributions=%d minimum breaches=%d" % [r.shifts.paid,r.shifts.wages,r.profitable.distributions.amount,r.profitable.contracts.breaches])
+	print("Village/external/combined money=%d/%d/%d" % [r.open_economy.village_money,r.open_economy.external_money,r.money.final])
+	print("Steps=%d visitor presences=%d clock=%d; cargo=" % [r.spatial.days.reduce(func(a,d):return a+d.steps,0),r.spatial.temporary_visitors,r.spatial.clock_minute]+JSON.stringify(r.spatial.cargo_final,"",true))
+	print("Verification: "+JSON.stringify(r.profitable.verification,"",true))

@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0–M15 complete; M16 pricing and market competition implemented and awaiting review
+**Status:** M0–M16 complete; M17 headless spatial town implemented and awaiting review
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -469,4 +469,26 @@ The separate pure pricing policy considers current−1/current/current+1 under a
 
 Actual 30-day resident meals/misses are **A 360/0, B 257/103, C 210/150, D 102/258**; contractual breaches are **0/2/41/116**. Accounting and decision-objective audits pass, but the adaptive treatments reduce food access under these particular beliefs and fixed commitments. D eventually posts one-coin prices yet loses productive working capital; no meals occur after day fourteen. No resources, demand or prices were adjusted to repair outcomes. The competition fixture and tests show real order-dependent allocation rather than assigned customers. These mechanisms do not establish autonomous stability or globally optimal pricing.
 
-`--report-json` includes daily business/household results and complete ledger fingerprints without verbose events; `--json` supports short trace inspection. See [M16 choices, actual results and limitations](docs/M16_RESULTS.md), [run fingerprints](docs/M16_RUNS.csv), [daily business results](docs/M16_BUSINESS_DAYS.csv), [village days](docs/M16_DAYS.csv) and [all final account outcomes](docs/M16_ACCOUNTS.csv). Stop after M16 for review; no M17.
+`--report-json` includes daily business/household results and complete ledger fingerprints without verbose events; `--json` supports short trace inspection. See [M16 choices, actual results and limitations](docs/M16_RESULTS.md), [run fingerprints](docs/M16_RUNS.csv), [daily business results](docs/M16_BUSINESS_DAYS.csv), [village days](docs/M16_DAYS.csv) and [all final account outcomes](docs/M16_ACCOUNTS.csv). M16 remains an unchanged historical experiment.
+
+
+## M17: Headless Spatial Town and Scheduling
+
+```sh
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_spatial 1 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_spatial 3 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_spatial 30 42
+# Isolated one-day disruptions, seed 42; only the declared spatial parameter changes:
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_spatial --spatial-case late_worker 1 42
+godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_spatial --spatial-case early_close 1 42
+# Repeat/audit all five experiments; compact reports and small CSVs:
+python3 -B scripts/tools/run_spatial.py --output work/m17
+# Optional short event trace; use --report-json for compact output without events:
+godot --headless --no-header --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_spatial 1 42 --json
+```
+
+The separate 10×7 data grid retains M15/M16-A's twelve residents, original businesses/assets/contracts, six-coin shifts, fixed 2/4/4 prices and 9192 combined coins. Residents start at three shared free housing tiles, walk one orthogonal tile per five simulated minutes, perform genuine one-hour shifts or owner tasks, shop on site, return home and consume. Owner couriers purchase real inputs with business funds and physically carry business-owned cargo to the correct warehouse before production. Temporary visitor presences share the existing finite external purse; none gets a new money account. No rendering, travel income/cost, economic policy or additional productive resources are added.
+
+Control runs at 1/3/30 days reproduce actual M15/M16-A accounting. The 30-day case has **360 resident meals, 180 visitor loaves, 270 paid shifts, zero breaches and 6600 actual movement steps**, with every resident ending at home holding 66 coins and every firm holding 120. All movement, time, custody, work, purchase and witness constraints are authoritative and independently reconstructed. Encounter views expose only personally co-located observations, without private customer balances, reservation prices or hidden future requests.
+
+The one-day late-worker fixture loses three productive shifts and all visitor sales through real input shortages; early closure leaves eighteen bread unsold and all twelve resident meals unmet. No replacement worker, remote purchase or free stock repairs either outcome. These are prescribed feasibility/failure experiments, not autonomous planning or pricing-learning results. See [M17 map, schedule, actual results and limitations](docs/M17_RESULTS.md), [run fingerprints](docs/M17_RUNS.csv), [daily results](docs/M17_DAYS.csv), [resident summaries](docs/M17_RESIDENTS.csv) and [business summaries](docs/M17_BUSINESSES.csv). Stop after M17 for review; no M18.
