@@ -72,6 +72,7 @@ func _init() -> void:
 	LearningTests.run(self)
 	preload("res://tests/native_math_tests.gd").run(self)
 	preload("res://tests/planning_jobs_tests.gd").run_pure(self)
+	preload("res://tests/dispatch_queue_tests.gd").run_pure(self)
 	ProfileTests.run(self)
 	ContinuationTests.run(self)
 	print("Tests: %d checks, %d failures" % [_checks, _failures])

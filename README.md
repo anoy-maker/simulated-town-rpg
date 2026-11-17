@@ -574,3 +574,23 @@ held. No new night routine, economic parameter or permanent migration is added.
 [M21 results](docs/M21_RESULTS.md) report actual timing, staleness/cancellation,
 ordering/parity, earlier-preparation limits and reproducible checks. Stop after
 M21 for review; no M22.
+
+## M22: bounded planning loads and quick performance checks
+
+The opt-in dispatcher reuses M21's complete Rust policy on recorded authorized
+snapshots, with 16 unacknowledged slots, private worker caches and deterministic
+ordered eligibility. It does not add residents or change world authority/time.
+
+```sh
+# Requires the optional M20 Rust/bridge build.
+godot --headless --no-header --path . --script res://scripts/tools/run_planning_load.gd -- 100 2 mixed
+python3 -B scripts/tools/performance_smoke.py --output work/perf-smoke.json
+python3 -B scripts/tools/benchmark_planning_scale.py --output work/m22/load
+```
+
+[M22 results](docs/M22_RESULTS.md) compare 1/10/100 jobs and pools of 1/2/4.
+Two workers gave the best representative throughput on the two-CPU quota;
+four increased memory and callback tails. The [verification cadence](docs/PERFORMANCE.md)
+keeps quick advisory performance checks separate from complete historical and
+independent audit acceptance. M21's real world barrier remains. Stop after M22
+for review; do not begin M23.

@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "host": {
+    "godot": "4.6.3.stable.official.7d41c59c4",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "machine": "x86_64",
+    "cpus": 3,
+    "cpu_max": "200000 100000",
+    "memory_max": "8589934592",
+    "rust_sha256": "a7c9f739c84aa83fcbd4f1c9554080d53932d2ba69144e77054615e72bc3c462",
+    "bridge_sha256": "feee66ececa02b22294955e587447a3b52a9eb33503d0d5c19bcf5275f827cc3"
+  },
+  "reference_samples": 3,
+  "method": "Per-metric medians of three fresh complete smoke commands; callback quantiles are medians of per-run estimates, not pooled quantiles. Raw sample counts are explicit.",
+  "cases": {
+    "C1": {
+      "run_seconds": 0.078548,
+      "command_seconds": 0.7581170789999305,
+      "peak_rss_kib": 85736,
+      "event_count": 913
+    },
+    "D1": {
+      "run_seconds": 0.086749,
+      "command_seconds": 0.7376963120004802,
+      "peak_rss_kib": 85744,
+      "event_count": 913
+    },
+    "queue10": {
+      "run_seconds": 0.799846,
+      "command_seconds": 1.2143815909985278,
+      "peak_rss_kib": 71184,
+      "event_count": 0,
+      "callback_ms": {
+        "median": 0.0825,
+        "p95": 1.955,
+        "p99": null,
+        "worst": 2.416
+      },
+      "callback_samples_per_run": [
+        49,
+        46,
+        48
+      ]
+    }
+  },
+  "command_wall_seconds": 2.7544989560010436
+}
