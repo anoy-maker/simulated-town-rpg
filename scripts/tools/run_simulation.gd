@@ -27,6 +27,9 @@ const STUDY_SCENARIOS = ["settlement_equilibrium_reference", "settlement_employe
 
 func _init() -> void:
 	var args = OS.get_cmdline_user_args()
+	if args.size()>=2 and args[0]=="--scenario" and args[1]=="settlement_binding_contracts":
+		preload("res://scripts/tools/run_binding.gd").run_cli(self,args.slice(2))
+		return
 	if args.size()>=2 and args[0]=="--scenario" and args[1]=="settlement_labor_market":
 		preload("res://scripts/tools/run_labor_market.gd").run_cli(self,args.slice(2))
 		return

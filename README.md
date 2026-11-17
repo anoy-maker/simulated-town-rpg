@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0–M23 complete; M24 fixed-wage labor experiment for review; GDScript remains the default
+**Status:** M0–M24 complete; M25 binding-contract experiment for review; GDScript remains the default
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -637,3 +637,28 @@ The [precommitted design](docs/M24_LABOR_FEASIBILITY.md) and
 [actual results](docs/M24_RESULTS.md) distinguish redistributed shifts, real
 vacancy transfers, and structural shortages. No historical scenario is replaced.
 Stop after M24 for review; do not begin M25.
+
+## M25: binding three-day employment contracts
+
+```sh
+godot --headless --no-header --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_binding_contracts --condition tight --mode matching 30 42 --report-json
+godot --headless --no-header --path . --script res://scripts/tools/run_binding.gd -- --condition tight --mode obligations_only 30 42 --report-json
+python3 -B scripts/tools/run_binding.py --output work/m25/experiments
+python3 -B scripts/tools/check_binding_lifecycle.py --output work/m25/lifecycle
+```
+
+M25 retains M24's fifteen residents and real economy. Three-day exclusive terms
+owe ten coins for a verified hour of workplace availability, including standby.
+Existing cash pays earned wages; any shortfall remains an explicit worker-by-firm
+claim through expiration or lawful release. Productive work references its wage
+receipt once. No-shows earn no guarantee. Current assignment excludes wages
+already committed; renewal forecasts include all three days of guaranteed wages.
+
+Local observed offers can renew or replace employment after natural expiration.
+The `obligations_only` control restricts new terms to incumbent renewals under
+the same financial conditions. Actual results distinguish attendance, productive
+work, standby, cash wages, arrears, expiration, renewal and rehire after a gap.
+Historical scenarios remain unchanged. See the
+[frozen contract rules](docs/M25_CONTRACT_FEASIBILITY.md) and
+[results, verification and limitations](docs/M25_RESULTS.md).
+Stop after M25 for review; no dynamic wages or M26.

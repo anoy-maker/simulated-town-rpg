@@ -11,6 +11,8 @@ from brewery_feasibility import WORKERS, OWNERS, SITES, WINDOWS
 
 
 class LaborAudit:
+    SCENARIO = 'settlement_labor_market'
+    BINDING = False
     ACTIONS = set('labor_vacancy_assessed job_posted labor_notice_opened labor_notices_observed labor_search_decision application_submitted labor_applicants_ranked job_offer_made labor_offers_observed labor_acceptance_decision offer_accepted resignation_requested labor_transfer_scheduled labor_boundary employment_ended employment_started labor_assignment labor_notice_closed'.split())
 
     def attach(self, report, events, entities, firms, jobs, people, quotes, cargo, books):
@@ -25,11 +27,14 @@ class LaborAudit:
         self.postings, self.apps, self.pending, self.resignations = {}, {}, {}, {}
         assert all(initial[k] == {} for k in ('job_postings', 'applications', 'pending_hires', 'resignations'))
         assert all(self.state[k] == {} for k in ('notices', 'known_jobs', 'known_offers', 'contingent', 'history', 'sales', 'input_terms'))
-        inactive = [w for w in jobs if not jobs[w]['active']]
-        fixture = self.state['fixture']
-        assert inactive == ([] if fixture == 'none' else ['gale' if fixture == 'vacancy' else fixture.split(':')[1]])
+        self.validate_initial_jobs(initial, jobs)
         assert self.affiliations == {w: dict(business=j['business'], kind='employee') for w, j in jobs.items() if j['active']}
         self.day = self.minute = 0
+
+    def validate_initial_jobs(self, initial, jobs):
+        inactive = [w for w in jobs if not jobs[w]['active']]
+        fixture = initial['labor_market']['fixture']
+        assert inactive == ([] if fixture == 'none' else ['gale' if fixture == 'vacancy' else fixture.split(':')[1]])
 
     def staff(self, f):
         return sorted(w for w in self.firms[f]['employees'] if self.jobs[w]['active'] and self.jobs[w]['business'] == f and self.affiliations.get(w) == dict(business=f, kind='employee'))
@@ -248,7 +253,7 @@ class LaborAudit:
         assert self.state==final['labor_market'] and self.affiliations==final['affiliations'] and self.firms==final['businesses']
         for key,value in [('job_postings',self.postings),('applications',self.apps),('pending_hires',self.pending),('resignations',self.resignations)]:assert final[key]==value,key
         assert final['labor_used']=={w:1 for w in self.worked}
-        assert final['business_labor']==dict(Counter(self.affiliations[w]['business'] for w in self.worked))
+        assert final['business_labor']==dict(Counter(e['target'] for e in self.events if e['day']==self.day and e['action']=='work_shift' and e['success']))
         counts=dict.fromkeys(('postings','applications','offers','accepted','employment_started','employment_ended','canceled_pending','rejections'),0);transitions=[];reasons=Counter()
         mapping=dict(job_posted='postings',application_submitted='applications',job_offer_made='offers',offer_accepted='accepted',employment_started='employment_started',employment_ended='employment_ended')
         for e in self.events:

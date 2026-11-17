@@ -82,7 +82,7 @@ static func build(initial: Dictionary, final: Dictionary, history: Array, seed: 
 			"spatial_encounter":
 				if d.kind=="inspected":current.observed_quotes+=1
 			"contract_day_closed":
-				current.missed_shifts=d.breaches
+				current.missed_shifts=d.get("unutilized",d.breaches)
 				for business in Brew.ORDER:
 					var f: Dictionary=current.firms[business]
 					f["operating_surplus"]=f.sales-f.inputs-f.wages
