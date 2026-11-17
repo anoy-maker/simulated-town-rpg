@@ -401,3 +401,31 @@ it does not demonstrate instant authoritative movement. Existing M18 schedules
 are regression workload, not a newly imposed planning/night/sleep requirement.
 Controlled fixtures and results/limitations are in [M21 results](M21_RESULTS.md).
 No scheduler for all residents or permanent language/world migration is adopted.
+
+## M22: bounded independent planning dispatcher
+
+`planning_dispatcher.gd` wraps unchanged M21 workers. Main-thread admission owns
+deduplication, capacity, monotone `(batch, priority, ordinal, task ID)` keys and
+logical expiry/fingerprint checks. It refuses concurrent off-thread producers.
+Each of 1–4 workers owns its existing bridge/mailbox/cache; computation sees only
+owned M21 request bytes. Total unacknowledged capacity is at most 16, requests
+64 KiB, responses 512 KiB; metadata/dedup/release history is capped at 1024
+admissions per dispatcher instance. Saturation rejects without consuming an ID
+or key; the caller can retry. No queue carries a world reference.
+
+Completion frees a physical worker independently of the release cursor. An
+unfinished earlier job blocks eligibility of later completed proposals. Canceled,
+stale and failed entries become ordered tombstones, never substitute proposals.
+Release is one-shot; acknowledgement requires the current epoch and frees the
+slot/payload. Worker failure closes admission and cancels remaining work. Explicit
+shutdown joins workers outside ordinary service and prevents late release/ack.
+Recreation uses a new caller-owned epoch. This deliberately small dispatcher
+requires sorted admission; it is not an arbitrary-priority or dependency scheduler.
+
+The synthetic harness uses eight hashed, lossless authorized C/D snapshots and
+checks entire proposals against original M21 results. Harness task keys are not
+world identities or simulation timestamps. Its eligibility ledger is not an
+economic commit ledger. The existing M21 main-world validity checks, one-shot
+authoritative execution and 12:25 time guard remain unchanged and independently
+verified. Timing/RSS/queue observations never enter canonical reports. See
+[M22 results](M22_RESULTS.md) and [performance workflow](PERFORMANCE.md).

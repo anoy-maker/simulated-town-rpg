@@ -12,3 +12,4 @@ This repository is a **simulation-first Godot 4 RPG prototype**, not a text-adve
 - Never commit API keys, credentials, or secret configuration. Do not add paid network calls, external AI integration, asset downloads, or new services unless explicitly requested.
 - Avoid unnecessary scaffolding, grand refactors, and speculative features. Ask for input only when a missing decision genuinely blocks progress; otherwise state a conservative assumption.
 - For each change, summarize files touched, tested behavior, unresolved issues, and the next small increment.
+- Follow the targeted → three-day checkpoint → once-per-milestone full acceptance cadence in `docs/PERFORMANCE.md`; the opt-in performance smoke emits advisory relative warnings, never substitutes for correctness or independent audits.

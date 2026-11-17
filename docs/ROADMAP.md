@@ -287,3 +287,19 @@ prices, viable autonomous settlement policy or structural demand identification.
   forced sleep or a night planning window. No 100-person/gameplay claim.
 
 **Stop after M21 for review. Do not begin M22.**
+
+## M22: bounded planning-load and verification guardrails
+
+**Status:** Implemented opt-in experiment; [M22 results](M22_RESULTS.md) for review.
+
+- Bounded independent planning queue, 1/2/4 private workers, immutable authorized
+  inputs, strict eligibility ordering, lifecycle/backpressure/failure checks.
+- Same-host repeated 1/10/100 complete-policy loads, heterogeneous/order fixtures,
+  throughput/latency/RSS and unchanged M21 world-barrier controls.
+- Quick machine-readable performance smoke with advisory relative warnings;
+  targeted → three-day checkpoint → full final acceptance cadence. Immutable
+  fixtures do not replace independent economic/observation/numerical audits.
+- Recommend returning to small economy work with a conservative worker budget;
+  no new NPCs/towns, authority migration or generic dependency engine.
+
+**Stop after M22 for review. Do not begin M23.**
