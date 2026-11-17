@@ -61,6 +61,17 @@ are zero while any arrears remain. Report cash operating margin separately from
 sales minus input spending minus **accrued** wages; inventory is not valued as
 formal accounting profit. Cash payroll + remaining arrears = accrued wages.
 
+Timing clarification during technical checks, before longitudinal outcomes:
+before16:00, tender any old/current earned arrears after each completed market/
+scheduling appointment when actual cash becomes available. This includes early
+grain/flour receipts after a wage window; they must not be delayed until19:00.
+Finish the native market receipt sequence before tendering so its purchase links
+remain intact. Old already-earned claims may also clear next morning. This
+clarifies the required payment timing, without changing priority or financial
+decision parameters. Money is an account transfer authorized by the actual owner;
+physical co-location is required for attendance/jobs/goods, not for paying an
+already verified former employee at home.
+
 ## Current assignment versus new commitment
 
 Current guarantees are committed costs. Reserve existing arrears and all today's
