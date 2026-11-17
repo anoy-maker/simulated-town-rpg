@@ -161,7 +161,9 @@ court, reputation, wage competition or enforcement engine is implemented.
    renewal/refusal and next-day actual work. Rehashed forgeries must fail replay.
 4. Separately labeled technical fixtures (not main endowments): `cash_short` /
    `cash_zero` endow bakery21 bread, bakery6/0 coins, Finn0 coins; all removed
-   initial coins move to visitors, retaining9192. Actual retail receipts can pay
+   initial coins move to visitors, retaining9192. `mill_zero` instead endows
+   mill15 flour/mill0 coins/Hale0 coins, with126 moved to visitors; actual12:10
+   flour sales must pay earned wages before16:00. Actual retail receipts can pay
    wages at19:00. `insolvent` uses bakery0/Finn0 with zero goods. `no_show` changes
    only Dain's test morning destination to bakery, with actual travel. `staggered`
    starts first terms expiring after1/2/3 days by sorted employee index; all new
