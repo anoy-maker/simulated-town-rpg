@@ -168,8 +168,12 @@ func start_self_employment(owner: String, business: String) -> bool:
 	return true
 
 
+func _asset_requirements() -> Dictionary:
+	return Enterprise.REQUIREMENTS
+
+
 func _asset_error(business: String) -> String:
-	for kind in Enterprise.REQUIREMENTS[_businesses[business].industry]:
+	for kind in _asset_requirements()[_businesses[business].industry]:
 		var found: bool = false
 		for asset in _assets.values():
 			if asset.holder == business and asset.kind == kind and asset.industry == _businesses[business].industry:
@@ -181,7 +185,7 @@ func _asset_error(business: String) -> String:
 
 func _asset_capacity(business: String) -> int:
 	var capacity: int = _businesses[business].assets.daily_slots
-	for kind in Enterprise.REQUIREMENTS[_businesses[business].industry]:
+	for kind in _asset_requirements()[_businesses[business].industry]:
 		var available: int = 0
 		for asset in _assets.values():
 			if asset.holder == business and asset.kind == kind and asset.industry == _businesses[business].industry:

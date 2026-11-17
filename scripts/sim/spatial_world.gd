@@ -10,11 +10,35 @@ var _external_consumer: String=""
 
 
 func _init(seed_value: int=42, experiment: String="control") -> void:
-	var economy: Dictionary=Enterprise.initial()
-	_space=Town.initial(economy,experiment)
+	var economy: Dictionary=_initial_economy()
+	_space=_initial_space(economy,experiment)
 	for business in economy.businesses:
-		_cargo[business]={"holder":economy.businesses[business].owner,"inventory":{"wheat":0,"flour":0,"bread":0}}
+		_cargo[business]={"holder":economy.businesses[business].owner,"inventory":_empty_goods()}
 	super(seed_value,economy)
+
+
+func _initial_economy() -> Dictionary:
+	return Enterprise.initial()
+func _initial_space(economy: Dictionary, experiment: String) -> Dictionary:
+	return Town.initial(economy,experiment)
+func _sites() -> Dictionary:
+	return Town.SITES
+func _windows() -> Dictionary:
+	return Town.WINDOWS
+func _trade() -> Dictionary:
+	return Town.TRADE
+func _empty_goods() -> Dictionary:
+	var goods: Dictionary={}
+	for item in _items(): goods[item]=0
+	return goods
+func _visitor_economic_event(action: String, details: Dictionary) -> void:
+	if action=="purchase":
+		_space.presences[_shopper].purchased=true
+		_space.presences[_shopper].loaf+=details.quantity
+	elif action=="consume":
+		_space.presences[_external_consumer].loaf-=details.amount
+func _visitor_purchase_error(id: String, item: String, quantity: Variant) -> String:
+	return "visitor_request_used_or_invalid" if _space.presences[id].kind!="visitor" or _space.presences[id].purchased or quantity!=1 else ""
 
 
 func snapshot() -> Dictionary:
@@ -39,14 +63,11 @@ func _record(action: String, actor: String, target: String, success: bool, detai
 	var physical: String=_completing if not _completing.is_empty() else _external_consumer if not _external_consumer.is_empty() else _body(actor)
 	if success and action=="purchase" and _businesses.has(actor):
 		details["custody"]={"business":actor,"holder":_courier}
-	if success and action=="purchase" and actor=="visitors":
-		_space.presences[_shopper].purchased=true
-		_space.presences[_shopper].loaf+=details.quantity
-	if success and action=="consume" and actor=="visitors":
-		_space.presences[_external_consumer].loaf-=details.amount
+	if success and actor=="visitors" and action in ["purchase","consume"]:
+		_visitor_economic_event(action,details)
 	if action=="contract_day_closed":
 		for parcel in _cargo.values():
-			for item in ITEMS: details.goods[item]+=parcel.inventory[item]
+			for item in _items(): details.goods[item]+=parcel.inventory[item]
 	super(action,actor,target,success,details)
 	_events.back()["minute"]=_space.minute
 	_events.back()["absolute_minute"]=_absolute()
@@ -135,8 +156,8 @@ func move_step(id: String, tile: Variant) -> bool:
 	if p.route.is_empty():
 		p.activity="idle"
 		_record("spatial_arrived",id,"",true,{"tile":p.tile.duplicate()})
-		for business in Town.SITES:
-			if Town.SITES[business]==p.tile: _encounter(id,business,"arrived")
+		for business in _sites():
+			if _sites()[business]==p.tile: _encounter(id,business,"arrived")
 	return true
 
 
@@ -174,7 +195,7 @@ func advance_time(target: Variant) -> bool:
 				p.business=""
 				_record("spatial_activity_ended",id,"",true,{"kind":kind,"result_event_id":result})
 		if _space.minute==_space.retail_close:
-			_record("spatial_shop_closed","world","bakery",true,{"tile":Town.SITES.bakery.duplicate()})
+			_record("spatial_shop_closed","world","bakery",true,{"tile":_sites().bakery.duplicate()})
 		if measure_ticks: tick_timings.append({"day":_day,"minute":_space.minute,"usec":Time.get_ticks_usec()-tick_start})
 	return true
 
@@ -193,15 +214,15 @@ func _begin(id: String, kind: String, duration: int, business: String="") -> boo
 func _shift_error(worker: String, business: String) -> String:
 	var reason: String=super(worker,business)
 	if not reason.is_empty(): return reason
-	if not _at(worker,Town.SITES[business]): return "worker_not_at_workplace"
+	if not _at(worker,_sites()[business]): return "worker_not_at_workplace"
 	if not _available(worker) and _completing!=worker: return "worker_busy"
 	return ""
 
 
 func start_shift(worker: String, business: String) -> bool:
-	if not Town.WINDOWS.has(business) or not _available(worker) or not _at(worker,Town.SITES[business]):
+	if not _windows().has(business) or not _available(worker) or not _at(worker,_sites()[business]):
 		return _reject("spatial_shift_started",worker,business,{},"absent_or_busy_worker")
-	if _space.minute!=Town.WINDOWS[business][0]:
+	if _space.minute!=_windows()[business][0]:
 		return _reject("spatial_shift_started",worker,business,{},"outside_shift_start")
 	var active: int=_space.presences.values().filter(func(p):return p.active and p.activity=="work" and p.business==business).size()
 	if active+_business_labor.get(business,0)>=_asset_capacity(business):
@@ -221,19 +242,19 @@ func owner_work_shift(owner: String, business: String) -> bool:
 
 
 func manage(owner: String, business: String) -> bool:
-	if not _businesses.has(business) or _businesses[business].owner!=owner or not _at(owner,Town.SITES[business]) or _space.minute!=Town.WINDOWS[business][0]:
+	if not _businesses.has(business) or _businesses[business].owner!=owner or not _at(owner,_sites()[business]) or _space.minute!=_windows()[business][0]:
 		return _reject("spatial_management",owner,business,{},"invalid_management_appointment")
 	return _begin(owner,"manage",60,business)
 
 
 func _open(seller: String) -> bool:
-	if not Town.TRADE.has(seller): return false
-	var end: int=_space.retail_close if seller=="bakery" else Town.TRADE[seller][1]
-	return _space.minute>=Town.TRADE[seller][0] and _space.minute<end
+	if not _trade().has(seller): return false
+	var end: int=_space.retail_close if seller=="bakery" else _trade()[seller][1]
+	return _space.minute>=_trade()[seller][0] and _space.minute<end
 
 
 func inspect_offers(id: String, seller: String) -> Dictionary:
-	if not Town.SITES.has(seller) or not _at(id,Town.SITES[seller]) or not _available(id) or not _open(seller):
+	if not _sites().has(seller) or not _at(id,_sites()[seller]) or not _available(id) or not _open(seller):
 		_reject("spatial_inspection",id,seller,{},"not_available_at_open_seller")
 		return {"success":false,"offers":[]}
 	var offers: Array=public_quotes().filter(func(q):return q.seller==seller)
@@ -244,7 +265,7 @@ func inspect_offers(id: String, seller: String) -> Dictionary:
 func buyer_observation(buyer: String, item: String, requested: int) -> Dictionary:
 	var o: Dictionary=super(buyer,item,requested)
 	var id: String=_body(buyer)
-	o.offers=o.offers.filter(func(q):return _at(id,Town.SITES[q.seller]) and _open(q.seller))
+	o.offers=o.offers.filter(func(q):return _at(id,_sites()[q.seller]) and _open(q.seller))
 	return o
 
 
@@ -253,13 +274,13 @@ func purchase_quote(buyer: String, supplied: Variant, quantity: Variant) -> bool
 	var seller: String=supplied.get("seller","") if supplied is Dictionary and supplied.get("seller") is String else ""
 	var id: String=_body(buyer)
 	var reason: String=""
-	if not _space.presences.has(id) or not Town.SITES.has(seller) or not _at(id,Town.SITES[seller]): reason="buyer_not_at_seller"
+	if not _space.presences.has(id) or not _sites().has(seller) or not _at(id,_sites()[seller]): reason="buyer_not_at_seller"
 	elif not _open(seller): reason="seller_closed"
 	elif _businesses.has(buyer) and (_businesses[buyer].owner!=id or _courier!=id): reason="unauthorized_courier"
 	elif id!=_shopper and id!=_courier: reason="physical_interaction_required"
 	elif _space.presences[id].activity not in ["shop","procure"]: reason="buyer_busy"
-	elif buyer=="visitors" and (_space.presences[id].kind!="visitor" or _space.presences[id].purchased or quantity!=1): reason="visitor_request_used_or_invalid"
-	if reason.is_empty() and _businesses.has(buyer) and supplied.get("item") in ITEMS and quantity is int and quantity>0 and quantity<=MAX_AMOUNT:
+	elif buyer=="visitors": reason=_visitor_purchase_error(id,supplied.get("item","") if supplied is Dictionary else "",quantity)
+	if reason.is_empty() and _businesses.has(buyer) and supplied.get("item") in _items() and quantity is int and quantity>0 and quantity<=MAX_AMOUNT:
 		var item: String=supplied.item
 		if _entities[buyer].inventory[item]+_cargo[buyer].inventory[item]+quantity>MAX_AMOUNT: reason="owned_inventory_limit"
 	if not reason.is_empty():
@@ -289,15 +310,15 @@ func deposit(owner: String, business: String) -> bool:
 	var _profile_scope=ExecutionProfile.scope("spatial") if ExecutionProfile.enabled else null
 	var reason: String=""
 	if not _cargo.has(business) or _cargo[business].holder!=owner or _businesses[business].owner!=owner: reason="unauthorized_courier"
-	elif not _at(owner,Town.SITES[business]) or not _available(owner): reason="not_available_at_warehouse"
+	elif not _at(owner,_sites()[business]) or not _available(owner): reason="not_available_at_warehouse"
 	elif _cargo[business].inventory.values().all(func(q):return q==0): reason="empty_cargo"
 	if reason.is_empty():
-		for item in ITEMS:
+		for item in _items():
 			if _entities[business].inventory[item]>MAX_AMOUNT-_cargo[business].inventory[item]: reason="warehouse_limit"
 	if not reason.is_empty(): return _reject("spatial_deposited",owner,business,{},reason)
 	var goods: Dictionary=_cargo[business].inventory.duplicate()
 	if not _begin(owner,"deposit",5,business): return false
-	for item in ITEMS:
+	for item in _items():
 		_entities[business].inventory[item]+=goods[item]
 		_cargo[business].inventory[item]=0
 	_record("spatial_deposited",owner,business,true,{"goods":goods})
@@ -305,9 +326,9 @@ func deposit(owner: String, business: String) -> bool:
 
 
 func shop(id: String) -> bool:
-	if not _space.presences.has(id) or not _at(id,Town.SITES.bakery) or not _available(id) or not _open("bakery"):
+	if not _space.presences.has(id) or not _at(id,_sites().bakery) or not _available(id) or not _open("bakery"):
 		_reject("spatial_shopping",id,"bakery",{},"not_available_at_open_shop")
-		if _at(id,Town.SITES.bakery): _encounter(id,"bakery","closed_attempt" if not _open("bakery") else "busy_attempt")
+		if _at(id,_sites().bakery): _encounter(id,"bakery","closed_attempt" if not _open("bakery") else "busy_attempt")
 		return false
 	var p: Dictionary=_space.presences[id]
 	if p.kind=="visitor" and p.purchased:
@@ -326,16 +347,20 @@ func enter_visitor(slot: Variant) -> bool:
 		return _reject("spatial_visitor_entered","visitors","",{},"invalid_visitor_request")
 	var id: String="visitor:%04d:%d"%[_day,slot]
 	if _space.presences.has(id): return _reject("spatial_visitor_entered",id,"",{},"duplicate_visitor_request")
-	var p={"id":id,"kind":"visitor","account":"visitors","active":true,"home":Town.GATE.duplicate(),"tile":Town.GATE.duplicate(),
-		"destination":Town.GATE.duplicate(),"activity":"idle","until":0,"business":"","route":[],"last_step":_absolute()-5,
-		"schedule":{"entry":1020,"shop":1025,"consume":1030,"exit":1035},"purchased":false,"loaf":0}
+	var p: Dictionary=_visitor_presence(id)
 	_space.presences[id]=p
 	_record("spatial_visitor_entered",id,"",true,{"presence":p.duplicate(true),"slot":slot,"account":"visitors"})
 	return true
 
 
+func _visitor_presence(id: String) -> Dictionary:
+	var p={"id":id,"kind":"visitor","account":"visitors","active":true,"home":Town.GATE.duplicate(),"tile":Town.GATE.duplicate(),
+		"destination":Town.GATE.duplicate(),"activity":"idle","until":0,"business":"","route":[],"last_step":_absolute()-5,
+		"schedule":{"entry":1020,"shop":1025,"consume":1030,"exit":1035},"purchased":false,"loaf":0}
+	return p
+
 func consume_visitor(id: String) -> bool:
-	if not _available(id) or _space.presences[id].kind!="visitor" or not _at(id,Town.SITES.bakery) or _space.presences[id].loaf!=1:
+	if not _available(id) or _space.presences[id].kind!="visitor" or not _at(id,_sites().bakery) or _space.presences[id].loaf!=1:
 		return _reject("spatial_visitor_meal",id,"",{},"no_available_owned_loaf")
 	_external_consumer=id
 	var result: bool=_consume_account_goods("visitors",1)
@@ -386,5 +411,5 @@ func observe(actor: String, _business: String="") -> Dictionary:
 	assert(_entities.has(actor) and _entities[actor].kind=="resident")
 	var p: Dictionary=_space.presences[actor]
 	return {"self":_entities[actor].duplicate(true),"spatial":p.duplicate(true),"minute":_space.minute,
-		"nearby":_witnesses(p.tile),"offers":public_quotes().filter(func(q):return _at(actor,Town.SITES[q.seller]) and _open(q.seller)),
+		"nearby":_witnesses(p.tile),"offers":public_quotes().filter(func(q):return _at(actor,_sites()[q.seller]) and _open(q.seller)),
 		"local_jobs":job_board(actor),"encounters":witnessed_encounters(actor)}

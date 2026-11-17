@@ -594,3 +594,27 @@ four increased memory and callback tails. The [verification cadence](docs/PERFOR
 keeps quick advisory performance checks separate from complete historical and
 independent audit acceptance. M21's real world barrier remains. Stop after M22
 for review; do not begin M23.
+
+## M23: isolated brewery economy
+
+```sh
+godot --headless --no-header --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_brewery --condition reference 30 42 --report-json
+# Other predeclared conditions: tight, scarce, no_brew_request. Diagnostic horizons 0..30.
+python3 -B scripts/tools/brewery_feasibility.py
+python3 -B scripts/tools/run_brewery.py --output work/m23/experiments
+godot --headless --no-header --path . --script res://tests/run_brewery_tests.gd
+```
+
+Fifteen residents and four firms use explicitly endowed M23-only techniques,
+ten-coin employee shifts and fixed wheat2/flour5/bread6/ale4 prices. Mill and brewery
+submit physical whole-lot requests together; the farm maximizes real grain sales
+at the common quote. Consumers buy bread before traveling to the brewery for
+optional ale, with actual funds and a shared ten-coin per-visitor daily allowance.
+Owners receive only realized surplus after meals, above the 120 capital floor.
+
+The [independent feasibility witness](docs/M23_FEASIBILITY.md) was verified and
+committed before outcomes. [M23 results](docs/M23_RESULTS.md) separate that
+witness from actual policy decisions, shortages, distribution and performance.
+Historical goods, residents, rules, outputs and Rust experiments remain unchanged.
+No Bayesian pricing model is transplanted to the new population. Stop after M23
+for review; do not begin M24.

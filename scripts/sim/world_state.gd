@@ -21,13 +21,21 @@ func _init(initial_entities: Array) -> void:
 		assert(entity.id is String and not entity.id.is_empty())
 		assert(not _entities.has(entity.id) and _valid_entity_role(entity))
 		assert(entity.money is int and entity.money >= 0 and entity.money <= MAX_AMOUNT)
-		assert(entity.inventory.size() == ITEMS.size())
-		for item in ITEMS:
+		assert(entity.inventory.size() == _items().size())
+		for item in _items():
 			assert(entity.inventory.has(item))
 			assert(entity.inventory[item] is int)
 			assert(entity.inventory[item] >= 0 and entity.inventory[item] <= MAX_AMOUNT)
 		_entities[entity.id] = entity.duplicate(true)
 	_record("initialize", "world", "", true, {"state": snapshot()})
+
+
+func _items() -> Array:
+	return ITEMS
+
+
+func _recipe_rules() -> Dictionary:
+	return RECIPES
 
 
 func _valid_entity_role(entity: Dictionary) -> bool:
@@ -53,7 +61,7 @@ func transfer_item(actor: String, target: String, item: String, amount: Variant)
 	var _profile_scope=ExecutionProfile.scope("transactions") if ExecutionProfile.enabled else null
 	var details = {"item": item, "amount": amount}
 	var reason = _transfer_error(actor, target, amount)
-	if reason.is_empty() and item not in ITEMS:
+	if reason.is_empty() and item not in _items():
 		reason = "unknown_item"
 	if reason.is_empty() and _entities[actor].inventory[item] < amount:
 		reason = "insufficient_stock"
@@ -88,7 +96,7 @@ func purchase(buyer: String, seller: String, item: String, quantity: Variant, un
 	var details = {"buyer": buyer, "seller": seller, "item": item,
 		"quantity": quantity, "unit_price": unit_price, "total_price": null}
 	var reason = _transfer_error(buyer, seller, quantity)
-	if reason.is_empty() and item not in ITEMS:
+	if reason.is_empty() and item not in _items():
 		reason = "unknown_item"
 	if reason.is_empty() and (not unit_price is int or unit_price < 0 or unit_price > MAX_AMOUNT):
 		reason = "invalid_unit_price"
@@ -146,11 +154,11 @@ func produce(actor: String, recipe_id: String, batches: Variant = 1) -> bool:
 	var _profile_scope=ExecutionProfile.scope("transactions") if ExecutionProfile.enabled else null
 	var details = {"recipe": recipe_id, "batches": batches}
 	var reason = _actor_amount_error(actor, batches)
-	if reason.is_empty() and not RECIPES.has(recipe_id):
+	if reason.is_empty() and not _recipe_rules().has(recipe_id):
 		reason = "unknown_recipe"
 	if not reason.is_empty():
 		return _reject("produce", actor, "", details, reason)
-	var recipe: Dictionary = RECIPES[recipe_id]
+	var recipe: Dictionary = _recipe_rules()[recipe_id]
 	if _entities[actor].role != recipe.role:
 		return _reject("produce", actor, "", details, "wrong_role")
 	var inputs: Dictionary = {}
@@ -176,13 +184,19 @@ func produce(actor: String, recipe_id: String, batches: Variant = 1) -> bool:
 
 func consume(actor: String, amount: Variant = 1) -> bool:
 	var _profile_scope=ExecutionProfile.scope("transactions") if ExecutionProfile.enabled else null
-	var details = {"item": "bread", "amount": amount}
+	return _consume_item(actor, "bread", amount)
+
+
+func _consume_item(actor: String, item: String, amount: Variant) -> bool:
+	var details = {"item": item, "amount": amount}
 	var reason = _actor_amount_error(actor, amount)
-	if reason.is_empty() and _entities[actor].inventory.bread < amount:
+	if reason.is_empty() and item not in _items():
+		reason = "unknown_item"
+	if reason.is_empty() and _entities[actor].inventory[item] < amount:
 		reason = "insufficient_stock"
 	if not reason.is_empty():
 		return _reject("consume", actor, "", details, reason)
-	_entities[actor].inventory.bread -= amount
+	_entities[actor].inventory[item] -= amount
 	_record("consume", actor, "", true, details)
 	return true
 

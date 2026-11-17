@@ -303,3 +303,18 @@ prices, viable autonomous settlement policy or structural demand identification.
   no new NPCs/towns, authority migration or generic dependency engine.
 
 **Stop after M22 for review. Do not begin M23.**
+
+## M23: feasible brewery and shared grain market
+
+**Status:** Isolated experiment; [M23 results](M23_RESULTS.md) for review.
+
+- Precommitted integer productive/financial/physical feasibility witness for
+  fifteen residents, four firms and a conserved 9192-coin initial allocation.
+- Real mill/brewer grain competition, whole-lot common-price clearing, physical
+  transport, paid shifts and essential/discretionary consumer budgets.
+- Reference/tight/scarce and matched zero-brew-request 1/3/30-day process replay,
+  independent native-event audits, performance evidence and historical acceptance.
+- No all-firm Bayesian model, additional industry, investment policy, new towns,
+  UI, impairment, relationships or permanent native authority migration.
+
+**Stop after M23 for review. Do not begin M24.**

@@ -429,3 +429,47 @@ economic commit ledger. The existing M21 main-world validity checks, one-shot
 authoritative execution and 12:25 time guard remain unchanged and independently
 verified. Timing/RSS/queue observations never enter canonical reports. See
 [M22 results](M22_RESULTS.md) and [performance workflow](PERFORMANCE.md).
+
+## M23: scoped brewery techniques and physical competition
+
+Historical static items/recipes and labor industry tables are unchanged.
+Default-preserving protected methods supply item/recipe/industry registries,
+harvest quantity, initial contract validation, resident count, required asset
+kinds, initial quote price, spatial initialization/sites/windows, visitor receipt
+handling and consumer eligibility. Existing defaults preserve original data and
+event order. The kernel's bread sink delegates to the same validated item sink;
+M23 alone uses it for ale. Settlement readiness explicitly counts bread attempts.
+
+`brewery_config.gd` endows four-good/15-resident techniques and actual equipment;
+`brewery_world.gd` extends the existing spatial/quoted-market/enterprise/labor
+authority. Wage transfers, completed-shift production, native atomic purchases,
+held cargo, deposits and realized-earnings distributions reuse those validators.
+The separate `brewery_runner.gd` supplies only M23's feasible timetable and asks
+the pure `brewery_policy.gd` to select bounded replenishment shifts/lots and
+currently feasible consumer baskets. No worker pool or broad business planner is
+needed. M18's calibrated twelve-local model is not used.
+
+The 10:10 seller appointment admits at most three mill five-grain lots and two
+brewer three-grain lots after genuine owner-courier inspections. Revalidate
+quote/current cash/attendance/capacity; pass only eligible quantities, current
+posted price and seller stock to the finite revenue-maximizing clearing policy.
+Execute whole lots through ordinary quote/custody/payment authority, in stable
+receipt order independent of request arrival. No bid inflation, free allocation
+priority, inventory reservation or private consumer information enters selection.
+
+Own-business observations contain only owned cash/stock, own qualified worker
+attendance, own quote, own farm capacity and inspected input terms. Consumer
+observations contain only their own spendable money/remaining allowance, needs,
+and currently inspected stock/quotes. Sellers get physical encounter witnesses
+and their own books, never consumer budget/utility observations. Six visitor
+bodies share finite external funds but each has one combined daily ten-coin cap,
+one bread and one ale allowance; owned ale has a witnessed consumption/benefit
+receipt. Bread attempts still determine household settlement readiness.
+
+`brewery_report.gd` projects day/firm/household/visitor results. Independent
+`brewery_audit.py` reconstructs actual native finances, item transformations,
+cargo, movement, labor, quotes, budgets, decisions and reports, rejecting unknown
+successful events and checking 9192 coins after each movement. It does not replace
+or relax any existing auditor. `brewery_feasibility.py` separately checks the
+predeclared mathematical/physical witness; it never writes world balances.
+See [M23 certificate](M23_FEASIBILITY.md) and [actual results](M23_RESULTS.md).

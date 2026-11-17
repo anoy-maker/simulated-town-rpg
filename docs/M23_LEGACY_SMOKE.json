@@ -1,0 +1,126 @@
+{
+  "version": 1,
+  "host": {
+    "godot": "4.6.3.stable.official.7d41c59c4",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "machine": "x86_64",
+    "cpus": 3,
+    "cpu_max": "200000 100000",
+    "memory_max": "8589934592",
+    "rust_sha256": "a7c9f739c84aa83fcbd4f1c9554080d53932d2ba69144e77054615e72bc3c462",
+    "bridge_sha256": "feee66ececa02b22294955e587447a3b52a9eb33503d0d5c19bcf5275f827cc3"
+  },
+  "cases": {
+    "C1": {
+      "run_seconds": 0.084176,
+      "command_seconds": 0.9374414629965031,
+      "report_seconds": 0.118546,
+      "peak_rss_kib": 85728,
+      "event_count": 913,
+      "canonical_sha256": "93006cc9d697fd9455527fb604e6eeebe54eefc3c43925a93b119bd0cdd7f966",
+      "decision_work_ms": {
+        "n": 1,
+        "min": 51.717,
+        "median": 51.717,
+        "p95": null,
+        "p99": null,
+        "worst": 51.717
+      },
+      "worst_appointment_ms": 52.255,
+      "worst_tick_ms": 0.506
+    },
+    "D1": {
+      "run_seconds": 0.105339,
+      "command_seconds": 1.1919133049996162,
+      "report_seconds": 0.114758,
+      "peak_rss_kib": 85816,
+      "event_count": 913,
+      "canonical_sha256": "572964383ed21e7ff013ba0192cd9db8dd42cfd5e0a584096bb8934c8e2be784",
+      "decision_work_ms": {
+        "n": 1,
+        "min": 70.073,
+        "median": 70.073,
+        "p95": null,
+        "p99": null,
+        "worst": 70.073
+      },
+      "worst_appointment_ms": 70.947,
+      "worst_tick_ms": 0.736
+    },
+    "queue10": {
+      "run_seconds": 0.750306,
+      "command_seconds": 1.1179490340000484,
+      "peak_rss_kib": 71284,
+      "event_count": 0,
+      "callback_ms": {
+        "n": 45,
+        "min": 0.046,
+        "median": 0.093,
+        "p95": 2.602,
+        "p99": null,
+        "worst": 3.844
+      },
+      "queue_wait_ms": {
+        "n": 10,
+        "min": 0.865,
+        "median": 317.40549999999996,
+        "p95": null,
+        "p99": null,
+        "worst": 634.203
+      },
+      "decision_work_ms": {
+        "n": 10,
+        "min": 62.969,
+        "median": 64.902,
+        "p95": null,
+        "p99": null,
+        "worst": 78.369
+      },
+      "maxima": {
+        "completed": 1,
+        "input_bytes": 15880,
+        "output_bytes": 23116,
+        "outstanding": 10,
+        "running": 1,
+        "waiting": 9
+      },
+      "proposal_digest": "c834cc0509c6784b9cdf7c93de29a0d7d2d5b6158601fff8bca4d8565c6fe6ba",
+      "release_digest": "5eb58dc71956864da7ae1f7a3e81d15e2ed1ce91653c3eb160317744df52d629"
+    }
+  },
+  "command_wall_seconds": 3.290962136001326,
+  "verification_phases": [
+    {
+      "phase": "full-godot",
+      "seconds": "371.0275199239986",
+      "status": "0"
+    },
+    {
+      "phase": "full-python",
+      "seconds": "170.36234889999832",
+      "status": "0"
+    },
+    {
+      "phase": "historical",
+      "seconds": "594.4829433180021",
+      "status": "0"
+    },
+    {
+      "phase": "legacy-capture",
+      "seconds": "96.74276886099688",
+      "status": "0"
+    },
+    {
+      "phase": "audits",
+      "seconds": "224.23897061300158",
+      "status": "0"
+    },
+    {
+      "phase": "editor-import",
+      "seconds": "12.210390317002748",
+      "status": "0"
+    }
+  ],
+  "warnings": [],
+  "comparable": true
+}

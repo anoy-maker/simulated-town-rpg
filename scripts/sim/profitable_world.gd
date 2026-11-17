@@ -10,13 +10,16 @@ var _day_start: int = 0
 func _init(seed_value: int = 42, initial: Dictionary = Terms.initial()) -> void:
 	for business in initial.businesses:
 		_cash_results[business] = _new_cash_book()
+	_validate_initial_contracts(initial)
+	super(seed_value, initial)
+
+
+func _validate_initial_contracts(initial: Dictionary) -> void:
 	for job in initial.employment.values():
 		var employees: Array = initial.businesses[job.business].employees.duplicate()
 		employees.sort()
 		assert(job.wage == Terms.WAGE and job.contract == {"cycle_days": 3, "shifts_per_cycle": 2,
 			"cycle_compensation": 12, "phases": Terms.PHASES[employees.find(job.worker)]})
-	super(seed_value, initial)
-
 
 func _new_cash_book() -> Dictionary:
 	return {"sales": 0, "inputs": 0, "payroll": 0, "distributions": 0}
@@ -86,15 +89,19 @@ func _contract_id(business: String, worker: String) -> String:
 	return "%d:%s:%s" % [_day, business, worker]
 
 
+func _resident_count() -> int:
+	return 12
+
+
 func _settlement_ready() -> bool:
 	if _day == 0:
 		return false
 	var attempted: Dictionary = {}
 	for e in _events.slice(_day_start):
-		if e.action == "consume" and _entities.has(e.actor) and _entities[e.actor].kind == "resident" \
+		if e.action == "consume" and e.details.get("item") == "bread" and _entities.has(e.actor) and _entities[e.actor].kind == "resident" \
 				and e.details.get("amount") == 1 and e.details.get("reason", "") in ["", "insufficient_stock"]:
 			attempted[e.actor] = true
-	return attempted.size() == 12
+	return attempted.size() == _resident_count()
 
 
 func _shift_error(worker: String, business: String) -> String:
@@ -204,7 +211,8 @@ func close_contract_day() -> void:
 	_contract_day_closed = true
 	var business_cash: Dictionary = {}
 	var household_cash: Dictionary = {}
-	var goods = {"wheat": 0, "flour": 0, "bread": 0}
+	var goods: Dictionary = {}
+	for item in _items(): goods[item] = 0
 	for id in _entities:
 		var entity: Dictionary = _entities[id]
 		if entity.kind == "business":

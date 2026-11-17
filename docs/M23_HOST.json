@@ -1,0 +1,11 @@
+{
+  "godot": "4.6.3.stable.official.7d41c59c4",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "machine": "x86_64",
+  "cpus": 3,
+  "cpu_max": "200000 100000",
+  "memory_max": "8589934592",
+  "rust_sha256": "a7c9f739c84aa83fcbd4f1c9554080d53932d2ba69144e77054615e72bc3c462",
+  "bridge_sha256": "feee66ececa02b22294955e587447a3b52a9eb33503d0d5c19bcf5275f827cc3",
+  "m23_backend": "GDScript; native hashes identify unchanged optional historical verification artifacts"
+}
