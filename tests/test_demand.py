@@ -90,7 +90,9 @@ class DemandTests(unittest.TestCase):
         def quote(d):first(d,'demand_customer_intent')['details']['quote']['version']+=1
         def receipt(d):first(d,'demand_order_observed')['details']['receipt_ids']*=2
         def future_view(d):first(d,'labor_vacancy_assessed')['details']['observation']['future_arrivals']=6
-        for mutate in (interest,witness,private,future,double,fake,estimate,contract,payroll,censor,quote,receipt,future_view):
+        def failed_lot(d):next(e for e in d['events'] if e['action']=='purchase' and not e['success'] and e['target']=='mill')['details']['quantity']=99
+        def failed_price(d):next(e for e in d['events'] if e['action']=='purchase' and not e['success'] and e['target']=='brewery')['details']['unit_price']=5
+        for mutate in (interest,witness,private,future,double,fake,estimate,contract,payroll,censor,quote,receipt,future_view,failed_lot,failed_price):
             with self.subTest(forgery=mutate.__name__):
                 data=copy.deepcopy(self.cases['requests_smoothed']);mutate(data)
                 data['report']['ledger_sha256']=hashlib.sha256(json.dumps(data['events'],sort_keys=True,separators=(',',':'),ensure_ascii=False).encode()).hexdigest()

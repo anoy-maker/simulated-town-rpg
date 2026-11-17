@@ -128,7 +128,9 @@ func freeze_demand() -> void:
 	if not _demand_points.is_empty():return
 	for b in Brew.ORDER:
 		var q: Dictionary=_quotes[b][Brew.INDUSTRIES[_businesses[b].industry].output]
-		var row: Dictionary=Memory.estimate(_demand_days,b,_day,q.unit_price,Brew.INDUSTRIES[_businesses[b].industry].target,demand_arm)
+		# Filter at the authority boundary, before invoking the seller's policy.
+		var own_history: Array=_demand_days.filter(func(r):return r.business==b)
+		var row: Dictionary=Memory.estimate(own_history,b,_day,q.unit_price,Brew.INDUSTRIES[_businesses[b].industry].target,demand_arm)
 		if demand_arm=="legacy_instrumented":row.forecast=_sales.get(_day-1,{}).get(b,Brew.INDUSTRIES[_businesses[b].industry].target if _day<=1 else 0)
 		_demand_points[b]=row.forecast;_demand_forecasts.append(row)
 		_record("demand_forecast",Brew.OWNERS[b],b,true,row)

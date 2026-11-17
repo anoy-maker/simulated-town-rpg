@@ -120,6 +120,14 @@ class DemandAudit(BindingAudit):
                 assert plan['details']['observation']['input_quote']==q and d['quantity']==5*plan['details']['proposal']['lots']
                 assert d['receipt_ids']==[x['id'] for x in self.events[plan['id']:e['id']-1] if x['action']=='purchase']
                 assert receipts and all(x['actor']=='bakery' and x['target']=='mill' and (x['success'] or x['details']['reason']=='insufficient_stock') for x in receipts)
+                for purchase in receipts:
+                    assert purchase['details']['quantity']==5 and purchase['details']['unit_price']==q['unit_price']
+                    if not purchase['success']:
+                        assert self.entities['mill']['inventory']['flour']<5
+                        # Failed command retains the inspected snapshot, whose
+                        # advisory stock can predate earlier lots in this order.
+                        assert purchase['details']['quote']==q
+                        p=self.people['cora'];assert p['tile']==SITES['mill'] and p['activity']=='procure' and p['until']==735
                 assert d['filled']==sum(x['details']['quantity'] for x in receipts if x['success'])
             self.ordered_receipts.update(d['receipt_ids']);self.orders[key]=copy.deepcopy(d)
             self.live[b]['order_ids'].append(e['id']);self.live[b]['unfilled']+=d['unfilled']
@@ -157,6 +165,7 @@ class DemandAudit(BindingAudit):
             if e['actor'] not in OWNERS:self.retail_bought[e['actor'],d['item']]+=d['quantity']
         if a=='purchase' and not e['success'] and e['physical_actor'] in self.people and self.people[e['physical_actor']]['kind'] in ('resident','visitor') and b in ('bakery','brewery'):
             assert self.entities[b]['inventory'][PRODUCT[b]]==0 and d['reason']=='insufficient_stock' and d['quantity']==1
+            assert d['unit_price']==self.quotes[b][PRODUCT[b]]['unit_price']
             assert e['id']>1 and self.events[e['id']-2]['action']=='demand_customer_intent'
             intent=self.intents[e['id']-1];assert intent['actor']==e['physical_actor'] and intent['details']['quantity']==1 and intent['details']['quote']==d['quote']
             self.failed_requests.add(e['id'])
