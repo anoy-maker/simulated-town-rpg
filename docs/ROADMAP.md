@@ -272,3 +272,18 @@ prices, viable autonomous settlement policy or structural demand identification.
   renderer, scheduler, additional population or economic policy.
 
 **Stop after M20 for review. Do not begin M21.**
+
+## M21: deterministic Rust-backed planning-job experiment
+
+**Status:** Opt-in experiment; [M21 results](M21_RESULTS.md) for review.
+
+- Complete isolated policy computation on one worker, owned snapshots/results and
+  private caches; original world executes/rejects every proposal on main thread.
+- Explicit 12:25 authority barrier, validity/version checks, deterministic commit
+  order, bounded retry/cancel/shutdown and actual frame-heartbeat proof.
+- Same-host synchronous/scheduled comparisons, separate frame service and world
+  progression, unchanged historical accounting, decisions and fingerprints.
+- Investigate legal earlier information without inserting future observations,
+  forced sleep or a night planning window. No 100-person/gameplay claim.
+
+**Stop after M21 for review. Do not begin M22.**

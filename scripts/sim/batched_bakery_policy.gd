@@ -13,7 +13,7 @@ static func _best(values: Array,offset: int,prices: Array,current: int) -> Dicti
 			selected=prices[i]
 	return {"price":selected,"value":best}
 
-static func decide(o: Dictionary,b: Dictionary,stage: String,math: RefCounted) -> Dictionary:
+static func decide(o: Dictionary,b: Dictionary,stage: String,math: RefCounted,cache: Variant=null) -> Dictionary:
 	var prices=Policy.candidates(o.current_price,o.posted)
 	var operated=Finance.operate(o.state,false)
 	var stock: int=int(operated.state[2])
@@ -24,12 +24,12 @@ static func decide(o: Dictionary,b: Dictionary,stage: String,math: RefCounted) -
 		var next_prices=Policy.candidates(p,o.posted+[p])
 		var group={"price":p,"prices":next_prices,"frozen":forecasts.size(),"branches":[]}
 		for np in next_prices: forecasts.append({"b":b,"price":np,"carry":o.carry})
-		for l in Beliefs.quadrature(Beliefs.outcomes(b,"local",p,stock,o.carry,o.minimum[0])):
-			for v in Beliefs.quadrature(Beliefs.outcomes(b,"visitor",p,stock-l.sales,0,o.minimum[1])):
+		for l in Beliefs.quadrature(Beliefs.outcomes(b,"local",p,stock,o.carry,o.minimum[0],cache),cache):
+			for v in Beliefs.quadrature(Beliefs.outcomes(b,"visitor",p,stock-l.sales,0,o.minimum[1],cache),cache):
 				var closing=Finance.close(operated.state,p,l.sales+v.sales)
 				var branch={"local":l,"visitor":v,"probability":l.probability*v.probability,
 					"state":closing.state,"payout":closing.payout,"updated":forecasts.size()}
-				var posterior=Beliefs.update(b,{"local":l,"visitor":v},p,true)
+				var posterior=Beliefs.update(b,{"local":l,"visitor":v},p,true,cache)
 				for np in next_prices: forecasts.append({"b":posterior,"price":np,"carry":o.carry})
 				group.branches.append(branch)
 		groups.append(group)
@@ -70,7 +70,7 @@ static func decide(o: Dictionary,b: Dictionary,stage: String,math: RefCounted) -
 				"unadapted_value":unadapted,"adaptive_value":adapted.value})
 		var p: int=group.price
 		rows.append({"price":p,"ordinary":ordinary,"informed":informed,"evsi":maxf(0.0,informed-ordinary),
-			"sales_pmf":Beliefs.sales(Beliefs.demand(b,p,o.carry,o.minimum),stock),"branches":branches})
+			"sales_pmf":Beliefs.sales(Beliefs.demand(b,p,o.carry,o.minimum,cache),stock),"branches":branches})
 		var value: float=informed if stage=="D" else ordinary
 		if Policy.better(value,p,maximum,selected,o.current_price):
 			maximum=value
