@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0–M19 complete; M20 native numerical comparison implemented for review; GDScript remains the default
+**Status:** M0–M20 complete; M21 opt-in planning-job experiment for review; GDScript remains the default
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -555,3 +555,22 @@ godot --headless --path . --script res://scripts/tools/run_simulation.gd -- --sc
 execution and main-thread decision latency. No historical defaults are replaced,
 no permanent migration is chosen, and no game responsiveness claim is made from
 headless throughput alone. Stop after M20 for review; no M21.
+
+## M21: opt-in planning jobs and frame-service experiment
+
+```sh
+# Requires the optional M20 Rust build. Historical run_simulation.gd stays unchanged.
+godot --headless --no-header --path . --script res://scripts/tools/run_planning_jobs.gd -- D 30 scheduled
+# Same ~60-Hz host pump, synchronous Rust pricing control:
+godot --headless --no-header --path . --script res://scripts/tools/run_planning_jobs.gd -- D 30 sync
+python3 -B scripts/tools/measure_planning_jobs.py --phase benchmark --output work/m21
+```
+
+One worker computes Cora's complete proposal using serialized permitted facts and
+private caches. At 12:25 a deterministic barrier holds authoritative simulation
+time until main-thread validation/commit; host heartbeats continue. This is a
+headless service proof, not a claim that a player could move while world time is
+held. No new night routine, economic parameter or permanent migration is added.
+[M21 results](docs/M21_RESULTS.md) report actual timing, staleness/cancellation,
+ordering/parity, earlier-preparation limits and reproducible checks. Stop after
+M21 for review; no M22.

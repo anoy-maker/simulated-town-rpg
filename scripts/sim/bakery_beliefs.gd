@@ -30,10 +30,11 @@ static func hazard(b: Dictionary) -> Dictionary:
 static func q(h: int, price: int) -> float:
 	return (0.9 if price<=h+1 else 0.1) if h<12 else clampf(0.8-0.075*(price-4),0.1,0.9)
 
-static func row(h: int, price: int, n: int) -> Array:
+static func row(h: int, price: int, n: int, cache: Variant=null) -> Array:
+	var tables: Dictionary=_tables if cache==null else cache.tables
 	var key=Vector3i(h,price,n)
-	if _tables.has(key): return _tables[key]
-	if ExecutionProfile.enabled: ExecutionProfile.count("beta_table_misses")
+	if tables.has(key): return tables[key]
+	if cache==null and ExecutionProfile.enabled: ExecutionProfile.count("beta_table_misses")
 	var a=2.0*q(h,price)
 	var b=2.0-a
 	var r: Array=[1.0]
@@ -42,11 +43,11 @@ static func row(h: int, price: int, n: int) -> Array:
 	var total: float=0.0
 	for v in r: total+=v
 	for s in r.size(): r[s]/=total
-	_tables[key]=r
+	tables[key]=r
 	return r
 
-static func update(b: Dictionary, observations: Dictionary, price: int, complete: bool) -> Dictionary:
-	var _profile_scope=ExecutionProfile.scope("bayes") if ExecutionProfile.enabled else null
+static func update(b: Dictionary, observations: Dictionary, price: int, complete: bool, cache: Variant=null) -> Dictionary:
+	var _profile_scope=ExecutionProfile.scope("bayes") if cache==null and ExecutionProfile.enabled else null
 	var result=b.duplicate(true)
 	for c in ["local","visitor"]:
 		var o: Dictionary=observations[c]
@@ -55,7 +56,7 @@ static func update(b: Dictionary, observations: Dictionary, price: int, complete
 		var scores: Array=[]
 		var scale=0.0
 		for h in 13:
-			var value: float=result[c].weights[h]*row(h,price,o.eligible)[o.sales]
+			var value: float=result[c].weights[h]*row(h,price,o.eligible,cache)[o.sales]
 			scores.append(value)
 			scale=maxf(scale,value)
 		var total=0.0
@@ -65,8 +66,9 @@ static func update(b: Dictionary, observations: Dictionary, price: int, complete
 		for h in 13: result[c].weights[h]=scores[h]/total
 	return result
 
-static func demand(b: Dictionary, price: int, carry: int=3, minimum: Array=[0,0]) -> Array:
-	var _profile_scope=ExecutionProfile.scope("forecast_mixture") if ExecutionProfile.enabled else null
+static func demand(b: Dictionary, price: int, carry: int=3, minimum: Array=[0,0], cache: Variant=null) -> Array:
+	var _profile_scope=ExecutionProfile.scope("forecast_mixture") if cache==null and ExecutionProfile.enabled else null
+	var components_cache: Dictionary=_components if cache==null else cache.components
 	var pmfs: Array=[]
 	for ci in 2:
 		var c: String=["local","visitor"][ci]
@@ -76,8 +78,8 @@ static func demand(b: Dictionary, price: int, carry: int=3, minimum: Array=[0,0]
 		var total=0.0
 		for n in range(minimum[ci],13): total+=b[c].alpha[n]
 		var key=str([b[c].alpha,price,carry if ci==0 else 0,minimum[ci]])
-		if not _components.has(key):
-			if ExecutionProfile.enabled: ExecutionProfile.count("traffic_component_misses")
+		if not components_cache.has(key):
+			if cache==null and ExecutionProfile.enabled: ExecutionProfile.count("traffic_component_misses")
 			var components: Array=[]
 			for h in 13:
 				var component: Array=[]
@@ -85,12 +87,12 @@ static func demand(b: Dictionary, price: int, carry: int=3, minimum: Array=[0,0]
 				component.fill(0.0)
 				for n in range(minimum[ci],13):
 					var people=mini(12,n+(carry if ci==0 else 0))
-					var r=row(h,price,people)
+					var r=row(h,price,people,cache)
 					for v in r.size(): component[v]+=b[c].alpha[n]/total*r[v]
 				components.append(component)
-			_components[key]=components
+			components_cache[key]=components
 		for h in 13:
-			for v in 13: mass[v]+=b[c].weights[h]*_components[key][h][v]
+			for v in 13: mass[v]+=b[c].weights[h]*components_cache[key][h][v]
 		pmfs.append(mass)
 	return pmfs
 
@@ -102,8 +104,8 @@ static func sales(pmf: Array, stock: int) -> Array:
 		for v in 13: out[mini(stock,l+v)]+=pmf[0][l]*pmf[1][v]
 	return out
 
-static func outcomes(b: Dictionary, c: String, price: int, stock: int, carry: int, minimum: int) -> Array:
-	var _profile_scope=ExecutionProfile.scope("evsi_outcomes") if ExecutionProfile.enabled else null
+static func outcomes(b: Dictionary, c: String, price: int, stock: int, carry: int, minimum: int, cache: Variant=null) -> Array:
+	var _profile_scope=ExecutionProfile.scope("evsi_outcomes") if cache==null and ExecutionProfile.enabled else null
 	var merged: Dictionary={}
 	var total=0.0
 	for n in range(minimum,13): total+=b[c].alpha[n]
@@ -111,7 +113,7 @@ static func outcomes(b: Dictionary, c: String, price: int, stock: int, carry: in
 		var m=mini(12,n+carry)
 		for h in 13:
 			var weight: float=b[c].alpha[n]/total*b[c].weights[h]
-			var r=row(h,price,m)
+			var r=row(h,price,m,cache)
 			for s in range(mini(stock,m)+1):
 				if s==stock and stock<m: continue
 				_add(merged,n,m,s,false,weight*r[s])
@@ -120,7 +122,7 @@ static func outcomes(b: Dictionary, c: String, price: int, stock: int, carry: in
 				else:
 					for k in range(stock,m+1):
 						# P(first stock-th success at k), exchangeable beta-binomial.
-						_add(merged,n,k,stock,k<m,weight*row(h,price,k)[stock]*float(stock)/k)
+						_add(merged,n,k,stock,k<m,weight*row(h,price,k,cache)[stock]*float(stock)/k)
 	var out: Array=merged.values()
 	out.sort_custom(func(a,z):
 		for key in ["sales","arrivals","eligible","censored"]:
@@ -133,8 +135,8 @@ static func _add(out: Dictionary,n: int,e: int,s: int,c: bool,p: float) -> void:
 	if not out.has(key): out[key]={"arrivals":n,"eligible":e,"sales":s,"censored":c,"probability":0.0}
 	out[key].probability+=p
 
-static func quadrature(out: Array) -> Array:
-	var _profile_scope=ExecutionProfile.scope("evsi_outcomes") if ExecutionProfile.enabled else null
+static func quadrature(out: Array, cache: Variant=null) -> Array:
+	var _profile_scope=ExecutionProfile.scope("evsi_outcomes") if cache==null and ExecutionProfile.enabled else null
 	var result: Array=[]
 	var cumulative=0.0
 	var index=0

@@ -44,12 +44,15 @@ func _after_appointments(minute: int) -> void:
 			"available":int(o.state[2])+18,"planned_inputs":48,"planned_payroll":18})
 	elif stage in ["C","D"]:
 		proposal=LearningPolicy.decide(o,world.beliefs,stage) if numerical_backend==null else preload("res://scripts/sim/batched_bakery_policy.gd").decide(o,world.beliefs,stage,numerical_backend)
-	var success: bool=true
-	if proposal.selected_price!=o.current_price: success=world.revise_quote("cora","bakery","bread",proposal.selected_price)
-	decisions.append({"day":o.day,"observation":o,"beliefs":world.beliefs.duplicate(true),"proposal":proposal,"success":success})
-	if success and proposal.selected_price not in posted: posted.append(proposal.selected_price)
+	_commit_proposal(o,world.beliefs,proposal)
 	decision_timings.append({"day":o.day,"minute":minute,"usec":Time.get_ticks_usec()-decision_started})
 	if ExecutionProfile.enabled: ExecutionProfile.decision_end(profile_start,o.day,world.memory.cora.size())
+
+func _commit_proposal(o: Dictionary,b: Dictionary,proposal: Dictionary) -> void:
+	var success: bool=true
+	if proposal.selected_price!=o.current_price: success=world.revise_quote("cora","bakery","bread",proposal.selected_price)
+	decisions.append({"day":o.day,"observation":o,"beliefs":b.duplicate(true),"proposal":proposal,"success":success})
+	if success and proposal.selected_price not in posted: posted.append(proposal.selected_price)
 
 func _reference_verification(history: Array,final: Dictionary) -> Dictionary:
 	return preload("res://scripts/sim/spatial_audit.gd").verify(history,final,true)

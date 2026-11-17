@@ -375,3 +375,29 @@ financial approximations, candidates, probabilities, order, tie tolerance and
 accounting audits. No full-world port, scheduler or migration is introduced.
 See [M20 results](M20_RESULTS.md) for measured parity, latency, boundary costs,
 build requirements and platform/maintenance limitations.
+
+## M21: isolated planning worker and deterministic commit barrier
+
+The optional `planning_jobs_runner.gd` uses the existing appointment dispatcher,
+not a second economic simulation. Default runners/CLI remain synchronous. A
+complete Cora C/D proposal receives versioned Variant bytes under `planning_job.gd`;
+only current permitted observations, beliefs, history and fixed M18 parameters
+cross the boundary. A single persistent `planning_worker.gd` owns its bridge,
+private caches, request and result. No active scene/server/world reference crosses.
+The M20 Rust library and exact policy graph are reused; optional cache arguments
+keep worker math away from historical static dictionaries/profiling state.
+
+A one-slot mutex/semaphore mailbox returns sealed result bytes. Ordinary host
+updates poll once with `try_lock`; only explicit teardown joins the worker.
+`planning_jobs_world.gd` prevents clock/day advancement during an active 12:25
+plan. Main-thread commit validates ID, owner, original day/minute, complete input
+hashes and relevant quote/presence/cargo versions, then executes the ordinary
+quote command exactly once. Stale/canceled jobs retain the same barrier and can
+resubmit current permitted information, with at most two retries. Completion wall
+time cannot reorder economic events. Diagnostics remain outside native records.
+
+The headless frame pump demonstrates host servicing while simulated time waits;
+it does not demonstrate instant authoritative movement. Existing M18 schedules
+are regression workload, not a newly imposed planning/night/sleep requirement.
+Controlled fixtures and results/limitations are in [M21 results](M21_RESULTS.md).
+No scheduler for all residents or permanent language/world migration is adopted.
