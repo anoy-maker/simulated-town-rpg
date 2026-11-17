@@ -142,3 +142,15 @@ must fail. Preserve the169 M0–M22 pins, all M23 controls, original C/D audits 
 M22 smoke. Measure isolated run/command/RSS/event/tick/appointment costs; use small
 checks while editing and complete final acceptance once. No dynamic wages,
 skill progression, welfare guarantee, new sector or M25 work.
+
+### Systematic fixture coverage extension before main outcomes
+
+The first tiny three-day Gale-inactive development fixture rehired Gale under
+the declared policies. Preserve that result; do not retune applicant rotation or
+initial money to force a named incumbent's move. To cover the required contingent
+cross-industry path, additionally enumerate **all eleven** single-incumbent-ended
+initializations, one per original worker, each for three days twice. Report every
+case, including no transfer or return to the same occupation. Each differs only
+in which initial contract is inactive; funds/goods/assets/prices/caps/policies
+remain unchanged. This is a disclosed coverage extension after the first technical
+fixture, frozen before the main longitudinal matrix, not a chosen winning economy.
