@@ -27,6 +27,9 @@ const STUDY_SCENARIOS = ["settlement_equilibrium_reference", "settlement_employe
 
 func _init() -> void:
 	var args = OS.get_cmdline_user_args()
+	if args.size()>=2 and args[0]=="--scenario" and args[1]=="settlement_brewery":
+		preload("res://scripts/tools/run_brewery.gd").run_cli(self,args.slice(2))
+		return
 	var scenario: String = "m0"
 	if not args.is_empty() and args[0] == "--scenario":
 		if args.size() < 2 or args[1] not in ["m0", "trading", "agents", "coordination", "planning", "market", "market_downstream", "calibration", "settlement_labor", "settlement_finance", "settlement_equilibrium_reference", "settlement_employer_choice", "settlement_fixed_owner_first", "settlement_sales_rotating", "settlement_profitable_reference", "settlement_external_trade_reference", "enterprise_startup_fixture", "enterprise_delegation_fixture", "settlement_pricing", "pricing_competition_fixture", "settlement_spatial", "settlement_spatial_learning"]:

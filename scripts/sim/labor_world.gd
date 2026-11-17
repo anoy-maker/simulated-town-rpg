@@ -23,14 +23,14 @@ func _init(seed_value: int = 42, initial: Dictionary = Config.initial()) -> void
 		if entity.kind == "resident":
 			assert(entity.labor_capacity == 1 and entity.skills is Array)
 			for skill in entity.skills:
-				assert(skill in Config.INDUSTRIES)
+				assert(skill in _industries())
 	for id in _businesses:
 		var business: Dictionary = _businesses[id]
 		assert(business.id == id and business.account == id and people[id].kind == "business")
-		assert(business.industry in Config.INDUSTRIES and people[id].role == business.industry)
+		assert(business.industry in _industries() and people[id].role == business.industry)
 		assert(people[business.owner].kind == "resident" and business.owner not in business.employees)
 		assert(business.assets.daily_slots is int and business.assets.daily_slots in range(1, 13))
-		assert(business.assets.batches_per_shift == Config.INDUSTRIES[business.industry].batches)
+		assert(business.assets.batches_per_shift == _industries()[business.industry].batches)
 		assert(business.output_target is int and business.output_target > 0 and business.output_target <= MAX_AMOUNT)
 		assert(business.owner_compensation is int and business.owner_compensation >= _minimum_owner_compensation() and business.owner_compensation <= MAX_AMOUNT)
 		var unique: Array = []
@@ -44,6 +44,10 @@ func _init(seed_value: int = 42, initial: Dictionary = Config.initial()) -> void
 		assert(worker in _businesses[job.business].employees)
 		assert(job.wage is int and job.wage > 0 and job.wage <= MAX_AMOUNT)
 	super(initial.entities)
+
+
+func _industries() -> Dictionary:
+	return Config.INDUSTRIES
 
 
 func _account_kinds() -> Array:
@@ -83,6 +87,10 @@ func advance_day() -> void:
 
 func _harvest_opportunity() -> int:
 	return _rng.randi_range(2, 6)
+
+
+func _harvest_quantity(worker: String) -> int:
+	return _harvests[worker]
 
 
 func _unit_price(item: String) -> int:
@@ -140,14 +148,14 @@ func _productive_shift_error(worker: String, business: String, wage: int) -> Str
 		return "unfunded_payroll"
 	if _entities[worker].money > MAX_AMOUNT - wage:
 		return "worker_money_limit"
-	var rule: Dictionary = Config.INDUSTRIES[firm.industry]
+	var rule: Dictionary = _industries()[firm.industry]
 	if firm.industry == "farmer":
 		if not _harvests.has(worker):
 			return "no_harvest_opportunity"
-		if _entities[business].inventory.wheat > MAX_AMOUNT - _harvests[worker]:
+		if _entities[business].inventory.wheat > MAX_AMOUNT - _harvest_quantity(worker):
 			return "output_limit"
 	else:
-		var recipe: Dictionary = RECIPES[rule.recipe]
+		var recipe: Dictionary = _recipe_rules()[rule.recipe]
 		for item in recipe.inputs:
 			if _entities[business].inventory[item] < recipe.inputs[item] * rule.batches:
 				return "insufficient_inputs"
@@ -204,8 +212,8 @@ func work_shift(worker: String, business: String) -> bool:
 
 
 func _produce_for_shift(worker: String, business: String) -> bool:
-	var rule: Dictionary = Config.INDUSTRIES[_businesses[business].industry]
-	return super.harvest(business, _harvests[worker]) if _businesses[business].industry == "farmer" else super.produce(business, rule.recipe, rule.batches)
+	var rule: Dictionary = _industries()[_businesses[business].industry]
+	return super.harvest(business, _harvest_quantity(worker)) if _businesses[business].industry == "farmer" else super.produce(business, rule.recipe, rule.batches)
 
 
 func harvest(actor: String, amount: Variant) -> bool:
@@ -225,11 +233,11 @@ func transfer_item(actor: String, target: String, item: String, amount: Variant)
 
 
 func purchase(buyer: String, seller: String, item: String, quantity: Variant, unit_price: Variant) -> bool:
-	var valid: bool = _entities.has(buyer) and _businesses.has(seller) and item in ITEMS
+	var valid: bool = _entities.has(buyer) and _businesses.has(seller) and item in _items()
 	if valid:
-		valid = Config.INDUSTRIES[_businesses[seller].industry].output == item and unit_price is int and unit_price == _unit_price(item)
+		valid = _industries()[_businesses[seller].industry].output == item and unit_price is int and unit_price == _unit_price(item)
 		if _businesses.has(buyer):
-			valid = valid and Config.INDUSTRIES[_businesses[buyer].industry].input == item
+			valid = valid and _industries()[_businesses[buyer].industry].input == item
 		else:
 			valid = valid and item == "bread"
 	if not valid:
@@ -263,7 +271,7 @@ func observe(actor: String, business: String = "") -> Dictionary:
 	ids.sort()
 	for id in ids:
 		var firm: Dictionary = _businesses[id]
-		var item: String = Config.INDUSTRIES[firm.industry].output
+		var item: String = _industries()[firm.industry].output
 		observation.offers.append({"seller": id, "item": item, "unit_price": _unit_price(item), "stock": _entities[id].inventory[item]})
 	for offer in _offers.values():
 		if offer.worker == actor and offer.status == "offered":

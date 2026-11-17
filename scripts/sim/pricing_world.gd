@@ -9,10 +9,14 @@ var _executing_quote: Dictionary = {}
 
 func _init(seed_value: int = 42, initial: Dictionary = Enterprise.initial()) -> void:
 	for business in initial.businesses:
-		var item: String = Config.INDUSTRIES[initial.businesses[business].industry].output
-		_quotes[business] = {item: {"seller": business, "item": item, "unit_price": Reference.PRICES[item], "active": true,
+		var item: String = _industries()[initial.businesses[business].industry].output
+		_quotes[business] = {item: {"seller": business, "item": item, "unit_price": _initial_quote_price(item), "active": true,
 			"limit": MAX_AMOUNT, "version": 1, "effective_day": 0, "revised_day": -1}}
 	super(seed_value, initial)
+
+
+func _initial_quote_price(item: String) -> int:
+	return Reference.PRICES[item]
 
 
 func snapshot() -> Dictionary:
@@ -42,7 +46,7 @@ func revise_quote(owner: String, business: String, item: String, price: Variant,
 	var reason: String = ""
 	if not _businesses.has(business) or _businesses[business].owner != owner:
 		reason = "not_owner"
-	elif item not in ITEMS or not price is int or price < 1 or price > MAX_AMOUNT or not active is bool or not limit is int or limit < 0 or limit > MAX_AMOUNT:
+	elif item not in _items() or not price is int or price < 1 or price > MAX_AMOUNT or not active is bool or not limit is int or limit < 0 or limit > MAX_AMOUNT:
 		reason = "invalid_offer"
 	elif _quotes.get(business, {}).get(item, {}).get("revised_day", -1) == _day:
 		reason = "already_revised_today"
@@ -99,12 +103,8 @@ func purchase_quote(buyer: String, supplied: Variant, quantity: Variant) -> bool
 			reason = "inactive_quote"
 		elif quantity > mini(current.limit, _entities[seller].inventory[item]):
 			reason = "insufficient_stock"
-		elif _entities[buyer].kind == "resident" and item == "bread" and (quantity > 1 - _market_bought.get(buyer, 0) or quantity > 1 - int(_meals.has(buyer)) - _entities[buyer].inventory.bread):
-			reason = "excess_daily_food"
-		elif _entities[buyer].kind == "external" and (buyer != "visitors" or item != "bread" or quantity > 6 - _market_bought.get(buyer, 0)):
-			reason = "excess_external_request"
-		elif _entities[buyer].kind == "external" and current.unit_price > 6:
-			reason = "reservation_price"
+		else:
+			reason = _consumer_quote_error(buyer, item, quantity, current.unit_price)
 	if not reason.is_empty():
 		return _reject("purchase", buyer, seller, {"item": item, "quantity": quantity, "unit_price": current.get("unit_price", 0), "quote": supplied}, reason)
 	_executing_quote = current.duplicate(true)
@@ -114,8 +114,17 @@ func purchase_quote(buyer: String, supplied: Variant, quantity: Variant) -> bool
 	return result
 
 
+func _consumer_quote_error(buyer: String, item: String, quantity: int, price: int) -> String:
+	if _entities[buyer].kind == "resident" and item == "bread" and (quantity > 1 - _market_bought.get(buyer, 0) or quantity > 1 - int(_meals.has(buyer)) - _entities[buyer].inventory.bread):
+		return "excess_daily_food"
+	elif _entities[buyer].kind == "external" and (buyer != "visitors" or item != "bread" or quantity > 6 - _market_bought.get(buyer, 0)):
+		return "excess_external_request"
+	elif _entities[buyer].kind == "external" and price > 6:
+		return "reservation_price"
+	return ""
+
 func buyer_observation(buyer: String, item: String, requested: int) -> Dictionary:
-	assert(_entities.has(buyer) and item in ITEMS and requested > 0 and requested <= MAX_AMOUNT)
+	assert(_entities.has(buyer) and item in _items() and requested > 0 and requested <= MAX_AMOUNT)
 	var p: Dictionary = _entities[buyer]
 	var need: int = requested
 	if p.kind == "resident" and item == "bread":
