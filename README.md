@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0–M20 complete; M21 opt-in planning-job experiment for review; GDScript remains the default
+**Status:** M0–M23 complete; M24 fixed-wage labor experiment for review; GDScript remains the default
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -618,3 +618,22 @@ witness from actual policy decisions, shortages, distribution and performance.
 Historical goods, residents, rules, outputs and Rust experiments remain unchanged.
 No Bayesian pricing model is transplanted to the new population. Stop after M23
 for review; do not begin M24.
+
+## M24: isolated fixed-wage labor market
+
+```sh
+godot --headless --no-header --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_labor_market --condition tight --mode matching 30 42 --report-json
+godot --headless --no-header --path . --script res://scripts/tools/run_labor_market.gd -- --fixture vacancy:dain 3 42 --report-json
+```
+
+`shift_selection` and `matching` reuse M23's physical economy at wage10. Ordinary
+employees supply homogeneous labor only in M24; historical skills stay unchanged.
+Financially equal workers use a frozen daily rotation (`--tie legacy_sorted`
+retains sorted ties). Matching adds a physical 15:55 bakery meeting, personally
+observed notices, applications, offers and contingent next-day transfers. Vacancies
+require a funded, positive-contribution position within existing equipment capacity.
+
+The [precommitted design](docs/M24_LABOR_FEASIBILITY.md) and
+[actual results](docs/M24_RESULTS.md) distinguish redistributed shifts, real
+vacancy transfers, and structural shortages. No historical scenario is replaced.
+Stop after M24 for review; do not begin M25.

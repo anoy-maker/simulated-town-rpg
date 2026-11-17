@@ -473,3 +473,45 @@ successful events and checking 9192 coins after each movement. It does not repla
 or relax any existing auditor. `brewery_feasibility.py` separately checks the
 predeclared mathematical/physical witness; it never writes world balances.
 See [M23 certificate](M23_FEASIBILITY.md) and [actual results](M23_RESULTS.md).
+
+## M24: local fixed-wage labor adaptation
+
+`labor_market_config.gd` reuses the exact M23 economy. The isolated
+`labor_market_world.gd` inherits its transactions, production, custody, movement,
+payroll and daily contracts. Two default-preserving hooks (`_labor_qualified`,
+`_posting_skills`) retain historical occupational gates and suppress them only
+for M24's ordinary employees. Skills metadata stays intact; owners only manage.
+
+Pure `labor_market_policy.gd` orders actually available workers by financial
+cost, then sorted or day-rotated equal-cost ties. M23's strict positive marginal
+contribution and inventory-target budget still decide how many shifts to propose.
+The vacancy forecast uses own cash/stock, yesterday's own unit sales, installed
+capacity, active/reserved staffing and genuinely inspected input quotes. It does
+not add future sales receipts to available cash or reserve physical inputs.
+
+`labor_market_runner.gd` inherits the whole M23 timetable. It adds an unemployed
+worker departure and, in matching mode, a five-minute bakery board appointment
+before normal shopping. Workers see only notices/offers they physically inspect;
+their planning observation includes only own three-day due/paid receipt history,
+current affiliation and copied public terms with observation IDs. Comparing exact
+expected-income ratios preserves the current job on ties. No worker's private
+income or consumer budget is part of the employer's applicant comparison.
+
+Native post/apply/offer/accept/resignation operations are wrapped with locality,
+fixed-term, funding and capacity checks. Incumbents may apply without leaving.
+Acceptance reserves one next-day job and conditionally requests the old job's end.
+Before the native midnight boundary, the world revalidates the entire transfer;
+invalid or withdrawn entry cancels both pending hire and contingent resignation.
+Valid old employment ends before new employment starts. Only route assignments
+and employee rosters change; there is no teleport, new skill or extra labor unit.
+Today's contract breaches remain in the native ledger. Boundary events use the
+closed day's 24:00, the same instant as the next day's 00:00.
+
+`labor_market_audit.py` independently reconstructs notices, local knowledge,
+receipt histories, financial proposals, pending transitions, affiliations and
+route assignments. A strictly opt-in adapter to `brewery_audit.py` supplies live
+staff membership and recognizes those new events. The existing cash, goods,
+custody, quotes, physical travel, consumer-budget and report reconstruction still
+runs on every M24 event; its historical path keeps the original fixed rosters.
+See [M24 frozen assumptions](M24_LABOR_FEASIBILITY.md),
+[results](M24_RESULTS.md) and the compact evidence CSVs linked there.

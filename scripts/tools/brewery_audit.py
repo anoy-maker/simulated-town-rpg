@@ -43,10 +43,10 @@ def basket(o):
     return dict(bread=b,ale=a,utility=value,remaining=remaining,cost=cost,reason=reason)
 
 
-def audit(data, fixture=False):
+def audit(data, fixture=False, labor=None):
     r,events=data['report'],data['events'];initial=r['initial']
     assert events[0]['action']=='initialize' and events[0]['details']['state']==initial
-    entities=copy.deepcopy(initial['entities']);firms=initial['businesses'];jobs=initial['employment']
+    entities=copy.deepcopy(initial['entities']);firms=copy.deepcopy(initial['businesses']);jobs=copy.deepcopy(initial['employment'])
     cargo=copy.deepcopy(initial['cargo']);space=copy.deepcopy(initial['spatial']);people=space['presences']
     books=copy.deepcopy(initial['cash_results']);quotes=copy.deepcopy(initial['commodity_quotes'])
     assert set(firms)==set(OWNERS) and len(entities)==20
@@ -73,20 +73,24 @@ def audit(data, fixture=False):
     clearing_before=None;clearing_buys=[];harvested=0;circulation=0;successful=0;rejected=0;current=None;dayrows=[]
     def owned(id):return people[id]['active'] and people[id]['activity']=='idle'
     def at(id,site):return people[id]['active'] and people[id]['tile']==SITES[site]
+    def staff(f):return WORKERS[f] if labor is None else labor.staff(f)
     def worker_available(w,f):return jobs[w]['active'] and w not in worked and owned(w) and at(w,f)
     def offered_quotes(seller):return [dict(q,available=min(q['limit'],entities[seller]['inventory'][item])) for item,q in sorted(quotes[seller].items())]
     def eligible(f):
         if f not in requested:return 0
         req=requested[f];who=req['owner'];q=req['quote'];now=quotes['farm']['wheat'];p=people[who]
         if any(q.get(k)!=v for k,v in now.items()) or not now['active'] or not at(who,'farm') or p['activity']!='procure' or p['until']!=615:return 0
-        return min(req['maximum'],sum(worker_available(w,f) for w in WORKERS[f]),entities[f]['money']//(req['lot_size']*q['unit_price']+10))
+        return min(req['maximum'],sum(worker_available(w,f) for w in staff(f)),entities[f]['money']//(req['lot_size']*q['unit_price']+10))
     def begin_clearing():
         return (min(quotes['farm']['wheat']['limit'],entities['farm']['inventory']['wheat']) if quotes['farm']['wheat']['active'] else 0,eligible('mill'),eligible('brewery'))
+    if labor is not None:
+        assert r['scenario']=='settlement_labor_market'
+        labor.attach(r,events,entities,firms,jobs,people,quotes,cargo,books)
     for index,e in enumerate(events,1):
         assert e['id']==index
         action,actor,target,d=(e[k] for k in ('action','actor','target','details'))
         if action=='day_started':
-            assert day==0 or (space['minute']==1440 and len(closed)==11)
+            assert day==0 or (space['minute']==1440 and len(closed)==(11 if labor is None else len(due)))
             day+=1;space['minute']=0;worked.clear();offered.clear();started.clear();seen.clear();requested.clear();bought.clear();drunk.clear();meals.clear();attempted.clear();due.clear();closed.clear();harvested=0;clearing_before=None;clearing_buys=[]
             current=dict(day=day,production=Counter(),production_inputs=Counter(),resident_meals=0,unmet_meals=0,visitor_bread=0,visitor_bread_declined=0,ale_sold=0,ale_consumed=0,shifts_due=0,shifts=0,missed_shifts=0,circulation=0,observed_quotes=0,declines=Counter())
             current['firms']={f:dict(sales=0,inputs=0,wages=0,distributions=0,shifts=0,shifts_due=0,missed_shifts=0) for f in firms}
@@ -102,10 +106,12 @@ def audit(data, fixture=False):
             if not e['success']:
                 assert d.get('reason')=='insufficient_stock' and entities[actor]['inventory']['bread']==0
                 accounts[actor]['missed_meals']+=1;current['unmet_meals']+=1;current['households'][actor]['missed_meals']+=1
+        if labor is not None:labor.context(day,minute,worked,due,harvested)
         if not e['success']:
             if action=='contract_shift':
                 assert actor in due and actor not in worked and d['actual_compensation']==0
                 accounts[actor]['missed_shifts']+=1;accounts[target]['missed_shifts']+=1;current['households'][actor]['missed_shifts']+=1;current['firms'][target]['missed_shifts']+=1
+            if labor is not None:labor.after(e)
             continue
         if action=='spatial_departed':
             p=people[actor];expected=route(p['tile'],d['destination'])
@@ -123,8 +129,9 @@ def audit(data, fixture=False):
             if kind in ('work','manage'):
                 assert at(actor,target) and minute==WINDOWS[target][0] and d['duration']==60
                 if kind=='manage':assert OWNERS[target]==actor
-                else:assert actor in WORKERS[target] and actor not in started and actor in offered;started[actor]=target
+                else:assert actor in staff(target) and actor not in started and actor in offered;started[actor]=target
             elif kind in ('shop','procure','deposit'):assert d['duration']==5
+            elif kind=='board' and labor is not None:assert labor.mode=='matching' and minute==955 and at(actor,'bakery') and d['duration']==5
             else:assert kind=='rest' and p['tile']==p['home'] and minute>=1110 and d['until']==1440
             p.update(activity=kind,until=d['until'],business=target)
         elif action=='spatial_activity_ended':
@@ -197,19 +204,19 @@ def audit(data, fixture=False):
             assert d['goods']==cargo[target]['inventory']
             for item in ITEMS:entities[target]['inventory'][item]+=d['goods'][item];cargo[target]['inventory'][item]=0
         elif action=='shift_offered':
-            w=d['offer']['worker'];assert OWNERS[target]==actor and w in WORKERS[target] and owned(w) and at(w,target) and w not in worked
+            w=d['offer']['worker'];assert OWNERS[target]==actor and w in staff(target) and owned(w) and at(w,target) and w not in worked
             assert d['offer']['wage']==10 and d['offer']['day']==day and d['offer']['status']=='offered';offered[w]=copy.deepcopy(d['offer'])
         elif action=='transfer_money':
             assert type(d['amount']) is int and d['amount']>0 and d['purpose'] in ('wage','distribution') and actor in firms
             pay_before[index]=(entities[actor]['money'],copy.deepcopy(books[actor]))
             if d['purpose']=='wage':
-                p=people[target];assert e['physical_actor']==target and target in WORKERS[actor] and target not in worked and p['activity']=='work' and p['until']==minute==WINDOWS[actor][1] and at(target,actor) and d['amount']==10
+                p=people[target];assert e['physical_actor']==target and target in staff(actor) and target not in worked and p['activity']=='work' and p['until']==minute==WINDOWS[actor][1] and at(target,actor) and d['amount']==10
                 field='wages';books[actor]['payroll']+=d['amount']
             else:assert OWNERS[actor]==target and minute==1140 and len(attempted)==15;field='distributions';books[actor]['distributions']+=d['amount']
             entities[actor]['money']-=d['amount'];entities[target]['money']+=d['amount'];accounts[target][field]+=d['amount'];current['firms'][actor][field]+=d['amount'];current['households'][target][field]+=d['amount'];receipts.add(index)
             circulation+=d['amount'];current['circulation']+=d['amount']
         elif action in ('harvest','produce'):
-            who=e['physical_actor'];p=people[who];assert who in WORKERS[actor] and started[who]==actor and p['activity']=='work' and p['until']==minute==WINDOWS[actor][1] and at(who,actor)
+            who=e['physical_actor'];p=people[who];assert who in staff(actor) and started[who]==actor and p['activity']=='work' and p['until']==minute==WINDOWS[actor][1] and at(who,actor)
             take,make=copy.deepcopy(RULES[actor])
             if action=='harvest':
                 assert actor=='farm';amount=min(7,initial['brewery']['supply_cap']-harvested);assert d['amount']==amount>0;make={'wheat':amount};harvested+=amount
@@ -248,16 +255,17 @@ def audit(data, fixture=False):
             assert d['amount']==min(max(0,retained),max(0,cash-120))>0 and d['policy']==dict(mode='full',reserve=120) and d['cumulative_before']==book
             claims.add(pay)
         elif action=='contract_due':
-            assert actor in WORKERS[target] and actor not in due and d['expected_compensation']==10 and d['phase']==1;due.add(actor);current['shifts_due']+=1
+            assert actor in staff(target) and actor not in due and d['expected_compensation']==10 and d['phase']==1;due.add(actor);current['shifts_due']+=1
             accounts[actor]['shifts_due']+=1;accounts[target]['shifts_due']+=1;current['households'][actor]['shifts_due']+=1;current['firms'][target]['shifts_due']+=1
         elif action=='contract_attempt':
-            command=events[d['command_event_id']-1];assert OWNERS[target]==actor and d['worker'] in WORKERS[target] and command['action']=='shift_offered'
+            command=events[d['command_event_id']-1];assert OWNERS[target]==actor and d['worker'] in staff(target) and command['action']=='shift_offered'
         elif action=='contract_shift':
             assert actor in due and actor not in closed and actor in worked and d['completed'] and d['actual_compensation']==10
             assert events[d['shift_event_id']-1]['action']=='work_shift' and events[d['shift_event_id']-1]['actor']==actor;closed.add(actor)
         elif action=='contract_day_closed':
             # Breaches are failed annotation events, counted below from completed native work.
-            assert d['due']==len(due)==11 and d['completed']==len(worked) and d['breaches']==11-len(worked)
+            expected_due=11 if labor is None else len(labor.active_workers())
+            assert d['due']==len(due)==expected_due and d['completed']==len(worked) and d['breaches']==expected_due-len(worked)
             current['missed_shifts']=d['breaches'];closed=set(due)
             assert d['cash_results']==books and d['business_cash']=={f:entities[f]['money'] for f in firms}
             assert d['household_cash']=={id:e['money'] for id,e in entities.items() if e['kind']=='resident'} and d['external_cash']=={'visitors':entities['visitors']['money']}
@@ -276,7 +284,8 @@ def audit(data, fixture=False):
             take,make=RULES[f];raw_item=next(iter(take),'');out_item=next(iter(make))
             assert rule==dict(output=out_item,input=raw_item,recipe=dict(farm='',mill='mill',bakery='bake',brewery='brew')[f],batches=int(f!='farm'),target=len(WORKERS[f])*make[out_item],take=take.get(raw_item,0),make=make[out_item])
             raw=rule['input'];assert o['input_stock']==(entities[f]['inventory'][raw]+(cargo[f]['inventory'][raw] if d['phase']=='procurement' else 0) if raw else 0)
-            assert o['workers']==[dict(id=w,wage=10,available=worker_available(w,f)) for w in WORKERS[f]]
+            candidates=[dict(id=w,wage=10,available=worker_available(w,f)) for w in staff(f)]
+            assert o['workers']==(candidates if labor is None else labor.ordered(candidates,day))
             if raw:
                 old=seen.get((actor,'farm' if raw=='wheat' else 'mill'),{}).get('offers',[])
                 assert o['input_quote']==(old[0] if old else {}) and o['input_price']==(old[0]['unit_price'] if old else 0)
@@ -309,7 +318,9 @@ def audit(data, fixture=False):
                     current['visitors'][actor]['declines'][d['item']]=d['proposal']['reason']
                     if d['item']=='bread':current['visitor_bread_declined']+=1
                 else:current['households'][actor]['declines'][d['item']]=d['proposal']['reason']
+        elif labor is not None and action in labor.ACTIONS:labor.apply(e)
         else:assert action in ('initialize','day_started','spatial_clock','spatial_shop_closed','labor_environment'),('unrecognized successful event',action)
+        if labor is not None:labor.after(e)
         assert sum(x['money'] for x in entities.values())==9192
         assert all(type(x['money']) is int and 0<=x['money']<=10**9 and set(x['inventory'])==set(ITEMS) and all(type(n) is int and 0<=n<=10**9 for n in x['inventory'].values()) for x in entities.values())
         for item in ITEMS:assert goods[item]==sum(x['inventory'][item] for x in entities.values())+sum(x['inventory'][item] for x in cargo.values())
@@ -322,7 +333,9 @@ def audit(data, fixture=False):
     for id,a in accounts.items():
         a.update(cash=entities[id]['money'],inventory=entities[id]['inventory'])
         for key in ('produced','purchased','sold'):a[key]={i:a[key][i] for i in ITEMS}
+        if labor is not None and entities[id]['kind']=='resident':a['employer']=labor.affiliations.get(id,{}).get('business','')
         assert a==r['accounts'][id],(id,'account report mismatch')
     assert r['money']==dict(initial=9192,final=9192,circulation=circulation) and r['purchases']==dict(successful=successful,rejected=rejected)
     assert hashlib.sha256(json.dumps(events,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode()).hexdigest()==r['ledger_sha256']
+    if labor is not None:labor.finish()
     return dict(events=len(events),days=day,money=9192,financial_spatial_goods_and_decisions=True)

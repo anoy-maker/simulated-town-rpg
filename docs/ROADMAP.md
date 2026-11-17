@@ -318,3 +318,19 @@ prices, viable autonomous settlement policy or structural demand identification.
   UI, impairment, relationships or permanent native authority migration.
 
 **Stop after M23 for review. Do not begin M24.**
+
+## M24: fixed-wage labor selection and local job mobility
+
+**Status:** Isolated experiment; [M24 results](M24_RESULTS.md) for review.
+
+- Preserve M23's real economy, prices, equipment, recipes and wage10.
+- Compare financial worker selection with neutral deterministic ties against
+  historical sorted ties, without forcing additional unprofitable shifts.
+- Observe genuine vacancies at the bakery; independently apply, offer, accept
+  and atomically transfer employment at the next-day boundary.
+- Homogeneous effective labor only in this scenario; unchanged historical skills
+  and eligibility, no experience, wage negotiation or new sector.
+- Preregistered 1/3/30-day controls, systematic vacancy coverage, independent
+  economic/employment replay, historical pins and performance measurements.
+
+**Stop after M24 for review. Do not begin M25.**

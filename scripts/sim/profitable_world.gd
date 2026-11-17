@@ -121,7 +121,7 @@ func _constraints(business: String, worker: String) -> Dictionary:
 		return {}
 	var firm: Dictionary = _businesses[business]
 	return {"cash": _entities[business].money, "inventory": _entities[business].inventory.duplicate(),
-		"wage": _wage(worker, business), "qualified": firm.industry in _entities[worker].get("skills", []),
+		"wage": _wage(worker, business), "qualified": _labor_qualified(worker, firm.industry),
 		"employee_active": _employment.get(worker, {}).get("active", false),
 		"worker_labor_used": _labor_used.get(worker, 0), "business_labor_used": _business_labor.get(business, 0),
 		"business_capacity": firm.assets.daily_slots}

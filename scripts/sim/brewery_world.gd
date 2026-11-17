@@ -68,7 +68,7 @@ func _workers(business: String) -> Array:
 	var workers: Array=[]
 	var ids: Array=_businesses[business].employees.duplicate();ids.sort()
 	for id in ids:
-		workers.append({"id":id,"wage":_wage(id,business),"available":_employment[id].active and _employment[id].business==business and _businesses[business].industry in _entities[id].skills and _labor_used.get(id,0)==0 and _available(id) and _at(id,_sites()[business])})
+		workers.append({"id":id,"wage":_wage(id,business),"available":_employment[id].active and _employment[id].business==business and _labor_qualified(id,_businesses[business].industry) and _labor_used.get(id,0)==0 and _available(id) and _at(id,_sites()[business])})
 	return workers
 func business_observation(owner: String, business: String, allow_procurement: bool=false) -> Dictionary:
 	assert(_businesses.has(business) and _businesses[business].owner==owner)

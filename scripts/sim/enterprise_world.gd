@@ -367,10 +367,14 @@ func post_job(owner: String, business: String, id: String, wage: Variant, minimu
 		return _reject("job_posted", owner, business, {}, "invalid_guarantee_period")
 	var posting = {"id": id, "employer": owner, "business": business, "role": _businesses[business].industry,
 		"wage": wage, "guaranteed_shifts": minimum, "cycle_days": cycle, "duration_days": duration,
-		"required_skills": [_businesses[business].industry], "vacancies": vacancies, "reserved": 0, "filled": 0, "active": true}
+		"required_skills": _posting_skills(business), "vacancies": vacancies, "reserved": 0, "filled": 0, "active": true}
 	_postings[id] = posting
 	_record("job_posted", owner, business, true, {"posting": posting.duplicate(true)})
 	return true
+
+
+func _posting_skills(business: String) -> Array:
+	return [_businesses[business].industry]
 
 
 func job_board(actor: String) -> Array:
