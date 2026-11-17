@@ -138,7 +138,7 @@ func _paid_shift_error(worker: String, business: String) -> String:
 
 func _productive_shift_error(worker: String, business: String, wage: int) -> String:
 	var firm: Dictionary = _businesses[business]
-	if firm.industry not in _entities[worker].skills:
+	if not _labor_qualified(worker, firm.industry):
 		return "missing_skill"
 	if _labor_used.get(worker, 0) >= _entities[worker].labor_capacity:
 		return "daily_labor_limit"
@@ -163,6 +163,10 @@ func _productive_shift_error(worker: String, business: String, wage: int) -> Str
 			if _entities[business].inventory[item] > MAX_AMOUNT - recipe.outputs[item] * rule.batches:
 				return "output_limit"
 	return ""
+
+
+func _labor_qualified(worker: String, industry: String) -> bool:
+	return industry in _entities[worker].skills
 
 
 func offer_shift(owner: String, business: String, worker: String) -> bool:
