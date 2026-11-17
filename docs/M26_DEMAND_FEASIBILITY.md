@@ -59,6 +59,10 @@ remaining-today sales use the same expression with the substituted point and
 legitimate today-so-far own sales. No 17:00 visitor or 19:00 information enters
 15:55. Subsequent meeting validations reuse the same frozen demand estimate.
 Financial candidate ties still prefer fewer commitments. No forced hiring.
+The inherited midnight entry validator still rechecks actual funds and capacity;
+it reuses the meeting-frozen demand point without fitting later retail outcomes.
+An already recorded positive buyer/day/offer is rejected on repeat, rather than
+creating a second commitment or a second unfilled-demand observation.
 
 ## Frozen verification and experiments
 
