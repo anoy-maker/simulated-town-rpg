@@ -138,15 +138,16 @@ func _paid_shift_error(worker: String, business: String) -> String:
 
 func _productive_shift_error(worker: String, business: String, wage: int) -> String:
 	var firm: Dictionary = _businesses[business]
+	var unpaid: int = _unpaid_shift_wage(worker, business, wage)
 	if not _labor_qualified(worker, firm.industry):
 		return "missing_skill"
 	if _labor_used.get(worker, 0) >= _entities[worker].labor_capacity:
 		return "daily_labor_limit"
 	if _business_labor.get(business, 0) >= firm.assets.daily_slots:
 		return "workplace_capacity"
-	if _entities[business].money < wage:
+	if _entities[business].money < unpaid:
 		return "unfunded_payroll"
-	if _entities[worker].money > MAX_AMOUNT - wage:
+	if _entities[worker].money > MAX_AMOUNT - unpaid:
 		return "worker_money_limit"
 	var rule: Dictionary = _industries()[firm.industry]
 	if firm.industry == "farmer":
@@ -167,6 +168,16 @@ func _productive_shift_error(worker: String, business: String, wage: int) -> Str
 
 func _labor_qualified(worker: String, industry: String) -> bool:
 	return industry in _entities[worker].skills
+
+
+func _unpaid_shift_wage(_worker: String, _business: String, wage: int) -> int:
+	return wage
+
+
+func _pay_shift_wage(worker: String, business: String, wage: int) -> int:
+	var paid: bool = _account_transfer(business, worker, wage)
+	assert(paid)
+	return _events.back().id
 
 
 func offer_shift(owner: String, business: String, worker: String) -> bool:
@@ -201,9 +212,7 @@ func work_shift(worker: String, business: String) -> bool:
 	var wage: int = _wage(worker, business)
 	# All wage, stock, capacity and labor checks precede every write. These native
 	# commands cannot fail after the checks above in this synchronous execution.
-	var paid: bool = _account_transfer(business, worker, wage)
-	assert(paid)
-	var payment_id: int = _events.back().id
+	var payment_id: int = _pay_shift_wage(worker, business, wage)
 	var produced: bool = _produce_for_shift(worker, business)
 	assert(produced)
 	var production_id: int = _events.back().id

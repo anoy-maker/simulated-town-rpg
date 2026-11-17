@@ -515,3 +515,59 @@ custody, quotes, physical travel, consumer-budget and report reconstruction stil
 runs on every M24 event; its historical path keeps the original fixed rosters.
 See [M24 frozen assumptions](M24_LABOR_FEASIBILITY.md),
 [results](M24_RESULTS.md) and the compact evidence CSVs linked there.
+
+## M25: binding availability, earned guarantees and natural renewal
+
+`binding_world.gd` extends the M24 world, retaining its homogeneous labor,
+physical notices, validated market purchases, equipment, input custody and
+native next-day affiliation machinery. Default-preserving initial-economy and
+posting-duration hooks select M25's three-day terms. Historical indefinite and
+thirty-day jobs keep their existing behavior. Terms archive original start/end,
+predecessor and source; early lawful closure records its actual date separately.
+
+Each employee proposes a one-hour work or standby activity at the actual firm.
+An unsuccessful employer assignment falls back to standby. The ending clock
+event verifies continuous availability, references native start/due receipts and
+accrues a unique ten-coin claim. Nonattendance records actual presence evidence
+and earns no claim. Claims are independent of current employment and remain
+until paid. No loan, money account, escrow or general debt instrument is added.
+
+Payroll tenders oldest claims first, then stable worker IDs. Only actual cash
+and recipient headroom can be transferred. Native wage payments and linked
+applications to claims are one-to-one; partial receipts leave nonnegative arrears.
+Before16:00, completed appointments tender eligible arrears from actual early
+receipts. Later receipts clear at19:00 before distributions. The capital floor
+never protects cash against an earned wage. Late payment does not erase the
+timely-payment breach or retroactively fund shopping. Owner distributions are
+zero while earned wages remain unpaid.
+
+Two narrow labor hooks retain the default atomic wage operation in old worlds.
+M25's completed productive shift instead references its already tendered full
+guarantee, with zero additional unpaid-wage validation cost. All original asset,
+affiliation, site/time, labor and recipe validators still run. A partially paid
+worker cannot create unpaid production; their availability and claim remain real.
+
+`binding_policy.gd` separates current incremental inputs from unavoidable current
+wages. New terms use a three-day cash/contribution projection over at most three
+installed positions, including every new guaranteed wage, conditional own sales,
+input prices and retained staff. Worker observations contain only own terms,
+own wage history and personally observed notices. A final-day application can
+authorize a contingent successor; ordinary midterm resignation is rejected.
+Optional receipt-proven material-breach releases are separate explicit choices,
+never a main-run intentional breach policy. The boundary runs once at24:00,
+ends expired/released jobs first, then starts validated three-day successors.
+
+`binding_report.gd` and the strict opt-in `binding_audit.py` extension distinguish
+continuous renewals, rehiring after unemployment and entry with another employer.
+They reconcile term flows, claims, actual payroll, accrued wage expense and future
+conditional guarantees. Unearned future promises are not current arrears or coins.
+The native `contract_shift` annotation and inherited `missed_shifts` fields count
+productive utilization; explicit `binding_breach` events and the contracts report
+measure mutual contractual breach. Paid standby is not a breach.
+
+The M23/M24 financial, physical, custody, quote, consumption and default-policy
+audit paths retain their historical checks. Only an explicit binding adapter
+recognizes M25's earlier wage receipts, standby activities, liabilities and true
+contract breach counts. Rehashed corruption and lifecycle witnesses test those
+rules. See [M25 specification assumptions](M25_CONTRACT_FEASIBILITY.md) and
+[actual results](M25_RESULTS.md).

@@ -334,3 +334,20 @@ prices, viable autonomous settlement policy or structural demand identification.
   economic/employment replay, historical pins and performance measurements.
 
 **Stop after M24 for review. Do not begin M25.**
+
+## M25: binding fixed-wage terms and conserved unpaid guarantees
+
+**Status:** Isolated experiment; [M25 results](M25_RESULTS.md) for review.
+
+- Exclusive three-day terms, verified one-hour availability, ten-coin earned
+  guarantees and paid standby without fabricated production.
+- Actual partial/late wage transfers, persistent receivables/payables, lawful
+  expiry/renewal/refusal and narrowly evidenced material-breach releases.
+- Separate unavoidable current wages from full-term new-hire cost; compare local
+  matching against financially justified incumbent-only renewals.
+- Independent economic/attendance/liability/term replay, controlled cash and
+  lifecycle witnesses, historical pins and measured performance.
+- No dynamic wages, intentional breach policy, credit markets, training,
+  enforcement system, new industries or graphical interface.
+
+**Stop after M25 for review. Do not begin M26.**

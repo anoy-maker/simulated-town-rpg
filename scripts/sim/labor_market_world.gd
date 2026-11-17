@@ -17,7 +17,9 @@ var _in_boundary: bool=false
 func _init(seed_value: int=42, condition: String="reference", selected_mode: String="matching", selected_tie: String="neutral_rotate", selected_fixture: String="none") -> void:
 	assert(selected_mode in MarketConfig.MODES and selected_tie in MarketConfig.TIES)
 	mode=selected_mode;tie=selected_tie;fixture=selected_fixture
-	super(seed_value,condition,MarketConfig.initial(fixture))
+	super(seed_value,condition,_labor_market_initial(fixture))
+func _labor_market_initial(selected_fixture: String) -> Dictionary:return MarketConfig.initial(selected_fixture)
+func _job_duration() -> int:return 30
 func _labor_qualified(worker: String, _industry: String) -> bool:
 	return _entities.has(worker) and _entities[worker].kind=="resident" and worker not in Brew.OWNERS.values()
 func _posting_skills(_business: String) -> Array:return []
@@ -118,7 +120,7 @@ func advertise(owner: String, business: String) -> bool:
 func post_job(owner: String, business: String, id: String, wage: Variant, minimum: Variant, cycle: Variant, duration: Variant, vacancies: Variant=1) -> bool:
 	var reason: String=""
 	if not _at_board(owner) or not _businesses.has(business) or _businesses[business].owner!=owner:reason="owner_not_at_board"
-	elif wage!=10 or not wage is int or minimum!=1 or cycle!=1 or duration!=30 or not vacancies is int or vacancies<1:reason="fixed_terms_required"
+	elif wage!=10 or not wage is int or minimum!=1 or cycle!=1 or duration!=_job_duration() or not vacancies is int or vacancies<1:reason="fixed_terms_required"
 	elif vacancies>_assessment(business).vacancies:reason="no_funded_positive_vacancy"
 	elif _notices.values().any(func(n):return n.business==business and n.day==_day):reason="daily_notice_limit"
 	if not reason.is_empty():return _reject("job_posted",owner,business,{"id":id},reason)
