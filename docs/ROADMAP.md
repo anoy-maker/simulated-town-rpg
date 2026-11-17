@@ -351,3 +351,18 @@ prices, viable autonomous settlement policy or structural demand identification.
   enforcement system, new industries or graphical interface.
 
 **Stop after M25 for review. Do not begin M26.**
+
+## M26: censored seller demand and fixed-wage contract valuation
+
+**Status:** Isolated comparison; [M26 results](M26_RESULTS.md) for review.
+
+- Authentic bounded retail intents and funded physical B2B requests, with native
+  purchase authority, provenance, explicit owner coverage and partial lower bounds.
+- Unchanged M25 financial evaluator: yesterday-sales instrumented control versus
+  matched sales-only and request-aware three-day smoothers.
+- Preregistered four-condition 1/3/30-day repeats and separately labeled staggered
+  maturities; independent evidence, contract and financial replay; historical pins.
+- No dynamic wages, adaptive prices, forced rehiring, full Bayesian model or
+  broad multi-firm optimization. Later work requires a separate review.
+
+**Stop after M26 for review. Do not begin M27.**

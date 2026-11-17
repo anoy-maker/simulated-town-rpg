@@ -571,3 +571,37 @@ recognizes M25's earlier wage receipts, standby activities, liabilities and true
 contract breach counts. Rehashed corruption and lifecycle witnesses test those
 rules. See [M25 specification assumptions](M25_CONTRACT_FEASIBILITY.md) and
 [actual results](M25_RESULTS.md).
+
+## M26: isolated seller-local evidence adapter
+
+`demand_world.gd` extends binding authority, and `demand_runner.gd` reuses its
+entire timetable and contract lifecycle. The historical M25 runner, policy and
+world are unchanged. A retail buyer can disclose a bounded intent at an inspected
+active quote even when the shelf is empty; the existing purchase command remains
+authoritative. Funded profitable physical grain/flour orders supply direct B2B
+evidence. No request moves goods or coins by itself.
+
+Append-only public books contain validated request/outcome receipts. Owner
+presence and empty-shelf inspections are distinct from entrusted accounting
+sales/order books. Five-minute coverage records establish full versus partial
+observation; partial samples with real evidence remain explicitly censored lower
+bounds. Only the authority-filtered own-seller records reach the pure bounded
+`demand_memory.gd` estimator. Buyer money, private visitor limits, preferences,
+other sellers' books and future arrivals do not enter that view.
+
+At the existing 15:55 meeting, all arms freeze one own demand point per firm.
+Smoothed arms use the same three eligible completed days, one target pseudo-day,
+integer ceiling and 30-unit guard. Requests add only credible stockout-unfilled
+quantity. The unchanged `binding_policy.forecast()` values identical prospective
+three-day wage commitments. Midnight authority checks current funds/capacity
+against the same frozen estimate, without fitting late visitors. No new Rust
+kernel, money subsystem or price/wage adaptation is introduced.
+
+`demand_audit.py` independently reconstructs evidence from native physical and
+financial events, whitelists public disclosure fields, verifies buyer legitimacy
+using private state solely inside the auditor, and rebuilds coverage, deduplication,
+censorship and estimates. It inherits all M25 cash/goods/contracts/payroll checks.
+The original auditors retain their historical paths. New CLI selection is
+`settlement_demand_observation`; reports separate lower-bound versus exact-window
+forecast diagnostics. See [protocol](M26_DEMAND_FEASIBILITY.md) and
+[results](M26_RESULTS.md).

@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0–M24 complete; M25 binding-contract experiment for review; GDScript remains the default
+**Status:** M0–M25 complete; M26 seller-local demand experiment for review; GDScript remains the default
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -662,3 +662,27 @@ Historical scenarios remain unchanged. See the
 [frozen contract rules](docs/M25_CONTRACT_FEASIBILITY.md) and
 [results, verification and limitations](docs/M25_RESULTS.md).
 Stop after M25 for review; no dynamic wages or M26.
+
+## M26: seller-local requests and demand-aware contract renewal
+
+```sh
+godot --headless --no-header --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_demand_observation --condition tight --arm requests_smoothed 30 42 --report-json
+python3 -B scripts/tools/run_demand.py --checkpoint --output work/m26/checkpoint
+python3 -B scripts/tools/run_demand.py --output work/m26/experiments
+python3 -B scripts/tools/run_demand.py --staggered --output work/m26/staggered
+python3 -B scripts/tools/check_demand_fixtures.py --output work/m26/fixtures
+python3 -B scripts/tools/summarize_demand.py --input work/m26 --output docs
+```
+
+The opt-in scenario keeps M25 matching, fixed prices, ten-coin wages and binding
+three-day terms. `legacy_instrumented` keeps its exact yesterday-sales forecast;
+`sales_smoothed` and `requests_smoothed` share a three-completed-day smoother and
+one output-target pseudo-day. Only the latter adds legitimate funded stockout
+requests. They all use the unchanged M25 contract financial evaluator.
+
+Public buyer intent and actual seller books are separate from private consumer
+state. Empty shelves do not prove willingness to pay. Owner coverage, witnessed
+encounters, entrusted registers and censored lower bounds remain explicit.
+See the [preregistered protocol](docs/M26_DEMAND_FEASIBILITY.md) and
+[actual outcomes and verification](docs/M26_RESULTS.md). No default parameters
+are adopted. Stop after M26 for review; no adaptive prices, dynamic wages or M27.
