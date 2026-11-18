@@ -3,6 +3,7 @@ import copy
 import hashlib
 import json
 import sys
+import subprocess
 import unittest
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts/tools'))
@@ -12,6 +13,7 @@ from economic_diagnostics import analyze
 from economic_witness import generate
 from check_economic_witness import verify,verify_physical,finance
 from economic_wedge import wedge,five_wheat_chain
+from profile_simulation import ROOT,godot_environment
 
 
 class EconomicDiagnosticsTests(unittest.TestCase):
@@ -89,6 +91,22 @@ class EconomicDiagnosticsTests(unittest.TestCase):
             data['report']['ledger_sha256']=hashlib.sha256(json.dumps(data['events'],sort_keys=True,separators=(',',':'),ensure_ascii=False).encode()).hexdigest()
             with self.assertRaises(AssertionError):analyze(data)
 
+    def test_poor_visitors_and_cashless_b2b_do_not_become_invented_demand(self):
+        for fixture in ('poor_visitors','cashless_buyers'):
+            process=subprocess.run(['godot','--headless','--no-header','--path',str(ROOT),'--script','res://tests/run_demand_fixture.gd','--',fixture],capture_output=True,env=godot_environment(),timeout=60)
+            self.assertEqual(process.returncode,0,process.stderr.decode());self.assertEqual(process.stderr,b'')
+            a=analyze(json.loads(process.stdout))
+            if fixture=='poor_visitors':
+                visitors=[c for c in a['cohorts'] if c['cohort']=='visitor']
+                self.assertTrue(all(c['requested']==0 and c['stockout_unfilled']==0 for c in visitors))
+                self.assertTrue(all(c['unaffordable_visits']==6 for c in visitors))
+            else:
+                farm=next(f for f in a['firm_days'] if f['firm']=='farm')
+                self.assertEqual((farm['requested'],farm['unfilled'],farm['coverage']),(0,0,True))
+                bundle=a['snapshots']['1'];proof=verify(bundle,generate(bundle,'voluntary_orders'))
+                self.assertTrue(proof['physical']['physically_feasible']);self.assertFalse(proof['finance']['finance_witnessed'])
+                self.assertEqual(proof['finance']['label'],'unproven')
+
     def test_late_visitors_and_sales_do_not_finance_early_wages(self):
         b=self.analyses['reference']['snapshots']['1'];p=generate(b,'fixed_orders')
         s=copy.deepcopy(b['state']);s['entities']['visitors']['money']+=s['entities']['farm']['money'];s['entities']['farm']['money']=0
@@ -115,7 +133,8 @@ class EconomicDiagnosticsTests(unittest.TestCase):
         def negative(p):p['requests']['mill']=-1
         def illegal(p):p['workers']['farm'][0]='ada'
         def false_production(p):p['claimed_physical']['production']['bread']+=1
-        for mutate in (fractional,duplicate,double,site,late,negative,illegal,false_production):
+        def false_truth(p):p['latent_demand']='exact'
+        for mutate in (fractional,duplicate,double,site,late,negative,illegal,false_production,false_truth):
             with self.subTest(mutate=mutate.__name__):
                 p=copy.deepcopy(plan);mutate(p)
                 with self.assertRaises((AssertionError,KeyError)):verify(b,p)

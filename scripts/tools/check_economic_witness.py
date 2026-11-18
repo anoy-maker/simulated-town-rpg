@@ -134,6 +134,8 @@ def geometry(s,e,plan,allocation,flour_lots):
 
 def verify_physical(bundle,plan):
     s,e=bundle['state'],bundle['evidence']
+    assert set(plan)=={'schema','snapshot_sha256','evidence_sha256','tier','day','counts','requests','workers','trips','claimed_physical','search_candidates','label','relaxations'},'unknown witness claims'
+    assert 0<integer(plan['search_candidates'])<=9216
     for holder in list(s['entities'].values())+list(s['cargo'].values()):
         assert set(holder['inventory'])==set(ITEMS)
         for qty in holder['inventory'].values():assert integer(qty)<=10**9
