@@ -660,3 +660,30 @@ Global diagnostic information remains outside NPC observations.
 
 See [frozen mathematics](M28_INPUT_FEASIBILITY.md), [schemas](M28_SCHEMAS.md) and
 [mixed economic outcomes](M28_RESULTS.md). No economic baseline is adopted.
+
+## M29: creation-only cash allocation wrapper
+
+`cash_allocation_world.gd` subclasses the complete M28 input world. Its sole
+creation hook calls the existing binding initializer, deep-copies its state and
+changes explicitly named initial cash fields via `cash_allocation_config.gd`.
+Historical initializers, B/I policies, observations, scheduling, transaction
+validation, claims and distributions are untouched. Creation emits the existing
+initialize event, with no synthetic transfer or earned income. The runner adds
+only research report metadata outside observations and snapshots; original
+allocation therefore retains literal M28 event/ledger parity.
+
+`cash_allocation_audit.py` independently enumerates the twenty accounts and
+requires exact allocation,9192 coins, zero goods/operating receipts and unchanged
+initial contracts/structure. After checking changed cash explicitly, it passes a
+copy normalized to original cash into the original structural preflight, then
+replays the actual changed-money world through unchanged M25–M28 economic and
+information audits. It does not relax the old audit entry points. Real transactions
+retain funded input provenance, authoritative cash/claims/goods and original
+time ordering. The allocation label is never included in an NPC observation.
+
+The capture driver runs two distinct native processes per case. The offline
+exporter keeps initialization, wages, ownership income and future guarantees
+separate and publishes matched contrasts without changing decisions. Historical
+raw-control reuse requires unchanged reachable source, engine and pinned payloads,
+with a new independent audit. See [protocol](M29_CASH_ALLOCATION_FEASIBILITY.md),
+[schemas](M29_SCHEMAS.md) and [results](M29_RESULTS.md).
