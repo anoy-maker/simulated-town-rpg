@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """M30 compact audited wage formation, named household days and exclusion evidence."""
-import argparse,csv,json,hashlib,statistics,shutil
+import argparse,csv,json,hashlib,statistics,shutil,gzip
 from collections import defaultdict,Counter
 from pathlib import Path
 from brewery_feasibility import OWNERS
@@ -24,7 +24,9 @@ def main():
    d=e['details'];day=e['day'];w=e['actor'];act=e['action']
    if act=='input_forecast_projection':F_projections[day,e['target']]=e
    if act=='wage_fixed_admission_observed':F_fixed[day,e['target']]=e
-   if act in ('wage_worker_decision','wage_fixed_worker_observed'):decisions[day,w]=e
+   if act in ('wage_worker_decision','wage_fixed_worker_observed'):
+    decisions[day,w]=e
+    tables['WORKER_DECISIONS'].append(flatten(dict(**tag,day=day,worker=w,event_id=e['id'],observation=d['observation'],baseline=d.get('proposal',{}).get('baseline'),selected_action=d.get('proposal',{}).get('action'),selected_notice=d.get('proposal',{}).get('notice'),selected_wage=d.get('proposal',{}).get('wage'),reason=d.get('proposal',{}).get('reason'))))
    if act=='consumer_decision':
     shops[day,w,d['item']]=e
     tables['SHOPPING'].append(flatten(dict(**tag,day=day,minute=e['minute'],buyer=w,cohort='visitor' if w.startswith('visitor:') else 'owner' if w in OWNERS.values() else 'nonowner',item=d['item'],money=d['observation']['money'],need=d['observation']['need_'+d['item']],stock=d['observation']['stock'].get(d['item']),price=d['observation']['prices'].get(d['item']),purchased=d['purchased'],event_id=e['id'])))
@@ -54,6 +56,9 @@ def main():
   for f in x['firm_days']:tables['FIRM_DAYS'].append(flatten(dict(**tag,**f)))
   for q in x['input']['orders']:tables['INPUT_ORDERS'].append(flatten(dict(**tag,**q)))
   for term in r['final']['binding_contracts']['terms'].values():tables['TERMS'].append(flatten(dict(**tag,**term)))
+  for n in r['final']['wage_market']['notices'].values():
+   close=r['final']['wage_market']['settlements'].get(n['id'],{});bidders=[z for z in r['final']['wage_market']['bids'].values() if z['notice']==n['id']]
+   tables['NOTICES'].append(flatten(dict(**tag,**n,actual_bids=len(bidders),filled=close.get('filled',0),settlement_status=close.get('status','unsettled'),closure_event_id=close.get('event_id'))))
   for bid in r['final']['wage_market']['bids'].values():
    close=r['final']['wage_market']['settlements'].get(bid['notice'],{});row=dict(**tag,**bid);row['actual_hired']=bid['status']=='hired';row['other_slot_filled']=close.get('filled',0)>0;row['outcome_observed_by_horizon']='observation_event_id' in bid;tables['BIDS'].append(flatten(row))
   for f in x['failure_attributions']:
@@ -146,7 +151,11 @@ def main():
   F=matched[c,allocation,arm];W=matched[c,allocation,'worker_bids'];assert F['day_results'][:3]==W['day_results'][:3],'wage experiment altered initial three ten-coin days'
  tables['WAGE_STATS']=stats;tables['COMPARISONS']=comparisons;tables['OUTCOMES']=[dict(condition=c,allocation=al,arm=arm,**v) for (c,al,arm),v in outcomes.items()]
  for label,rows in tables.items():
-  if rows:write_rows(a.output/('M30_'+label+'.csv'),[flatten(r) for r in rows])
+  if rows:
+   path=a.output/('M30_'+label+'.csv');write_rows(path,[flatten(r) for r in rows])
+   if label in ('BUDGETS','BELIEFS','FIRM_COMPARISONS','WORKER_DECISIONS'):
+    with path.open('rb') as src,path.with_suffix('.csv.gz').open('wb') as dest,gzip.GzipFile(fileobj=dest,mode='wb',mtime=0,compresslevel=6) as packed:shutil.copyfileobj(src,packed)
+    path.unlink()
  captures=[]
  for path in sorted(a.traces.glob('*.json.gz')):
   raw=path.read_bytes();d=load_trace(path);captures.append(dict(file=path.name,bytes=len(raw),compressed_payload_sha256=hashlib.sha256(raw).hexdigest(),summary_sha256=digest(dict(report=d['report'])),ledger_sha256=d['report']['ledger_sha256']))
