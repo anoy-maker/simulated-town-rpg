@@ -30,3 +30,15 @@ only under these exact technical labels, while still requiring physical notice,
 source IDs, rational firm selection, valid offers, native boundary, attendance,
 real payments/claims and complete resource conservation. All automatic-policy
 cases require the independently reconstructed utility-maximizing decision.
+
+## Published control hash availability
+
+`M30_CONTROL_PINS.csv` freezes all fourteen F controls. M29 published short
+primary scarce/no-brew cases and all four thirty-day conditions; it did not
+publish reference/tight1/3-day cash-wrapper reports. Those four short original
+controls use the already published M28 input-aware event/ledger pins and complete
+M28 report after removing only cash-allocation report metadata and restoring its
+scenario name. The wrapper emits no extra economic event. Do not invent M29
+short-cell historical hashes or overwrite either source table. All fourteen
+F comparisons still require complete native economic events, receipt links,
+terms and the full cash-world report after passive M30 normalization.
