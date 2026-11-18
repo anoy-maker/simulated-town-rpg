@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0–M25 complete; M26 seller-local demand experiment for review; GDScript remains the default
+**Status:** M0–M26 preserved; M27 offline economic diagnostics for review; GDScript remains the default
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -687,3 +687,20 @@ encounters, entrusted registers and censored lower bounds remain explicit.
 See the [preregistered protocol](docs/M26_DEMAND_FEASIBILITY.md) and
 [actual outcomes and verification](docs/M26_RESULTS.md). No default parameters
 are adopted. Stop after M26 for review; no adaptive prices, dynamic wages or M27.
+
+## M27: offline economic diagnostics
+
+```sh
+python3 -B scripts/tools/run_economic_diagnostics.py --checkpoint --traces work/m27/traces --output work/m27/checkpoint
+python3 -B scripts/tools/run_economic_diagnostics.py --legacy-parity --traces work/m27/traces --output work/m27/experiments
+python3 -B scripts/tools/summarize_economic_diagnostics.py --input work/m27/experiments --traces work/m27/traces --output work/m27/published
+```
+
+The reader reuses the independent M26 event audit without changing any simulation
+scenario or NPC observation. Separate integer, route and cash certificates compare
+day1/day3 alternatives with actual outcomes;30-day summaries retain shopping-time
+cash, earned liabilities, real customer requests and overlapping failure evidence.
+A physical optimum in a declared one-day space is not an economically rational
+or sustainable plan. See the [frozen protocol](docs/M27_ECONOMIC_DIAGNOSTICS_FEASIBILITY.md),
+[actual results](docs/M27_RESULTS.md) and [artifact schemas](docs/M27_SCHEMAS.md).
+Stop after M27 for review; no M28 policy or economic parameter change is included.

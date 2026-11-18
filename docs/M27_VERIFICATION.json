@@ -1,0 +1,166 @@
+{
+  "base": "2bc13ef8ca92809a77eaf78a47168d97fd8bf939",
+  "implementation_commit": "cc34a37",
+  "sim_tree": "52825d822ec952b9981c6431d2657aa44c5bff87",
+  "checks": {
+    "native_checks": 3272,
+    "python_methods": 123,
+    "focused_methods": 12,
+    "old_payload_pins": 169,
+    "published_m23_m24_m25_report_and_ledger_pairs": 88,
+    "m26_main_report_and_ledger_pairs": 36,
+    "m26_legacy_normalized_economic_parity_cases": 12,
+    "m26_additional_pinned_controls": 8,
+    "original_cd_independent_audits": 12,
+    "checked_checkpoint_certificates": 48,
+    "complete_committed_examples": 16,
+    "standalone_trace_certificate": true,
+    "primary_coin_supply": 9192,
+    "native_source_and_original_auditors_unchanged": true,
+    "unresolved_correctness_failures": [],
+    "m22_isolated_smoke": true,
+    "smoke_advisory_warnings": []
+  },
+  "phases": [
+    {
+      "phase": "full-godot",
+      "seconds": 736.8282038979996,
+      "status": 0
+    },
+    {
+      "phase": "historical",
+      "seconds": 1447.419071950997,
+      "status": 0
+    },
+    {
+      "phase": "full-python",
+      "seconds": 706.1973107129998,
+      "status": 0
+    },
+    {
+      "phase": "m23-controls",
+      "seconds": 65.62262149800154,
+      "status": 0
+    },
+    {
+      "phase": "m24-controls",
+      "seconds": 283.0823726330018,
+      "status": 0
+    },
+    {
+      "phase": "m24-fixtures",
+      "seconds": 92.63749525499952,
+      "status": 0
+    },
+    {
+      "phase": "m25-controls",
+      "seconds": 761.9417558230016,
+      "status": 0
+    },
+    {
+      "phase": "m25-fixtures",
+      "seconds": 50.56814899899837,
+      "status": 0
+    },
+    {
+      "phase": "m25-lifecycle",
+      "seconds": 23.215832013996987,
+      "status": 0
+    },
+    {
+      "phase": "m26-fixtures",
+      "seconds": 15.088811110999814,
+      "status": 0
+    },
+    {
+      "phase": "m26-extra-controls",
+      "seconds": 189.11826330799886,
+      "status": 0
+    },
+    {
+      "phase": "original-audits",
+      "seconds": 528.174838758001,
+      "status": 0
+    },
+    {
+      "phase": "cd-native-source",
+      "seconds": 1.3918140999994648,
+      "status": 0
+    },
+    {
+      "phase": "m27-original-capture-parity",
+      "seconds": 329.386690643998,
+      "status": 0
+    },
+    {
+      "phase": "m27-final-passive-replay",
+      "seconds": 313.90775781699995,
+      "status": 0
+    },
+    {
+      "phase": "performance-smoke",
+      "seconds": 3.4682186979989638,
+      "status": 0
+    }
+  ],
+  "commands": [
+    "godot --headless --no-header --path . --script res://tests/run_tests.gd",
+    "python3 -B -m unittest discover -s tests -p 'test_*.py'",
+    "python3 -B scripts/tools/check_historical.py --output work/m27/historical.csv",
+    "python3 -B scripts/tools/run_labor_market.py --legacy-controls --output work/m27/m23-controls",
+    "python3 -B scripts/tools/run_labor_market.py --verify-pins docs/M24_RUNS.csv --output work/m27/m24-controls",
+    "python3 -B scripts/tools/run_labor_market.py --fixtures --verify-pins docs/M24_VACANCIES.csv --output work/m27/m24-fixtures",
+    "python3 -B scripts/tools/run_binding.py --verify-pins docs/M25_RUNS.csv --output work/m27/m25-controls",
+    "python3 -B scripts/tools/run_binding.py --fixtures --verify-pins docs/M25_FIXTURES.csv --output work/m27/m25-fixtures",
+    "python3 -B scripts/tools/check_binding_lifecycle.py --output work/m27/m25-lifecycle",
+    "python3 -B scripts/tools/check_demand_fixtures.py --output work/m27/m26-fixtures",
+    "python3 -B scripts/tools/check_diagnostic_controls.py --output work/m27/m26-extra-controls",
+    "python3 -B scripts/tools/check_diagnostic_controls.py --cd --reuse-cd work/m26/legacy-controls --output work/m27/legacy-controls",
+    "python3 -B scripts/tools/measure_planning_jobs.py --phase audit --output work/m27/legacy-controls",
+    "python3 -B scripts/tools/run_economic_diagnostics.py --legacy-parity --traces work/m27/traces --output work/m27/experiments",
+    "python3 -B scripts/tools/run_economic_diagnostics.py --traces work/m27/traces --output work/m27/final-diagnostics",
+    "python3 -B scripts/tools/performance_smoke.py --output work/m27/smoke.json --verification-times work/m27/verification-phases.csv"
+  ],
+  "cost_note": "Shared-host verification walls overlap. Do not sum them as total elapsed work. Native C/D traces reused by unchanged-source/pin checks; original audits rerun.",
+  "source_checksums": {
+    "scripts/tools/check_economic_witness.py": "8699e0378d6dc401aca315cf5cb8efbe6aed9d61c74020d4ce683d6b012c2a89",
+    "scripts/tools/economic_diagnostics.py": "11c7615e2fc17a02d621d27fb90440af2f7acb09d96739a8e56c98a70ff935fe",
+    "scripts/tools/economic_wedge.py": "01c6d7c7b61ddb02d46b3ce75aa7bcf9456fd0d4edf13e09c9fd574f0f7a6a6c",
+    "scripts/tools/economic_witness.py": "fab9a4c32939f477cde20db521b11e058e7c963eff6db0ef08a2f38efa40488a",
+    "scripts/tools/run_economic_diagnostics.py": "41096d60bef5f083b54fa1cd4ef2a091f4492a1321411a6fc43d0ecfc2b1d57b",
+    "scripts/tools/summarize_economic_diagnostics.py": "3f30856b13607cb51fa0f34945367e5a236ef59bcb7100414c591dd6b2832902",
+    "tests/test_economic_diagnostics.py": "21f5a8a4c0011dce8c4521d2da4f36705de94bb5d8de2879b35b8f7a37a54171",
+    "scripts/tools/check_diagnostic_controls.py": "4a6886f572e912a8190afb06f2b7f859cf073efc527ae43dc8cc479395344b24"
+  },
+  "smoke_status": "passed; matching reference metadata; no advisory warnings",
+  "host": {
+    "godot": "4.6.3.stable.official.7d41c59c4",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "machine": "x86_64",
+    "cpus": 3,
+    "cpu_max": "200000 100000",
+    "memory_max": "8589934592",
+    "rust_sha256": "a7c9f739c84aa83fcbd4f1c9554080d53932d2ba69144e77054615e72bc3c462",
+    "bridge_sha256": "feee66ececa02b22294955e587447a3b52a9eb33503d0d5c19bcf5275f827cc3"
+  },
+  "standalone_certificate_command": "python3 -B scripts/tools/check_economic_witness.py --trace work/m27/traces/scarce-30-legacy_instrumented.json --certificate docs/M27_CERTIFICATES/scarce-30-legacy_instrumented-day1-voluntary_orders.json",
+  "isolated_reader_cost": {
+    "case": "reference-30-legacy_instrumented",
+    "sample_count": 1,
+    "isolated_from_other_acceptance_processes": true,
+    "events": 48363,
+    "parse_seconds": 0.4995245160025661,
+    "analysis_seconds": 5.365675555996859,
+    "replay_seconds": 5.984702751000441,
+    "witnesses_seconds": 0.11580934399898979,
+    "certificates": 4,
+    "body_wall_seconds": 11.965724361001776,
+    "process_peak_rss_kib": 122736,
+    "report_sha256": "275fcbb8537deb5835642939f58c597dc5f851c16ad9c543ecfad1202f2aebbb",
+    "ledger_sha256": "b37ba72faa0abad005494f06b2cdcc4f2ce4a0b9f2dac04f450e6d4123ecb9de",
+    "diagnostic_sha256": "d3d977cef79e909e094075a6488ff694b74fcfe0c75be777c56f4fd8f7a4b46a",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "python": "3.12.14",
+    "interpretation": "One offline audit/replay cost sample, not a simulation speedup, comparative benchmark or NPC latency."
+  }
+}

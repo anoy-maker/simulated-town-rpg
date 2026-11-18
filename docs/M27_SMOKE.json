@@ -1,0 +1,171 @@
+{
+  "version": 1,
+  "host": {
+    "godot": "4.6.3.stable.official.7d41c59c4",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "machine": "x86_64",
+    "cpus": 3,
+    "cpu_max": "200000 100000",
+    "memory_max": "8589934592",
+    "rust_sha256": "a7c9f739c84aa83fcbd4f1c9554080d53932d2ba69144e77054615e72bc3c462",
+    "bridge_sha256": "feee66ececa02b22294955e587447a3b52a9eb33503d0d5c19bcf5275f827cc3"
+  },
+  "cases": {
+    "C1": {
+      "run_seconds": 0.087379,
+      "command_seconds": 0.854690305000986,
+      "report_seconds": 0.140386,
+      "peak_rss_kib": 86000,
+      "event_count": 913,
+      "canonical_sha256": "93006cc9d697fd9455527fb604e6eeebe54eefc3c43925a93b119bd0cdd7f966",
+      "decision_work_ms": {
+        "n": 1,
+        "min": 49.92,
+        "median": 49.92,
+        "p95": null,
+        "p99": null,
+        "worst": 49.92
+      },
+      "worst_appointment_ms": 50.085,
+      "worst_tick_ms": 0.569
+    },
+    "D1": {
+      "run_seconds": 0.093242,
+      "command_seconds": 0.9524917259986978,
+      "report_seconds": 0.123857,
+      "peak_rss_kib": 86020,
+      "event_count": 913,
+      "canonical_sha256": "572964383ed21e7ff013ba0192cd9db8dd42cfd5e0a584096bb8934c8e2be784",
+      "decision_work_ms": {
+        "n": 1,
+        "min": 57.096,
+        "median": 57.096,
+        "p95": null,
+        "p99": null,
+        "worst": 57.096
+      },
+      "worst_appointment_ms": 57.27,
+      "worst_tick_ms": 0.725
+    },
+    "queue10": {
+      "run_seconds": 0.932878,
+      "command_seconds": 1.5092747320013586,
+      "peak_rss_kib": 71172,
+      "event_count": 0,
+      "callback_ms": {
+        "n": 56,
+        "min": 0.07,
+        "median": 0.098,
+        "p95": 2.44,
+        "p99": null,
+        "worst": 6.831
+      },
+      "queue_wait_ms": {
+        "n": 10,
+        "min": 0.796,
+        "median": 426.242,
+        "p95": null,
+        "p99": null,
+        "worst": 800.995
+      },
+      "decision_work_ms": {
+        "n": 10,
+        "min": 67.281,
+        "median": 76.005,
+        "p95": null,
+        "p99": null,
+        "worst": 126.976
+      },
+      "maxima": {
+        "completed": 1,
+        "input_bytes": 15880,
+        "output_bytes": 23116,
+        "outstanding": 10,
+        "running": 1,
+        "waiting": 9
+      },
+      "proposal_digest": "c834cc0509c6784b9cdf7c93de29a0d7d2d5b6158601fff8bca4d8565c6fe6ba",
+      "release_digest": "5eb58dc71956864da7ae1f7a3e81d15e2ed1ce91653c3eb160317744df52d629"
+    }
+  },
+  "command_wall_seconds": 3.3672972280000977,
+  "verification_phases": [
+    {
+      "phase": "full-godot",
+      "seconds": "736.8282038979996",
+      "status": "0"
+    },
+    {
+      "phase": "historical",
+      "seconds": "1447.419071950997",
+      "status": "0"
+    },
+    {
+      "phase": "full-python",
+      "seconds": "706.1973107129998",
+      "status": "0"
+    },
+    {
+      "phase": "m23-controls",
+      "seconds": "65.62262149800154",
+      "status": "0"
+    },
+    {
+      "phase": "m24-controls",
+      "seconds": "283.0823726330018",
+      "status": "0"
+    },
+    {
+      "phase": "m24-fixtures",
+      "seconds": "92.63749525499952",
+      "status": "0"
+    },
+    {
+      "phase": "m25-controls",
+      "seconds": "761.9417558230016",
+      "status": "0"
+    },
+    {
+      "phase": "m25-fixtures",
+      "seconds": "50.56814899899837",
+      "status": "0"
+    },
+    {
+      "phase": "m25-lifecycle",
+      "seconds": "23.215832013996987",
+      "status": "0"
+    },
+    {
+      "phase": "m26-fixtures",
+      "seconds": "15.088811110999814",
+      "status": "0"
+    },
+    {
+      "phase": "m26-extra-controls",
+      "seconds": "189.11826330799886",
+      "status": "0"
+    },
+    {
+      "phase": "original-audits",
+      "seconds": "528.174838758001",
+      "status": "0"
+    },
+    {
+      "phase": "cd-native-source",
+      "seconds": "1.3918140999994648",
+      "status": "0"
+    },
+    {
+      "phase": "m27-original-capture-parity",
+      "seconds": "329.386690643998",
+      "status": "0"
+    },
+    {
+      "phase": "m27-final-passive-replay",
+      "seconds": "313.90775781699995",
+      "status": "0"
+    }
+  ],
+  "warnings": [],
+  "comparable": true
+}
