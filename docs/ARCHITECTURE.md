@@ -687,3 +687,55 @@ separate and publishes matched contrasts without changing decisions. Historical
 raw-control reuse requires unchanged reachable source, engine and pinned payloads,
 with a new independent audit. See [protocol](M29_CASH_ALLOCATION_FEASIBILITY.md),
 [schemas](M29_SCHEMAS.md) and [results](M29_RESULTS.md).
+
+
+## M30: isolated direct wage bidding and authoritative term salaries
+
+`wage_world.gd` subclasses the M29 cash world; `wage_runner.gd` inherits its entire
+physical/economic schedule. F delegates all historical decisions and inserts only
+passive observations. W replaces the existing board's employment meeting with
+public negotiable notices, one sealed worker ask, firm-local subset evaluation,
+actual offers, voluntary acceptance and native midnight entry. Private
+worker-specific native contract postings are never public wage-board notices.
+An expiring incumbent can apply for renewal; a locked term cannot be repriced.
+
+`wage_policy.gd` is pure: own authorized quotes/cash/food/history support bounded
+three-day affordability and declared hiring priors; employers see their own
+actual books and asks, never worker utility or rival information. Valid application
+outcomes become evidence only at the next personally attended board. No posting
+or an unfilled/canceled notice does not become a fictional lost application.
+The sole meeting and deterministic ordering are unchanged; W's stable notice-ID
+tie rule and immediate cash funding gate are explicit institutional assumptions.
+
+`wage_projection.gd` accepts per-worker salaries, conservatively continues
+retained salaries in its conditional three-day valuation, and preserves the old
+whole-input estimator. All-ten projections match unchanged `input_projection.gd`
+trajectories. Original fixed-ten forecasts and economic policies remain intact.
+The tiny subset search uses only genuine asks within installed slot caps.
+Offer, acceptance and midnight validation reject stale/underfunded portfolios;
+no decision reserves goods or invents revenue.
+
+The minimal shared authority extensions are `_binding_salary` (default10) and
+`_allowed_employee_salary` (old fixed-ten guard). Only W supplies validated real
+term salaries. Native attendance, due claims, priority payments, fully funded
+productive work, no-shows, breaches, immutable terms and expiry use the same
+existing lifecycle. Earned partial liabilities survive term closure; future
+attendance guarantees are separate and end at the actual term end. Business
+accounts, household wallets, prices and inventory authority stay distinct.
+`wage_report.gd` corrects opt-in variable-salary attendance/future-guarantee totals
+without modifying historical report semantics.
+
+`wage_calculation.py` independently implements integer budgets, priors, whole-input
+projection and legal subset valuation. `wage_audit.py` extends the strict historical
+coin/goods/attendance/claims replay with exact provenance and permitted observation
+checks. Old audit entrypoints retain literal ten-coin guards. `check_wage_controls.py`
+executes M28/M29 controls afresh because shared reachable authority changed;
+old raw traces are comparison targets, never substitutes for those fresh runs.
+F parity removes an exact whitelist of new passive events and remaps receipt IDs;
+it retains the historical `wage_payment_applied` event and the complete economic
+report. New raw hashes are honestly different.
+
+All cross-worker ranks, competing asks, actual food failures and concentration
+summaries are offline research exports. None enters an NPC's observation.
+See [protocol](M30_DYNAMIC_WAGE_FEASIBILITY.md), [schemas](M30_SCHEMAS.md) and
+[results](M30_RESULTS.md). No new queue, native kernel or generalized labor engine.

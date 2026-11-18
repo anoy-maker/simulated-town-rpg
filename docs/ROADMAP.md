@@ -414,3 +414,22 @@ prices, viable autonomous settlement policy or structural demand identification.
 - No recurring benefits, lending, rescue, price/wage changes or default adoption.
 
 **Stop after M29 for review. Do not begin M30.**
+
+
+## M30: negotiated wages with binding three-day employment
+
+**Status:** Isolated fixed-ten versus worker-bid experiment;
+[results](M30_RESULTS.md) for review. No dynamic-wage baseline adopted.
+
+- Frozen whole-coin wage requests, private bounded hiring beliefs and own household
+  budgets; firm-local actual mixed-salary valuation and funded next-day entry.
+- Preserve financially equal incumbent continuity, technological homogeneity,
+  immutable current terms, verified attendance, full compensation and old debts.
+- Matched seed42 1/3/30-day controls and separately labeled household-cash
+  sensitivity; independent provenance, salary/claim and resource reconstruction.
+- Keep job scarcity, financial competition, wage levels and actual food access
+  distinct. Stable notice ties and real-time cash constraints can disrupt chains;
+  no outcome tuning, welfare ranking or claim of long-run bargaining equilibrium.
+- No price/skill reform, wage floor, machinery, new population, rescue or adoption.
+
+**Stop after M30 for review. Do not begin M31.**

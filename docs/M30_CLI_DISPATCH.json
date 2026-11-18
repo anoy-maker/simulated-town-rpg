@@ -1,0 +1,27 @@
+{
+  "command": [
+    "godot",
+    "--headless",
+    "--no-header",
+    "--path",
+    ".",
+    "--script",
+    "res://scripts/tools/run_simulation.gd",
+    "--",
+    "--scenario",
+    "settlement_dynamic_wages",
+    "--condition",
+    "scarce",
+    "--arm",
+    "worker_bids",
+    "--allocation",
+    "original",
+    "3",
+    "42",
+    "--report-json"
+  ],
+  "status": 0,
+  "report_sha256": "3433ca1cf76f5499c03987f8b760273ca78b849269693b565a23cd961c35b917",
+  "matches_direct_runner": true,
+  "seconds": 7.409594766002556
+}

@@ -1,0 +1,13 @@
+condition,allocation,arm,meals,missed,visitor_bread,resident_ale,visitor_ale,cash_blocked,solvent_stockout,owner_missed,nonowner_missed,cash_wages,distributions,circulation,productive,wheat,flour,bread,ale,standby,fully_paid_standby,earned_below6,earned_below10,cash_blocked_with_stock,paid_employee_days,mean_paid_nominal_wage,median_paid_nominal_wage,bids,new_terms,active_jobs,arrears,household_cash,firm_cash,visitor_cash,locked_board_days,no_notice_eligible_board_days,submitted_unselected_board_days,meals_days_1_10,meals_days_11_20,meals_days_21_30
+no_brew_request,households_330,fixed10_instrumented,353,97,88,0,0,83,14,41,56,1950,756,7557,171,315,315,441,0,24,24,0,0,80,195,10,10,0,58,6,0,1008,420,7764,132,12,0,126,118,109
+no_brew_request,original,fixed10_instrumented,317,133,124,0,0,124,9,41,92,1910,796,7557,171,315,315,441,0,20,20,0,0,123,191,10,10,0,57,6,0,894,420,7878,129,19,0,120,98,99
+no_brew_request,households_330,worker_bids,291,159,24,0,0,46,113,47,112,1269,692,5436,125,238,230,315,0,16,16,0,84,28,141,9,9,227,39,5,0,635,409,8148,96,7,188,85,102,104
+no_brew_request,original,worker_bids,272,178,57,0,0,109,69,49,129,1333,701,5653,128,238,235,329,0,18,18,0,83,77,146,9.13013698630137,9.0,227,41,4,0,492,420,8280,98,5,186,85,82,105
+reference,original,fixed10_instrumented,450,0,180,359,1,0,0,0,0,3300,1920,13950,330,630,450,630,360,0,0,0,0,0,330,10,10.0,0,110,11,0,1174,480,7538,220,0,0,150,150,150
+reference,original,worker_bids,52,398,18,274,44,118,280,105,293,1133,707,4230,111,245,65,70,318,14,14,0,59,0,125,9.064,10,176,33,3,0,522,332,8338,84,70,143,52,0,0
+scarce,households_330,fixed10_instrumented,391,59,36,235,5,54,5,18,41,2580,944,9421,225,426,305,427,240,33,33,0,0,54,258,10,10.0,0,82,8,0,658,478,8056,173,15,0,131,133,127
+scarce,original,fixed10_instrumented,355,95,65,234,18,94,1,16,79,2490,1038,9408,225,426,300,420,252,24,24,0,0,94,249,10,10,0,80,8,0,552,480,8160,166,54,0,122,117,116
+scarce,households_330,worker_bids,290,160,18,296,4,64,96,45,115,2023,1038,7959,195,377,225,308,300,21,21,0,135,48,216,9.36574074074074,9.0,183,66,8,0,557,467,8168,147,0,117,72,104,114
+scarce,original,worker_bids,273,177,35,278,22,92,85,45,132,1995,1066,7959,195,377,225,308,300,21,21,0,135,75,216,9.23611111111111,9.0,183,66,8,0,401,467,8324,147,0,117,69,96,108
+tight,original,fixed10_instrumented,398,52,78,186,0,52,0,24,28,2690,914,9770,230,435,340,476,186,39,39,0,0,52,269,10,10,0,86,8,0,562,476,8154,180,16,0,141,131,126
+tight,original,worker_bids,52,398,18,258,48,122,276,106,292,1092,700,4122,109,239,65,70,306,15,15,0,58,3,124,8.806451612903226,10.0,193,32,2,0,538,332,8322,83,54,161,52,0,0

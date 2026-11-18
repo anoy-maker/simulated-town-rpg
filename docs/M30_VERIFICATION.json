@@ -1,0 +1,280 @@
+{
+  "base": "9f7268e130d5e1efa341c858e9b14c4d42ab5e80",
+  "branch": "codex/m30-dynamic-wages",
+  "preregistration_commit": "e58c8e2b121359e7d23ecc76533f87ff9af3f846",
+  "implementation_commit": "7038575681b13555423648148d70456d70b0c146",
+  "exporter_commit": "d61df8b5f68294443b2732b97c8ef6d4e532583e",
+  "native_source_identical_to_implementation": true,
+  "historical_protected_paths_unchanged": [
+    "native",
+    "scripts/sim/binding_config.gd",
+    "scripts/sim/binding_policy.gd",
+    "scripts/sim/brewery_config.gd",
+    "scripts/sim/brewery_policy.gd",
+    "scripts/sim/brewery_world.gd",
+    "scripts/sim/demand_world.gd",
+    "scripts/sim/input_world.gd",
+    "scripts/sim/input_memory.gd",
+    "scripts/sim/input_projection.gd",
+    "scripts/sim/cash_allocation_world.gd",
+    "scripts/sim/input_runner.gd",
+    "scripts/sim/cash_allocation_runner.gd"
+  ],
+  "checks": {
+    "native_checks": 3482,
+    "previous_native_checks": 3416,
+    "python_methods": 149,
+    "previous_python_methods": 140,
+    "focused_native_assertions": 66,
+    "focused_python_methods": 9,
+    "rehashed_independent_negative_forgeries": 14,
+    "old_payload_pins": 169,
+    "published_M23_M25_report_and_ledger_pairs": 88,
+    "fresh_M26_report_and_ledger_pairs": 36,
+    "unchanged_M27_diagnostic_digests": 36,
+    "unchanged_M27_checkpoint_proofs": 48,
+    "complete_committed_M27_certificates": 16,
+    "M25_M26_normalized_parity_cases": 12,
+    "fresh_M28_main_and_staggered_cases": 28,
+    "fresh_M29_cases": 48,
+    "M28_R_normalized_parities": 17,
+    "M29_M28_original_native_parities": 16,
+    "extra_M26_pinned_controls": 8,
+    "original_CD_independent_audits": 12,
+    "M30_cases": 28,
+    "M30_distinct_process_captures": 56,
+    "M30_short_actual_captures_reaudited": 32,
+    "M30_new_long_captures": 24,
+    "F_full_normalized_economic_parities": 14,
+    "F_direct_M29_pins": 10,
+    "F_M28_derived_short_pins": 4,
+    "initial_three_day_full_daily_economic_parity_pairs": 6,
+    "technical_authority_witnesses": 3,
+    "canonical_currency": 9192,
+    "unresolved_correctness_failures": [],
+    "isolated_M22_smoke": "passed"
+  },
+  "phases": [
+    {
+      "phase": "full-godot",
+      "seconds": 983.6318121329969,
+      "status": 0
+    },
+    {
+      "phase": "historical",
+      "seconds": 1593.1058240109996,
+      "status": 0
+    },
+    {
+      "phase": "full-python",
+      "seconds": 241.69274398499692,
+      "status": 0
+    },
+    {
+      "phase": "m23-controls",
+      "seconds": 158.87224945399794,
+      "status": 0
+    },
+    {
+      "phase": "m24-controls",
+      "seconds": 705.4126344230026,
+      "status": 0
+    },
+    {
+      "phase": "m24-fixtures",
+      "seconds": 86.77724163400126,
+      "status": 0
+    },
+    {
+      "phase": "m25-controls",
+      "seconds": 683.7382185320021,
+      "status": 0
+    },
+    {
+      "phase": "m25-fixtures",
+      "seconds": 16.0896474809997,
+      "status": 0
+    },
+    {
+      "phase": "m25-lifecycle",
+      "seconds": 12.688092811993556,
+      "status": 0
+    },
+    {
+      "phase": "m26-fixtures",
+      "seconds": 6.888163866002287,
+      "status": 0
+    },
+    {
+      "phase": "m26-extra-controls",
+      "seconds": 80.56300231099885,
+      "status": 0
+    },
+    {
+      "phase": "original-audits",
+      "seconds": 607.1867387829989,
+      "status": 0
+    },
+    {
+      "phase": "cd-native-source",
+      "seconds": 3.69065750700247,
+      "status": 0
+    },
+    {
+      "phase": "m26-m27-controls",
+      "seconds": 816.2248130699954,
+      "status": 0
+    },
+    {
+      "phase": "m28-m29-fresh-controls",
+      "seconds": 1732.2536713079971,
+      "status": 0
+    },
+    {
+      "phase": "m30-checkpoint",
+      "seconds": 50.20505084400065,
+      "status": 0
+    },
+    {
+      "phase": "m30-main-matrix",
+      "seconds": 492.86409138399904,
+      "status": 0
+    },
+    {
+      "phase": "m30-authority-fixtures",
+      "seconds": 34.886630344997684,
+      "status": 0
+    },
+    {
+      "phase": "m30-opt-in-dispatch",
+      "seconds": 7.409594766002556,
+      "status": 0
+    },
+    {
+      "phase": "performance-smoke",
+      "seconds": 2.5953207679995103,
+      "status": 0
+    }
+  ],
+  "commands": [
+    "godot --headless --no-header --path . --script res://tests/run_tests.gd",
+    "python3 -B -m unittest discover -s tests -p 'test_*.py'",
+    "python3 -B scripts/tools/check_historical.py --output work/m30/historical.csv",
+    "python3 -B scripts/tools/run_labor_market.py --legacy-controls --output work/m30/m23-controls",
+    "python3 -B scripts/tools/run_labor_market.py --verify-pins docs/M24_RUNS.csv --output work/m30/m24-controls",
+    "python3 -B scripts/tools/run_labor_market.py --fixtures --verify-pins docs/M24_VACANCIES.csv --output work/m30/m24-fixtures",
+    "python3 -B scripts/tools/run_binding.py --verify-pins docs/M25_RUNS.csv --output work/m30/m25-controls",
+    "python3 -B scripts/tools/run_binding.py --fixtures --verify-pins docs/M25_FIXTURES.csv --output work/m30/m25-fixtures",
+    "python3 -B scripts/tools/check_binding_lifecycle.py --output work/m30/m25-lifecycle",
+    "python3 -B scripts/tools/check_demand_fixtures.py --output work/m30/m26-fixtures",
+    "python3 -B scripts/tools/check_diagnostic_controls.py --output work/m30/m26-extra-controls",
+    "python3 -B scripts/tools/check_input_controls.py --output work/m30/m26-m27-controls",
+    "python3 -B scripts/tools/check_wage_controls.py --output work/m30/m28-m29-controls --R-comparison-traces work/m27/traces",
+    "python3 -B scripts/tools/check_diagnostic_controls.py --cd --reuse-cd work/m29/legacy-controls --output work/m30/legacy-controls",
+    "python3 -B scripts/tools/measure_planning_jobs.py --phase audit --output work/m30/legacy-controls",
+    "python3 -B scripts/tools/run_wages.py --checkpoint --output work/m30/checkpoint --traces work/m30/traces --old-traces work/m29/traces",
+    "python3 -B scripts/tools/run_wages.py --reuse-checkpoint --output work/m30/experiments --traces work/m30/traces --old-traces work/m29/traces",
+    "python3 -B scripts/tools/summarize_wages.py --input work/m30/experiments --traces work/m30/traces --output docs",
+    "godot --headless --no-header --path . --script res://tests/run_wage_tests.gd",
+    "python3 -B -m unittest discover -s tests -p test_wages.py",
+    "python3 -B scripts/tools/performance_smoke.py --output work/m30/smoke.json --verification-times work/m30/verification-phases.csv"
+  ],
+  "experimental_model": {
+    "F_parity_cases": 14,
+    "captures": 56,
+    "cases": 28,
+    "command_seconds": 492.86409138399904,
+    "model": {
+      "base": "9f7268e130d5e1efa341c858e9b14c4d42ab5e80",
+      "godot": "4.6.3.stable.official.7d41c59c4",
+      "native_source_sha256": "87c741f90b2638b85c2116501e63bb89c4f1ef11529c9476224ea6ccf0712ec9",
+      "wage_cli": "8d9c12b9f847fd8a774a69fbae424ced6f43e51459de3b0e1d7c981123c9a1a1",
+      "wage_policy": "5169d6ccfb4d695d18de508d291b79616dec886441a522612cbeca4306d52c09"
+    }
+  },
+  "cache_note": "32 distinct actual short captures reused only on exact final native source/CLI/policy/engine metadata, all independently reaudited;24 new isolated long captures. All76 M28/M29 pinned controls freshly execute after shared default-ten salary hooks. Historical raw targets are comparison evidence, not substitute current executions. Twelve C/D raw traces retain38 exact reachable source files, engine/native builds and published byte hashes; original independent audits rerun. No cached audit conclusion substitutes for replay.",
+  "source_checksums": {
+    "scripts/sim/binding_world.gd": "f4d0143fd544907ee222c97f864ef0f83ba72d4970d7f6e777444eb0ab4c464b",
+    "scripts/sim/labor_market_world.gd": "8725b3ba7fdcd565c2fdaef245b4ce7de01b7c84374a5405f179845d22a94163",
+    "scripts/sim/wage_policy.gd": "065d0781a8178f4f1c512a98aeeba40f30e37494964d80b6e6ad883f85d0dc3d",
+    "scripts/sim/wage_policy.gd.uid": "5bc61a030e8cedb885e3218f8a1df813b8d4284ae9e031e80160890fee8b0952",
+    "scripts/sim/wage_projection.gd": "5e6908809eb1db1458cf6093eb72722824416acc13ef34b061f41f1696d87fb8",
+    "scripts/sim/wage_projection.gd.uid": "ed43f8e69587f4427e6eced369616055ce0144f372029a0dd4237088dfc468fa",
+    "scripts/sim/wage_report.gd": "d48f9ead83ea78466114fdd2a324d7032187ca40a53bcf85269d40a9a9f55738",
+    "scripts/sim/wage_report.gd.uid": "c32d7afe5147e9fdb4f37ee740bdf75f1cce0fd97489f6f30e1e22842c3c5a1f",
+    "scripts/sim/wage_runner.gd": "86c86ab7b2608caa916330cfc018dd4bd60e57fae6a5a6ddeb98c987924f6e58",
+    "scripts/sim/wage_runner.gd.uid": "5a18a68b31cb8f44e9ecb88c83fad8ff214fb2be345960ff84481245c029157a",
+    "scripts/sim/wage_world.gd": "071526faf1339fb5ec06c321fc9d6bc5c9aa5f707af0e34987f9ec300c8b0569",
+    "scripts/sim/wage_world.gd.uid": "f3f15168e31eb74d1068febfa69beff8db30cddbdf31087b99839ea018ef8b4d",
+    "scripts/tools/binding_audit.py": "45503d18056e9485614e026baf5f019b02ffb821582da341b9f5b64a97ad367f",
+    "scripts/tools/brewery_audit.py": "b934c7b5ecef3619bb5c6ff763e07ac6122f93b17e7fa42965475b9cf6beaf47",
+    "scripts/tools/check_wage_controls.py": "9c1d822919e0a0cf491b9b570b02df03186bf079b795575f2a25c1cea6e9b15f",
+    "scripts/tools/economic_diagnostics.py": "e9d7c9e49b9fa0df8c0a10bed3d8d1a7c10224ea5587a95d8d73fea69ca88b0d",
+    "scripts/tools/input_audit.py": "0ad40539bfb63dc25f9487ce9cc818e13611fdd05bdedac6be1cae9d6db67647",
+    "scripts/tools/labor_market_audit.py": "6af2337eba2d0235491d3c1cc4edc2edd8a0e5b3859160511452e3411babf4e2",
+    "scripts/tools/run_simulation.gd": "ab2589abaf414e8a279adf753d44eb83a454edeaa0e5f42747506c6e92f947c2",
+    "scripts/tools/run_wages.gd": "e4bdbe949803a6799c2ea70912d6acdb4cf1484864ce8c0509f9abd39eb15a69",
+    "scripts/tools/run_wages.gd.uid": "4ec5d6318a6fe219885392f2974d478862e87450920427157c8eb642a8b9aa84",
+    "scripts/tools/run_wages.py": "ec1926d835a808eb52ee5dd203377395e34f79335ee10063386c43e6e0128c86",
+    "scripts/tools/summarize_wages.py": "cf0ce0d5203e8dfd5c3d9435d46d792b9fcd5044cfbc31d1805b8a55d0439ea9",
+    "scripts/tools/wage_audit.py": "c6ecc39ce466ab77f786ebf6aff65ac7089c608be85e82ebec974355c25af074",
+    "scripts/tools/wage_calculation.py": "7036c7f2f45e5a1b6ba25b52fbe1884e7addf4101af719016fcd569ae3f1af6a",
+    "tests/run_tests.gd": "612aee9fcfce47943fd43b2885a4931b6d64828e3863183de08ecbd1f00a387d",
+    "tests/run_wage_fixture.gd": "1ef802116ed29083d73c0f61730553a21be27f601af66c8f13bd7b1cfde11891",
+    "tests/run_wage_fixture.gd.uid": "7c51718202cc6f6bdcb85a03381e3a63ed5335047d1bf1ae37cbcbdd1649f6bc",
+    "tests/run_wage_tests.gd": "5466ee3f27e0ac7fdbdece4a60ae77bfa466be02e0cf15b056e15adcbd27535c",
+    "tests/run_wage_tests.gd.uid": "68041229733e097d861bf620f280a820886786bfe56180a3caa205264b36d1aa",
+    "tests/test_wages.py": "a2506f30d31c19fffe262166817166bfd449de5ca2a4fa9f0a79af65d2a65f65",
+    "tests/wage_fixture_runner.gd": "36febb340fbe4c35ed9ab7255c53616cea0d2625bfb8a4f634c1ea60a53e495f",
+    "tests/wage_fixture_runner.gd.uid": "e719289a315ea17a368e071902c0816eb31c621a7a59d7e9feebc12a90bf6ff5",
+    "tests/wage_fixture_world.gd": "1cd40ef63f98de74b0986db985d8ec96ae84681549f04971db6faebcf549ed20",
+    "tests/wage_fixture_world.gd.uid": "228099d0d81f149bb4ed9e556e0be292d9f191f8a6a3a7af0c27737a6835276c",
+    "tests/wage_tests.gd": "b1a84368414ad6b3df881cee797fec1b5c9f0a88ac5eead24babb4435685a591",
+    "tests/wage_tests.gd.uid": "740a2c6065394aac67947961c206e8a1e1f57f812ac62e564468b212e96d0f0a"
+  },
+  "development_evidence": "M30_DEVELOPMENT_FIRST.txt; four corrected pre-matrix failures plus discarded earlier32-capture successful checkpoint. No policy/parameter retuning.",
+  "final_acceptance_passed": true,
+  "smoke_status": "passed; comparable reference metadata; no advisory warnings",
+  "artifact_checks": {
+    "captures": 56,
+    "cases": 12,
+    "checks": "All exports derive from complete independently audited traces; household/day budgets and9192 actual coins reconcile.",
+    "initial_three_day_economic_parity_pairs": 6,
+    "matched_comparisons": 6,
+    "rows": {
+      "BELIEFS": 51560,
+      "BIDS": 1189,
+      "BUDGETS": 23780,
+      "COMPARISONS": 6,
+      "CONCENTRATION": 36,
+      "DAYS": 360,
+      "FIRMS": 48,
+      "FIRM_COMPARISONS": 7950,
+      "FIRM_DAYS": 1440,
+      "F_FIXED_ADMISSION": 720,
+      "INITIAL_ACCOUNTS": 240,
+      "INPUT_ORDERS": 842,
+      "MISSED_MEALS": 1906,
+      "NOTICES": 318,
+      "OUTCOMES": 12,
+      "PARTICIPATION": 3960,
+      "RESIDENTS": 180,
+      "RESIDENT_DAYS": 5400,
+      "SHOPPING": 15120,
+      "TERMS": 882,
+      "TRANSFERS": 3389,
+      "WAGE_SPELLS": 81,
+      "WAGE_STATS": 36,
+      "WORKER_CYCLES": 132,
+      "WORKER_DECISIONS": 3960
+    }
+  },
+  "cost_note": "Correctness verification phases overlap on shared host; do not sum as elapsed time. Comparative56 capture timings were isolated, two fresh processes per case. Full Python and final smoke isolated. Read-only exporter preparation wall was not separately timed.",
+  "smoke_warnings": [],
+  "smoke_command_wall_seconds": 2.514990695999586,
+  "frozen_protocol_checksums": {
+    "M30_DYNAMIC_WAGE_FEASIBILITY.md": "e965d8e0ac1ab3a29547af653073e08ad3433707916595691767c7f2ede11b7b",
+    "M30_TECHNICAL_FIXTURES.md": "2ca031b2de99a141125e48d822b4e30cbe74b2ac8dec278709589602c610755f",
+    "M30_CONTROL_PINS.csv": "c1c06c98193fa88747d29a920cc863d97cdd7be5e38c1ccb9a6483c452334e02"
+  }
+}

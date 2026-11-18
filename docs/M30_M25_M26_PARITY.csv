@@ -1,0 +1,13 @@
+condition,days,all_native_events,initial_final,accounts_goods_money_days
+reference,1,True,True,True
+tight,1,True,True,True
+scarce,1,True,True,True
+no_brew_request,1,True,True,True
+reference,3,True,True,True
+tight,3,True,True,True
+scarce,3,True,True,True
+no_brew_request,3,True,True,True
+reference,30,True,True,True
+tight,30,True,True,True
+scarce,30,True,True,True
+no_brew_request,30,True,True,True

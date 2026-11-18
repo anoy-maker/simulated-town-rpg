@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0–M28 preserved; M29 initial cash ownership experiment for review; GDScript remains the default
+**Status:** M0–M29 preserved; M30 negotiated-wage experiment for review; GDScript remains the default
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -742,3 +742,30 @@ visitor budgets and realized-income distribution rules. No later transfer policy
 or default endowment changes. See [protocol](docs/M29_CASH_ALLOCATION_FEASIBILITY.md),
 [actual results](docs/M29_RESULTS.md) and [schemas](docs/M29_SCHEMAS.md).
 Stop after M29 for review; no M30 or adopted economic baseline.
+
+## M30: negotiated wages under binding contracts
+
+The opt-in `settlement_dynamic_wages` scenario compares an unchanged, passively
+observed ten-coin control with sealed worker wage requests. Three-day employment,
+verified work/standby compensation, private observations, real funding and world
+authority remain binding. Read the [frozen institution](docs/M30_DYNAMIC_WAGE_FEASIBILITY.md),
+[actual results and limitations](docs/M30_RESULTS.md), and [evidence schemas](docs/M30_SCHEMAS.md).
+This is an experiment; no wage policy is adopted as the default.
+
+```sh
+# Compact report; use --json only when a complete event trace is needed.
+godot --headless --no-header --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_dynamic_wages --condition scarce --arm worker_bids --allocation original 30 42 --report-json
+
+# Focused authority and independent audit tests.
+godot --headless --no-header --path . --script res://tests/run_wage_tests.gd
+python3 -B -m unittest discover -s tests -p test_wages.py
+
+# Frozen full matrix: 28 cases, two distinct native processes per case.
+python3 -B scripts/tools/run_wages.py --checkpoint --output work/m30/checkpoint --traces work/m30/traces
+python3 -B scripts/tools/run_wages.py --reuse-checkpoint --output work/m30/experiments --traces work/m30/traces
+python3 -B scripts/tools/summarize_wages.py --input work/m30/experiments --traces work/m30/traces --output work/m30/tables
+```
+
+Use a common parent directory for checkpoint and experiment outputs. The matrix
+has seed42, core horizons1/3/30 and the declared two-condition household-cash
+sensitivity at30; it is not a365-day stability test. Stop after M30 for review.
