@@ -51,7 +51,7 @@ def main():
             comparisons.append(dict(**tag,**parity(first,old)));write_rows(a.output/'parity.csv',comparisons)
         runs.append(dict(**tag,meals=sum(x['resident_meals'] for x in ds),missed=sum(x['unmet_meals'] for x in ds),visitor_meals=sum(x['visitor_bread'] for x in ds),productive=sum(x['shifts'] for x in ds),standby=sum(x['standby'] for x in workers.values()),wages=sum(x['cash_wages'] for x in workers.values()),arrears=sum(x['arrears'] for x in workers.values()),**r['totals']['produced'],circulation=r['money']['circulation'],currency=r['money']['final'],active_jobs=len(r['final']['affiliations']),successful_purchases=r['purchases']['successful'],rejected_purchases=r['purchases']['rejected'],last_productive_day=max((d['day'] for d in ds if d['shifts']),default=0),**r['contracts']['counts'],summary_sha256=digest(dict(report=r)),ledger_sha256=r['ledger_sha256']))
         for n,rows in [('runs',runs),('performance',perf)]:write_rows(a.output/(n+'.csv'),rows)
-        write_json(a.output/'reports'/(name+'.json'),dict(report=r));print(name,'native replay, full audit and original parity PASS',flush=True)
+        write_json(a.output/'reports'/(name+'.json'),dict(report=r));print(name,'native replay and full audit PASS'+('; literal M28 parity PASS' if allocation=='original' else ''),flush=True)
     write_json(a.output/'verification.json',dict(cases=len(cases),captures=len(cases)*2,original_parity_cases=len(comparisons),model=model,command_seconds=time.perf_counter()-start))
 
 
