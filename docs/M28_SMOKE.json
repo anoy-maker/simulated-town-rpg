@@ -1,0 +1,191 @@
+{
+  "version": 1,
+  "host": {
+    "godot": "4.6.3.stable.official.7d41c59c4",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "machine": "x86_64",
+    "cpus": 3,
+    "cpu_max": "200000 100000",
+    "memory_max": "8589934592",
+    "rust_sha256": "a7c9f739c84aa83fcbd4f1c9554080d53932d2ba69144e77054615e72bc3c462",
+    "bridge_sha256": "feee66ececa02b22294955e587447a3b52a9eb33503d0d5c19bcf5275f827cc3"
+  },
+  "cases": {
+    "C1": {
+      "run_seconds": 0.08137,
+      "command_seconds": 0.9795860510021157,
+      "report_seconds": 0.120051,
+      "peak_rss_kib": 85864,
+      "event_count": 913,
+      "canonical_sha256": "93006cc9d697fd9455527fb604e6eeebe54eefc3c43925a93b119bd0cdd7f966",
+      "decision_work_ms": {
+        "n": 1,
+        "min": 47.223,
+        "median": 47.223,
+        "p95": null,
+        "p99": null,
+        "worst": 47.223
+      },
+      "worst_appointment_ms": 47.453,
+      "worst_tick_ms": 1.478
+    },
+    "D1": {
+      "run_seconds": 0.095561,
+      "command_seconds": 0.8353001560026314,
+      "report_seconds": 0.114738,
+      "peak_rss_kib": 86000,
+      "event_count": 913,
+      "canonical_sha256": "572964383ed21e7ff013ba0192cd9db8dd42cfd5e0a584096bb8934c8e2be784",
+      "decision_work_ms": {
+        "n": 1,
+        "min": 63.17,
+        "median": 63.17,
+        "p95": null,
+        "p99": null,
+        "worst": 63.17
+      },
+      "worst_appointment_ms": 63.336,
+      "worst_tick_ms": 0.441
+    },
+    "queue10": {
+      "run_seconds": 0.783234,
+      "command_seconds": 1.2032444430005853,
+      "peak_rss_kib": 71100,
+      "event_count": 0,
+      "callback_ms": {
+        "n": 47,
+        "min": 0.069,
+        "median": 0.085,
+        "p95": 2.049,
+        "p99": null,
+        "worst": 2.454
+      },
+      "queue_wait_ms": {
+        "n": 10,
+        "min": 0.773,
+        "median": 342.9805,
+        "p95": null,
+        "p99": null,
+        "worst": 667.525
+      },
+      "decision_work_ms": {
+        "n": 10,
+        "min": 62.514,
+        "median": 68.73150000000001,
+        "p95": null,
+        "p99": null,
+        "worst": 79.23
+      },
+      "maxima": {
+        "completed": 1,
+        "input_bytes": 15880,
+        "output_bytes": 23116,
+        "outstanding": 10,
+        "running": 1,
+        "waiting": 9
+      },
+      "proposal_digest": "c834cc0509c6784b9cdf7c93de29a0d7d2d5b6158601fff8bca4d8565c6fe6ba",
+      "release_digest": "5eb58dc71956864da7ae1f7a3e81d15e2ed1ce91653c3eb160317744df52d629"
+    }
+  },
+  "command_wall_seconds": 3.0731186649973097,
+  "verification_phases": [
+    {
+      "phase": "full-godot",
+      "seconds": "768.5224593850035",
+      "status": "0"
+    },
+    {
+      "phase": "historical",
+      "seconds": "1340.484559853001",
+      "status": "0"
+    },
+    {
+      "phase": "full-python",
+      "seconds": "221.59706333400027",
+      "status": "0"
+    },
+    {
+      "phase": "m23-controls",
+      "seconds": "106.94959036999717",
+      "status": "0"
+    },
+    {
+      "phase": "m24-controls",
+      "seconds": "489.4420838160004",
+      "status": "0"
+    },
+    {
+      "phase": "m24-fixtures",
+      "seconds": "70.02193894800075",
+      "status": "0"
+    },
+    {
+      "phase": "m25-controls",
+      "seconds": "661.3705780980017",
+      "status": "0"
+    },
+    {
+      "phase": "m25-fixtures",
+      "seconds": "31.052382800000487",
+      "status": "0"
+    },
+    {
+      "phase": "m25-lifecycle",
+      "seconds": "15.949400921999768",
+      "status": "0"
+    },
+    {
+      "phase": "m26-fixtures",
+      "seconds": "8.06184731400208",
+      "status": "0"
+    },
+    {
+      "phase": "m26-extra-controls",
+      "seconds": "94.64841774399974",
+      "status": "0"
+    },
+    {
+      "phase": "original-audits",
+      "seconds": "584.414237803001",
+      "status": "0"
+    },
+    {
+      "phase": "cd-native-source",
+      "seconds": "4.75888581700201",
+      "status": "0"
+    },
+    {
+      "phase": "m26-m27-controls",
+      "seconds": "613.1333109139996",
+      "status": "0"
+    },
+    {
+      "phase": "full-python-shared-host-first",
+      "seconds": "666.5481256959974",
+      "status": "1"
+    },
+    {
+      "phase": "queue-isolated",
+      "seconds": "5.413436727998487",
+      "status": "0"
+    },
+    {
+      "phase": "m28-checkpoint",
+      "seconds": "41.7219822809966",
+      "status": "0"
+    },
+    {
+      "phase": "m28-main-matrix",
+      "seconds": "265.54058757299936",
+      "status": "0"
+    },
+    {
+      "phase": "m28-staggered-sensitivity",
+      "seconds": "151.97529903199757",
+      "status": "0"
+    }
+  ],
+  "warnings": [],
+  "comparable": true
+}

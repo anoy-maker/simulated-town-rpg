@@ -630,3 +630,33 @@ compact actual tables, checks all48 primary certificates and retains16 complete
 representative L examples. There is no new planner, money account, native kernel
 or simulation event. See [protocol](M27_ECONOMIC_DIAGNOSTICS_FEASIBILITY.md),
 [schemas](M27_SCHEMAS.md) and [findings](M27_RESULTS.md).
+
+## M28: opt-in owner-local input forecast boundary
+
+`input_world.gd` extends M26's world and records only a buyer's own validated
+native grain/flour order and ownership-transfer receipts. It emits no event
+recursively during the parent receipt callback, preserving native linkage order.
+At15:55 `input_memory.gd` filters the last three completed same-quote-context
+days, preserves exact K/N/D and freezes the owner-local estimate. Current morning
+orders, competitor books, hidden supplier funds and future traffic are excluded.
+
+`binding_world.gd` gains a default-preserving `_renewal_plan` hook; its original
+world uses the same original calculation. `binding_policy.renewal` accepts an
+optional pure forecast callable while retaining candidate bounds/objective/ties.
+Only the new input-aware world supplies `input_projection.gd`: obtain desired
+funded missing lots from the original planner, half-up round predicted delivery,
+retain owned stock, charge those purchases, produce only from available inputs,
+and retain every promised wage. Baseline instrumentation leaves choices intact.
+Current-term assignment and all authoritative economic commands remain inherited.
+
+`input_runner.gd` reuses the existing entire schedule. No new reservation, account,
+employment type or native kernel exists. `input_audit.py` extends M27's passive
+observer: original demand/contract/goods/cash replay validates each underlying
+receipt; an independent analytical shift bound and exact quotient/remainder check
+reconstruct the new projection. The M27 observer exposes optional observer/fixture
+arguments with identical default outputs. `check_input_controls.py` verifies
+fresh historical M26 pins and exact old M27 diagnostic/certificate digests.
+Global diagnostic information remains outside NPC observations.
+
+See [frozen mathematics](M28_INPUT_FEASIBILITY.md), [schemas](M28_SCHEMAS.md) and
+[mixed economic outcomes](M28_RESULTS.md). No economic baseline is adopted.

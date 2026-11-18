@@ -1,0 +1,13 @@
+condition,arm,fixture,seed,household_cash,business_cash,external_cash,owner_cash,employee_cash,richest_resident_cash,currency
+no_brew_request,R_baseline_instrumented,none,42,846,420,7926,336,510,217,9192
+no_brew_request,R_input_aware,none,42,894,420,7878,346,548,227,9192
+reference,R_baseline_instrumented,none,42,1174,480,7538,876,298,340,9192
+reference,R_input_aware,none,42,1174,480,7538,876,298,340,9192
+scarce,R_baseline_instrumented,none,42,658,336,8198,96,562,118,9192
+scarce,R_input_aware,none,42,552,480,8160,154,398,118,9192
+tight,R_baseline_instrumented,none,42,822,360,8010,202,620,169,9192
+tight,R_input_aware,none,42,562,476,8154,118,444,102,9192
+scarce,R_baseline_instrumented,staggered,42,624,478,8090,152,472,118,9192
+scarce,R_input_aware,staggered,42,598,478,8116,156,442,118,9192
+tight,R_baseline_instrumented,staggered,42,688,478,8026,130,558,101,9192
+tight,R_input_aware,staggered,42,598,478,8116,136,462,101,9192

@@ -382,3 +382,19 @@ prices, viable autonomous settlement policy or structural demand identification.
   implement no NPC forecasting change, wage/price reform or M28.
 
 **Stop after M27 for review. Do not begin M28.**
+
+## M28: local input reliability and prospective employment
+
+**Status:** Opt-in experiment; [results](M28_RESULTS.md) for review.
+
+- Same M26 R demand estimate, prices, resources, current work and binding wages;
+  instrumented economic control versus bounded own-input fulfillment forecast.
+- Genuine own funded whole-lot receipts, exact prior-smoothed N/D, completed-day
+  embargo, unchanged inventory ownership and full three-day wage costs.
+- Matched main and separate staggered terms, independent receipt/forecast and
+  M27 financial/food reconstruction, historical pins and measured costs.
+- Brewery capital can improve while bread and household income worsen; keep
+  the treatment optional and record individual consequences without retuning.
+- No wage/price adaptation, new sector, bank, rescue or generalized planner.
+
+**Stop after M28 for review. Do not begin M29.**
