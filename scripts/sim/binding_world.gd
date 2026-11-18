@@ -25,14 +25,15 @@ func _term_id(w: String,b: String,start: int) -> String:return "term:%04d:%s:%s"
 func _claim_id(w: String,b: String) -> String:return "%04d:%s:%s"%[_day,b,w]
 func snapshot() -> Dictionary:
 	return super().merged({"binding_contracts":{"mode":renewal_mode,"terms":_terms.duplicate(true),"active_terms":_active_terms.duplicate(),"obligations":_obligations.duplicate(true),"attendance":_attendance.duplicate(true),"releases":_releases.duplicate(true),"processed_boundary":_processed_boundary}})
+func _binding_salary(_worker: String,_business: String) -> int:return 10
 func _unpaid_shift_wage(w: String,b: String,wage: int) -> int:
-	return 0 if _obligations.get(_claim_id(w,b),{}).get("paid",0)==10 else wage
+	return 0 if _obligations.get(_claim_id(w,b),{}).get("paid",0)==_binding_salary(w,b) else wage
 func _pay_shift_wage(w: String,b: String,_wage: int) -> int:
 	var claim: Dictionary=_obligations[_claim_id(w,b)]
-	assert(claim.paid==10 and claim.payments.size()==1)
+	assert(claim.amount==_binding_salary(w,b) and claim.paid==claim.amount and claim.payments.size()==1)
 	return claim.payments[0].payment_event_id
 func work_shift(w: String,b: String) -> bool:
-	if _obligations.get(_claim_id(w,b),{}).get("paid",0)!=10:return _reject("work_shift",w,b,{"wage":0},"guarantee_not_fully_paid")
+	if _obligations.get(_claim_id(w,b),{}).get("paid",0)!=_binding_salary(w,b):return _reject("work_shift",w,b,{"wage":0},"guarantee_not_fully_paid")
 	if _obligations[_claim_id(w,b)].payments.size()!=1:return _reject("work_shift",w,b,{"wage":0},"single_full_wage_receipt_required")
 	return super(w,b)
 func _pay(actor: String,target: String,amount: int,purpose: String) -> bool:
@@ -56,7 +57,7 @@ func _on_recorded_event(e: Dictionary) -> void:
 		for id in _terms:
 			if _terms[id].worker==e.actor and (predecessor.is_empty() or _terms[id].start_day>_terms[predecessor].start_day):predecessor=id
 		var j: Dictionary=e.details.job;var id: String=_term_id(e.actor,e.target,j.start_day)
-		var term={"id":id,"worker":e.actor,"business":e.target,"start_day":j.start_day,"end_day":j.end_day,"wage":10,"status":"active","predecessor":predecessor,"source":"accepted"}
+		var term={"id":id,"worker":e.actor,"business":e.target,"start_day":j.start_day,"end_day":j.end_day,"wage":_binding_salary(e.actor,e.target),"status":"active","predecessor":predecessor,"source":"accepted"}
 		_terms[id]=term;_active_terms[e.actor]=id
 		var same: bool=not predecessor.is_empty() and _terms[predecessor].business==e.target
 		var continuous: bool=same and _terms[predecessor].closed_day==j.start_day
@@ -84,7 +85,7 @@ func _verify_window(b: String,clock_id: int) -> void:
 			session.status="attended"
 			_record("contract_attended",w,b,true,{"term":_active_terms[w],"session":id,"start_event_id":session.start_event_id,"clock_event_id":clock_id,"due_event_id":session.due_event_id,"kind":session.kind})
 			session.attendance_event_id=_events.back().id
-			var claim={"id":id,"worker":w,"business":b,"term":_active_terms[w],"day":_day,"minute":_space.minute,"amount":10,"paid":0,"due_event_id":session.due_event_id,"attendance_event_id":session.attendance_event_id,"payments":[],"breach_event_id":null}
+			var claim={"id":id,"worker":w,"business":b,"term":_active_terms[w],"day":_day,"minute":_space.minute,"amount":_binding_salary(w,b),"paid":0,"due_event_id":session.due_event_id,"attendance_event_id":session.attendance_event_id,"payments":[],"breach_event_id":null}
 			_obligations[id]=claim
 			_record("guaranteed_wage_due",w,b,true,{"claim":claim.duplicate(true)})
 		else:
@@ -95,8 +96,8 @@ func _verify_window(b: String,clock_id: int) -> void:
 	settle_wages(Brew.OWNERS[b],b)
 	for w in _active_staff(b):
 		var claim: Dictionary=_obligations.get(_claim_id(w,b),{})
-		if not claim.is_empty() and claim.paid<10:
-			_record("binding_breach",w,b,true,{"kind":"employer_unpaid","term":claim.term,"claim":claim.id,"amount_paid":claim.paid,"arrears":10-claim.paid,"clock_event_id":clock_id})
+		if not claim.is_empty() and claim.paid<claim.amount:
+			_record("binding_breach",w,b,true,{"kind":"employer_unpaid","term":claim.term,"claim":claim.id,"amount_paid":claim.paid,"arrears":claim.amount-claim.paid,"clock_event_id":clock_id})
 			claim.breach_event_id=_events.back().id
 func _queue(b: String) -> Array:
 	var ids: Array=_obligations.keys().filter(func(id):return _obligations[id].business==b and _obligations[id].paid<_obligations[id].amount)
@@ -137,15 +138,15 @@ func tender_early_receipts() -> void:
 func _committed_payroll(b: String) -> int:
 	var total: int=arrears(b)
 	for w in _active_staff(b):
-		if not _attendance.has(_claim_id(w,b)):total+=10
+		if not _attendance.has(_claim_id(w,b)):total+=_binding_salary(w,b)
 	return total
 func _funded_workers(b: String) -> Array:
 	var cash: int=_entities[b].money-arrears(b);var ids: Array=[]
 	for w in _active_staff(b):
 		var c: Dictionary=_obligations.get(_claim_id(w,b),{})
 		if not c.is_empty():
-			if c.paid==10:ids.append(w)
-		elif cash>=10:ids.append(w);cash-=10
+			if c.paid==c.amount:ids.append(w)
+		elif cash>=_binding_salary(w,b):ids.append(w);cash-=_binding_salary(w,b)
 	return ids
 func business_observation(owner: String,b: String,allow_procurement: bool=false) -> Dictionary:
 	return super(owner,b,allow_procurement).merged({"committed_payroll":_committed_payroll(b),"funded_workers":_funded_workers(b)})
@@ -257,7 +258,7 @@ func release_for_breach(actor: String,w: String,receipt: Variant) -> bool:
 		var e: Dictionary=_events[receipt-1]
 		if e.action!="binding_breach" or not e.success or e.actor!=w or e.target!=b or e.details.term!=_active_terms[w]:reason="unverified_breach"
 		elif e.details.kind=="employer_unpaid":
-			if actor!=w or _obligations[e.details.claim].paid==10:reason="worker_choice_with_unpaid_claim_required"
+			if actor!=w or _obligations[e.details.claim].paid==_obligations[e.details.claim].amount:reason="worker_choice_with_unpaid_claim_required"
 		elif actor!=Brew.OWNERS[b]:reason="owner_choice_required"
 	if not reason.is_empty():return _reject("binding_release_requested",actor,w,{},reason)
 	_releases[w]={"worker":w,"business":b,"actor":actor,"breach_event_id":receipt,"effective_day":_day+1}
@@ -280,7 +281,7 @@ func close_contract_day() -> void:
 				if e.action=="work_shift" and e.success and e.actor==w and e.target==b:work=e
 			var breach: bool=session.status=="absent" or claim.get("breach_event_id",null)!=null
 			completed+=int(not work.is_empty());breaches+=int(breach)
-			_record("contract_shift",w,b,not work.is_empty(),{"contract_id":_contract_id(b,w),"employer":Brew.OWNERS[b],"expected_compensation":10,"actual_compensation":claim.get("paid",0),"completed":not work.is_empty(),"reason":"productive_work" if not work.is_empty() else "worker_nonattendance" if session.status=="absent" else "attended_standby","shift_event_id":work.get("id",null),"attendance_event_id":session.attendance_event_id,"guaranteed_wage_due":claim.get("amount",0),"arrears":claim.get("amount",0)-claim.get("paid",0),"breach":breach})
+			_record("contract_shift",w,b,not work.is_empty(),{"contract_id":_contract_id(b,w),"employer":Brew.OWNERS[b],"expected_compensation":_binding_salary(w,b),"actual_compensation":claim.get("paid",0),"completed":not work.is_empty(),"reason":"productive_work" if not work.is_empty() else "worker_nonattendance" if session.status=="absent" else "attended_standby","shift_event_id":work.get("id",null),"attendance_event_id":session.attendance_event_id,"guaranteed_wage_due":claim.get("amount",0),"arrears":claim.get("amount",0)-claim.get("paid",0),"breach":breach})
 	_contract_day_closed=true
 	var business_cash: Dictionary={};var household_cash: Dictionary={};var goods: Dictionary=Brew.empty_goods()
 	for id in _entities:

@@ -120,7 +120,8 @@ class InputAudit(EconomicAudit):
         super().finish()
         assert self.r['final']['input_reliability']==dict(arm=self.input_arm,orders=self.input_orders,points=self.input_points,forecasts=self.input_forecasts,projections=self.input_projections)
         assert self.r['input_reliability']==dict(arm=self.input_arm,orders=self.input_orders,forecasts=self.input_forecasts,projections=self.input_projections,note='Local endogenous fill heuristic, not a future supply guarantee.')
-        assert len(self.input_forecasts)==len(self.input_projections)==4*self.r['days']
+        assert len(self.input_forecasts)==4*self.r['days']
+        assert len(self.input_projections)==(0 if getattr(self,'VARIABLE_WAGES',False) else 4*self.r['days'])
 
 
 def analyze(data):

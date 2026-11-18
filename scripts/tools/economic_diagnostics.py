@@ -177,7 +177,7 @@ class EconomicAudit(DemandAudit):
             self.claim_totals.append(dict(day=day,event_id=e['id'],payable=liabilities,receivable=receivables))
             for firm in OWNERS:
                 f=self.firm_days[day,firm];f.update(closing_cash=self.entities[firm]['money'],closing_inventory=copy.deepcopy(self.entities[firm]['inventory']),closing_cargo=copy.deepcopy(self.cargo[firm]['inventory']),
-                    arrears=d['liabilities'][firm],future_guarantees=sum(10*max(0,t['end_day']-max(day+1,t['start_day'])) for t in self.bound['terms'].values() if t['status']=='active' and t['business']==firm))
+                    arrears=d['liabilities'][firm],future_guarantees=sum(t['wage']*max(0,t['end_day']-max(day+1,t['start_day'])) for t in self.bound['terms'].values() if t['status']=='active' and t['business']==firm))
                 assert f['closing_cash']==f['opening_cash']+f['sales']-f['input_spending']-f['paid_wages']-f['distributions']
                 assert f['opening_arrears']+f['accrued_wages']-f['paid_wages']==f['arrears']
                 for item in PRODUCT.values():
@@ -189,7 +189,7 @@ class EconomicAudit(DemandAudit):
         if a=='binding_boundary_closed':
             for firm in OWNERS:
                 f=self.firm_days[day,firm]
-                f['future_guarantees']=sum(10*max(0,t['end_day']-max(day+1,t['start_day'])) for t in self.bound['terms'].values() if t['status']=='active' and t['business']==firm)
+                f['future_guarantees']=sum(t['wage']*max(0,t['end_day']-max(day+1,t['start_day'])) for t in self.bound['terms'].values() if t['status']=='active' and t['business']==firm)
                 f['future_guarantees_event_id']=e['id'];f['future_guarantees_minute']=e['minute']
                 self.timeline(e,'future_term_guarantees',firm,'employees',0,guaranteed_coins=f['future_guarantees'],note='conditional future compensation, not current coins or earned debt')
 

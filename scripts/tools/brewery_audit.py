@@ -75,6 +75,7 @@ def audit(data, fixture=False, labor=None):
     def owned(id):return people[id]['active'] and people[id]['activity']=='idle'
     def at(id,site):return people[id]['active'] and people[id]['tile']==SITES[site]
     def staff(f):return WORKERS[f] if labor is None else labor.staff(f)
+    def salary(w,f):return labor.salary(w,f) if binding and getattr(labor,'VARIABLE_WAGES',False) else 10
     def worker_available(w,f):return jobs[w]['active'] and w not in worked and owned(w) and at(w,f)
     def offered_quotes(seller):return [dict(q,available=min(q['limit'],entities[seller]['inventory'][item])) for item,q in sorted(quotes[seller].items())]
     def eligible(f):
@@ -210,7 +211,7 @@ def audit(data, fixture=False, labor=None):
             for item in ITEMS:entities[target]['inventory'][item]+=d['goods'][item];cargo[target]['inventory'][item]=0
         elif action=='shift_offered':
             w=d['offer']['worker'];assert OWNERS[target]==actor and w in staff(target) and owned(w) and at(w,target) and w not in worked
-            assert d['offer']['wage']==10 and d['offer']['day']==day and d['offer']['status']=='offered';offered[w]=copy.deepcopy(d['offer'])
+            assert d['offer']['wage']==salary(w,target) and d['offer']['day']==day and d['offer']['status']=='offered';offered[w]=copy.deepcopy(d['offer'])
         elif action=='transfer_money':
             assert type(d['amount']) is int and d['amount']>0 and d['purpose'] in ('wage','distribution') and actor in firms
             pay_before[index]=(entities[actor]['money'],copy.deepcopy(books[actor]))
@@ -236,7 +237,7 @@ def audit(data, fixture=False, labor=None):
             for item,n in make.items():entities[actor]['inventory'][item]+=n;goods[item]+=n;production[item]+=n;current['production'][item]+=n;accounts[actor]['produced'][item]+=n
             receipts.add(index)
         elif action=='work_shift':
-            assert actor in started and started[actor]==target and actor not in worked and d['wage']==10 and d['labor']==1
+            assert actor in started and started[actor]==target and actor not in worked and d['wage']==salary(actor,target) and d['labor']==1
             pay,out=d['payment_event_id'],d['production_event_id'];assert out==index-1 and out not in claims
             if binding:labor.validate_productive(e)
             else:assert pay==index-2 and pay not in claims
@@ -267,12 +268,12 @@ def audit(data, fixture=False, labor=None):
             assert d['amount']==min(max(0,retained),max(0,cash-120))>0 and d['policy']==dict(mode='full',reserve=120) and d['cumulative_before']==book
             claims.add(pay)
         elif action=='contract_due':
-            assert actor in staff(target) and actor not in due and d['expected_compensation']==10 and d['phase']==1;due.add(actor);current['shifts_due']+=1
+            assert actor in staff(target) and actor not in due and d['expected_compensation']==salary(actor,target) and d['phase']==1;due.add(actor);current['shifts_due']+=1
             accounts[actor]['shifts_due']+=1;accounts[target]['shifts_due']+=1;current['households'][actor]['shifts_due']+=1;current['firms'][target]['shifts_due']+=1
         elif action=='contract_attempt':
             command=events[d['command_event_id']-1];assert OWNERS[target]==actor and d['worker'] in staff(target) and command['action']=='shift_offered'
         elif action=='contract_shift':
-            assert actor in due and actor not in closed and actor in worked and d['completed'] and d['actual_compensation']==10
+            assert actor in due and actor not in closed and actor in worked and d['completed'] and d['actual_compensation']==salary(actor,target)
             if binding:labor.validate_closure(e)
             assert events[d['shift_event_id']-1]['action']=='work_shift' and events[d['shift_event_id']-1]['actor']==actor;closed.add(actor)
         elif action=='contract_day_closed':
@@ -299,7 +300,7 @@ def audit(data, fixture=False, labor=None):
             take,make=RULES[f];raw_item=next(iter(take),'');out_item=next(iter(make))
             assert rule==dict(output=out_item,input=raw_item,recipe=dict(farm='',mill='mill',bakery='bake',brewery='brew')[f],batches=int(f!='farm'),target=len(WORKERS[f])*make[out_item],take=take.get(raw_item,0),make=make[out_item])
             raw=rule['input'];assert o['input_stock']==(entities[f]['inventory'][raw]+(cargo[f]['inventory'][raw] if d['phase']=='procurement' else 0) if raw else 0)
-            candidates=[dict(id=w,wage=10,available=worker_available(w,f)) for w in staff(f)]
+            candidates=[dict(id=w,wage=salary(w,f),available=worker_available(w,f)) for w in staff(f)]
             assert o['workers']==(candidates if labor is None else labor.ordered(candidates,day))
             if raw:
                 old=seen.get((actor,'farm' if raw=='wheat' else 'mill'),{}).get('offers',[])

@@ -43,9 +43,10 @@ func _workers(business: String) -> Array:
 	var rows: Array=[]
 	for id in _active_staff(business):rows.append({"id":id,"wage":_wage(id,business),"available":_labor_qualified(id,_businesses[business].industry) and _labor_used.get(id,0)==0 and _available(id) and _at(id,Brew.SITES[business])})
 	return Market.order(rows,_day,tie)
+func _allowed_employee_salary(worker: String,_business: String) -> bool:return _employment[worker].wage==10
 func _shift_error(worker: String, business: String) -> String:
 	var reason: String=super(worker,business)
-	if reason.is_empty() and (_employment[worker].wage!=10 or worker in Brew.OWNERS.values()):return "fixed_wage_employee_required"
+	if reason.is_empty() and (not _allowed_employee_salary(worker,business) or worker in Brew.OWNERS.values()):return "fixed_wage_employee_required"
 	return reason
 func snapshot() -> Dictionary:
 	return super().merged({"labor_market":{"mode":mode,"tie":tie,"fixture":fixture,"homogeneous":true,"notices":_notices.duplicate(true),"known_jobs":_known_jobs.duplicate(true),"known_offers":_known_offers.duplicate(true),"contingent":_contingent.duplicate(true),"history":_history.duplicate(true),"sales":_sales.duplicate(true),"input_terms":_input_terms.duplicate(true)}})

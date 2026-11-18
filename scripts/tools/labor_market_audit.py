@@ -264,7 +264,7 @@ class LaborAudit:
             if a in ('employment_started','employment_ended'):transitions.append({k:e[k] for k in ('day','minute','action','details')}|dict(worker=e['actor'],business=e['target']))
             if a=='labor_notice_closed':counts['canceled_pending']+=len(e['details']['canceled_pending'])
             if a=='labor_search_decision':reasons[e['details']['proposal']['reason']]+=1
-        assert self.r['labor']==dict(mode=self.mode,tie=self.tie,fixture=self.state['fixture'],wage=10,counts=counts,search_reasons=dict(reasons),transitions=transitions,qualification='M24 homogeneous labor; historical skill arrays unchanged')
+        assert self.r['labor']==dict(mode=self.mode,tie=self.tie,fixture=self.state['fixture'],wage=self.wage_label() if hasattr(self,'wage_label') else 10,counts=counts,search_reasons=dict(reasons),transitions=transitions,qualification='M24 homogeneous labor; historical skill arrays unchanged')
 
 
 def audit(data):
