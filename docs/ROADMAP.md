@@ -366,3 +366,19 @@ prices, viable autonomous settlement policy or structural demand identification.
   broad multi-firm optimization. Later work requires a separate review.
 
 **Stop after M26 for review. Do not begin M27.**
+
+## M27: read-only feasibility and failure evidence
+
+**Status:** Offline diagnostic milestone; [results](M27_RESULTS.md) for review.
+
+- Preserve every M0–M26 rule and historical result; no new simulation scenario.
+- Independently audited actual cash/goods/contracts/demand, shopping-time failure
+  evidence, explicit coverage limits and overlapping constraint flags.
+- Tiny day1/day3 integer physical spaces, separate named-worker/route proofs and
+  conservative legal cash witnesses; no financed optimum or incentive claim.
+- Thirty-day observational summaries, tampered-certificate rejection, historical
+  regression/audit preservation and measured verification costs.
+- Recommend a separately reviewed controlled input-availability experiment;
+  implement no NPC forecasting change, wage/price reform or M28.
+
+**Stop after M27 for review. Do not begin M28.**

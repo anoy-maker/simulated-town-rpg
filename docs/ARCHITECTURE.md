@@ -605,3 +605,28 @@ The original auditors retain their historical paths. New CLI selection is
 `settlement_demand_observation`; reports separate lower-bound versus exact-window
 forecast diagnostics. See [protocol](M26_DEMAND_FEASIBILITY.md) and
 [results](M26_RESULTS.md).
+
+## M27: researcher-only diagnostics and independent certificates
+
+No Godot source, authority, scenario, policy, observation or historical audit path
+changes. `economic_diagnostics.py` observes the reconstructed state from the
+existing `DemandAudit`/`BindingAudit` replay. It checks read-only input identity,
+extracts actual checkpoint snapshots and per-day goods/cargo/cash/claim identities,
+and emits provenance-backed overlapping constraints and missed-meal attributions.
+Private shopping cash and global state stay offline; they never enter NPC views.
+
+`economic_witness.py` performs the small deterministic physical enumeration.
+`check_economic_witness.py` independently checks its integer allocations, source
+stocks, active named workers, installed assets, routes and time windows, and derives
+a separate physical upper bound. Its conservative cash overlay retains due wages,
+real positive customer requests, quote authorization and settlement timing. The
+checker does not import the search generator or NPC policies. It can certify a
+one-day funded witness; neither future term funding nor incentives are inferred.
+
+`run_economic_diagnostics.py` pins native sources and published M26 results before
+analyzing traces, replays diagnostics, checks short-run prefixes and optionally
+compares unchanged M25 economics. `summarize_economic_diagnostics.py` publishes
+compact actual tables, checks all48 primary certificates and retains16 complete
+representative L examples. There is no new planner, money account, native kernel
+or simulation event. See [protocol](M27_ECONOMIC_DIAGNOSTICS_FEASIBILITY.md),
+[schemas](M27_SCHEMAS.md) and [findings](M27_RESULTS.md).
