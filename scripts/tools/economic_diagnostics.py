@@ -194,11 +194,11 @@ class EconomicAudit(DemandAudit):
                 self.timeline(e,'future_term_guarantees',firm,'employees',0,guaranteed_coins=f['future_guarantees'],note='conditional future compensation, not current coins or earned debt')
 
 
-def analyze(data):
+def analyze(data,observer=None,fixture=False):
     """Fully audit before returning any researcher outputs; never modify data."""
     if 'events' not in data:raise ValueError('unobserved: full native events required; final cash cannot replace shopping-time funds')
-    before=digest(data);observer=EconomicAudit()
-    result=replay(data,fixture='demand_fixture' in data['report']['initial'],labor=observer)
+    before=digest(data);observer=EconomicAudit() if observer is None else observer
+    result=replay(data,fixture=fixture or 'demand_fixture' in data['report']['initial'],labor=observer)
     assert digest(data)==before,'diagnostic mutated its source trace'
     source=dict(base=BASE,report_sha256=digest(dict(report=data['report'])),ledger_sha256=data['report']['ledger_sha256'])
     snapshots={str(day):dict(state=s,snapshot_sha256=digest(s),source=source,evidence=observer.evidence[day]) for day,s in observer.snapshots.items()}

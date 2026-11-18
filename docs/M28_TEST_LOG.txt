@@ -1,0 +1,97 @@
+Final isolated queue checks
+test_pool_and_order_parity (test_dispatch_queue.DispatchTests.test_pool_and_order_parity) ... ok
+test_schema_and_lifecycle (test_dispatch_queue.DispatchTests.test_schema_and_lifecycle) ... ok
+test_relative_warnings_are_diagnostics (test_dispatch_queue.GuardrailTests.test_relative_warnings_are_diagnostics) ... ok
+test_sample_size_quantiles (test_dispatch_queue.GuardrailTests.test_sample_size_quantiles) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 5.041s
+
+OK
+
+Complete native suite
+M0 regression checks: 147
+M0/M1 regression checks: 436
+M0/M1/M2 regression checks: 530
+M0/M1/M2/M3 regression checks: 633
+M0–M4 regression checks: 834
+M0–M5 regression checks: 1024
+M0–M6 regression checks: 1409
+M0–M6B regression checks: 1780
+M0–M8 regression checks: 2513
+M0–M9 regression checks: 2572
+M0–M10 regression checks: 2615
+M11 reference: days=1 meals=12 shifts=6 missed=0 currency=432 invariants=true
+M11 reference: days=2 meals=24 shifts=12 missed=0 currency=432 invariants=true
+M11 reference: days=30 meals=360 shifts=180 missed=0 currency=432 invariants=true
+M11 reference: days=365 meals=4380 shifts=2190 missed=0 currency=432 invariants=true
+M0–M11 regression checks: 2673
+M12 employer choice: days=2 meals=18 missed=6 shifts=12 currency=432
+M12 employer choice: days=30 meals=117 missed=243 shifts=61 currency=432
+M12 employer choice: days=365 meals=1122 missed=3258 shifts=563 currency=432
+M0–M12 regression checks: 2703
+M13 settlement_fixed_owner_first days=2 meals=18 missed=6 shifts=12 first_cash_short=<null>
+M13 settlement_fixed_owner_first days=7 meals=48 missed=36 shifts=40 first_cash_short=6
+M13 settlement_fixed_owner_first days=30 meals=160 missed=200 shifts=119 first_cash_short=6
+M13 settlement_fixed_owner_first days=365 meals=1182 missed=3198 shifts=631 first_cash_short=6
+M13 settlement_sales_rotating days=2 meals=24 missed=0 shifts=12 first_cash_short=<null>
+M13 settlement_sales_rotating days=7 meals=84 missed=0 shifts=42 first_cash_short=<null>
+M13 settlement_sales_rotating days=30 meals=360 missed=0 shifts=180 first_cash_short=<null>
+M13 settlement_sales_rotating days=365 meals=4380 missed=0 shifts=2190 first_cash_short=<null>
+M0–M13 regression checks: 2754
+M14 profitable reference: days=1 meals=12 shifts=6 employee_wages=36 owner_income=12 breaches=0 currency=432
+M14 profitable reference: days=2 meals=24 shifts=12 employee_wages=72 owner_income=24 breaches=0 currency=432
+M14 profitable reference: days=3 meals=36 shifts=18 employee_wages=108 owner_income=36 breaches=0 currency=432
+M14 profitable reference: days=30 meals=360 shifts=180 employee_wages=1080 owner_income=360 breaches=0 currency=432
+M14 profitable reference: days=365 meals=4380 shifts=2190 employee_wages=13140 owner_income=4380 breaches=0 currency=432
+M0–M14 regression checks: 2803
+M15 A days=1 village=456 external=8736 combined=9192 meals=12 visitor_bread=6 shifts=9
+M15 A days=3 village=504 external=8688 combined=9192 meals=36 visitor_bread=18 shifts=27
+M15 A days=30 village=1152 external=8040 combined=9192 meals=360 visitor_bread=180 shifts=270
+M15 A days=365 village=9192 external=0 combined=9192 meals=4380 visitor_bread=2190 shifts=3285
+M0–M15 regression checks: 2867
+M0–M16 regression checks: 2932
+M17 control days=1 meals=12 visitors=6 shifts=9 money=9192 steps=220
+M17 control days=3 meals=36 visitors=18 shifts=27 money=9192 steps=660
+M17 control days=30 meals=360 visitors=180 shifts=270 money=9192 steps=6600
+Tests: 3334 checks, 0 failures
+
+Complete Python suite
+.....................................................................................................................................
+----------------------------------------------------------------------
+Ran 133 tests in 221.039s
+
+OK
+
+Focused final native checks
+M28 focused checks: 62, failures: 0
+
+Focused final Python
+test_complete_native_replay_and_no_hidden_state_mutation (test_input_reliability.InputTests.test_complete_native_replay_and_no_hidden_state_mutation) ... ok
+test_every_no_history_and_full_fill_candidate_matches_original (test_input_reliability.InputTests.test_every_no_history_and_full_fill_candidate_matches_original) ... ok
+test_exact_estimator_context_last_three_dedup_and_half_up (test_input_reliability.InputTests.test_exact_estimator_context_last_three_dedup_and_half_up) ... ok
+test_morning_receipt_is_embargoed_and_farm_is_unaffected (test_input_reliability.InputTests.test_morning_receipt_is_embargoed_and_farm_is_unaffected) ... ok
+test_native_filled_rationed_and_unknown_orders_have_distinct_provenance (test_input_reliability.InputTests.test_native_filled_rationed_and_unknown_orders_have_distinct_provenance) ... ok
+test_native_focused_integer_and_policy_fixtures (test_input_reliability.InputTests.test_native_focused_integer_and_policy_fixtures) ... ok
+test_owned_inputs_survive_bad_history_and_standby_wages_remain (test_input_reliability.InputTests.test_owned_inputs_survive_bad_history_and_standby_wages_remain) ... ok
+test_passive_baseline_full_report_events_receipt_and_obligation_parity (test_input_reliability.InputTests.test_passive_baseline_full_report_events_receipt_and_obligation_parity) ... ok
+test_rehashed_forged_knowledge_cost_quantity_and_debt_reject (test_input_reliability.InputTests.test_rehashed_forged_knowledge_cost_quantity_and_debt_reject) ... ok
+test_same_initial_endowment_and_current_term_economic_behavior (test_input_reliability.InputTests.test_same_initial_endowment_and_current_term_economic_behavior) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 17.592s
+
+OK
+
+Published report reconstruction
+{
+  "cases": 12,
+  "actual_firm_days": 1440,
+  "resident_days": 5400,
+  "beliefs": 1440,
+  "candidate_day_rows": 9654,
+  "actual_positive_input_orders": 994,
+  "selected_forecast_comparisons": 944,
+  "unscored_comparisons": 100,
+  "checks": "Published reports agree with independent native-audit case summaries; fiscal/goods/wage/candidate and unknown-vs-zero identities pass."
+}

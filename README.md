@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0–M26 preserved; M27 offline economic diagnostics for review; GDScript remains the default
+**Status:** M0–M27 preserved; M28 local input forecast experiment for review; GDScript remains the default
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -704,3 +704,23 @@ A physical optimum in a declared one-day space is not an economically rational
 or sustainable plan. See the [frozen protocol](docs/M27_ECONOMIC_DIAGNOSTICS_FEASIBILITY.md),
 [actual results](docs/M27_RESULTS.md) and [artifact schemas](docs/M27_SCHEMAS.md).
 Stop after M27 for review; no M28 policy or economic parameter change is included.
+
+## M28: local input reliability in contract forecasts
+
+```sh
+godot --headless --no-header --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_input_reliability --condition scarce --arm R_input_aware 30 42 --report-json
+python3 -B scripts/tools/run_input.py --checkpoint --output work/m28/checkpoint --traces work/m28/traces
+python3 -B scripts/tools/run_input.py --reuse-checkpoint --output work/m28/experiments --traces work/m28/traces
+python3 -B scripts/tools/run_input.py --staggered --output work/m28/staggered --traces work/m28/traces
+```
+
+The optional scenario compares unchanged R decisions with an own-input fill-rate
+cap inside the existing three-day renewal projection. It keeps real purchases,
+production, ten-coin wages, contracts, prices, endowments and current work rules.
+Owned inputs retain full value; projected standby still incurs every guaranteed
+wage. No eligible order is unknown supply, not a manufactured failure sample.
+
+The [frozen protocol](docs/M28_INPUT_FEASIBILITY.md),
+[actual outcomes](docs/M28_RESULTS.md) and [artifact definitions](docs/M28_SCHEMAS.md)
+separate business survival from individual food access. Results are mixed and
+the mechanism is not adopted as a default. Stop after M28 for review; no M29.

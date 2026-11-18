@@ -26,14 +26,15 @@ static func forecast(o: Dictionary, count: int) -> Dictionary:
 		raw+=plan.lots*p.rule.take-plan.shifts*p.rule.take
 		var sold: int=mini(stock,o.demand);stock-=sold;cash+=sold*p.output_price;receipts+=sold*p.output_price
 	return {"headcount":count,"receipts":receipts,"inputs":inputs,"guaranteed_wages":30*count,"contribution":receipts-inputs-30*count,"feasible":feasible,"cash":cash}
-static func renewal(o: Dictionary) -> Dictionary:
-	var baseline: Dictionary=forecast(o,o.retained)
+static func renewal(o: Dictionary, project: Callable=Callable()) -> Dictionary:
+	var baseline: Dictionary=project.call(o,o.retained) if project.is_valid() else forecast(o,o.retained)
 	var best: Dictionary=baseline;var candidates: Array=[baseline]
 	var maximum: int=o.capacity
 	if o.mode=="obligations_only":maximum=mini(maximum,o.retained+o.expiring.size())
 	if o.disabled:maximum=o.retained
 	for count in range(o.retained+1,maximum+1):
-		var candidate: Dictionary=forecast(o,count);candidates.append(candidate)
+		var candidate: Dictionary=project.call(o,count) if project.is_valid() else forecast(o,count)
+		candidates.append(candidate)
 		if candidate.feasible and candidate.contribution>best.contribution:best=candidate
 	return {"vacancies":maxi(0,best.headcount-o.retained-o.reserved),"headcount":best.headcount,"baseline":baseline,"candidates":candidates,
 		"reason":"positive_full_term_contribution" if best.headcount>o.retained else "no_profitable_new_commitment"}
