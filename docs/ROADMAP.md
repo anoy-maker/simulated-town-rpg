@@ -398,3 +398,19 @@ prices, viable autonomous settlement policy or structural demand identification.
 - No wage/price adaptation, new sector, bank, rescue or generalized planner.
 
 **Stop after M28 for review. Do not begin M29.**
+
+## M29: initial household versus firm cash ownership
+
+**Status:** Isolated endowment sensitivity; [results](M29_RESULTS.md) for review.
+
+- Preserve all historical rules/results and9192 coins; move the same330 initial
+  visitor coins to eleven non-owner wallets or four business treasuries.
+- Cross both fixed M28 B/I policies with frozen primary and secondary conditions;
+  unchanged prices, contracts, production, preferences, timing and distributions.
+- Audit actual shopping-time cash, food, labor, input receipts and earned claims;
+  separate initial ownership from income and resident access from visitor sales.
+- Keep individual gains/losses and duration visible; extra capital is neither
+  accounting profit nor evidence of365-day sustainable household income.
+- No recurring benefits, lending, rescue, price/wage changes or default adoption.
+
+**Stop after M29 for review. Do not begin M30.**

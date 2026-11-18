@@ -1,0 +1,227 @@
+{
+  "base": "29aae2f3852965968a9cefcf06f508c2ff469890",
+  "preregistration_commit": "40669ad",
+  "implementation_commit": "d05885e",
+  "final_source_commit": "9c00b03",
+  "native_suite_source_commit": "83e3eee",
+  "log_only_followup": "9c00b03 labels original parity only for original captures; no native, capture, audit or economic behavior changed",
+  "checks": {
+    "native_checks": 3416,
+    "previous_native_checks": 3334,
+    "python_methods": 140,
+    "previous_python_methods": 133,
+    "focused_native_assertions": 82,
+    "focused_python_methods": 7,
+    "old_payload_pins": 169,
+    "published_m23_m24_m25_report_and_ledger_pairs": 88,
+    "fresh_M26_report_and_ledger_pairs": 36,
+    "unchanged_M27_diagnostic_digests": 36,
+    "unchanged_M27_checkpoint_proofs": 48,
+    "complete_committed_M27_certificates": 16,
+    "M25_M26_normalized_parity_cases": 12,
+    "M28_main_pinned_cases": 24,
+    "M28_staggered_pinned_cases": 4,
+    "M28_main_baseline_parity_cases": 12,
+    "M28_staggered_baseline_parity_cases": 2,
+    "input_aware_reference_parity_cases": 3,
+    "additional_M26_pinned_controls": 8,
+    "original_cd_independent_audits": 12,
+    "M29_primary_cases": 36,
+    "M29_primary_fresh_captures": 72,
+    "M29_secondary_cases": 12,
+    "M29_secondary_fresh_captures": 24,
+    "M29_original_native_events_ledger_and_report_parity": 16,
+    "primary_coin_supply": 9192,
+    "unresolved_correctness_failures": [],
+    "isolated_M22_smoke": true,
+    "smoke_warnings": [],
+    "default_CLI_dispatch_three_day_exact_report_parity": true
+  },
+  "phases": [
+    {
+      "phase": "full-godot",
+      "seconds": 642.7841336850033,
+      "status": 0
+    },
+    {
+      "phase": "historical",
+      "seconds": 1277.666555826996,
+      "status": 0
+    },
+    {
+      "phase": "full-python",
+      "seconds": 209.51907767399825,
+      "status": 0
+    },
+    {
+      "phase": "m23-controls",
+      "seconds": 78.1592644620032,
+      "status": 0
+    },
+    {
+      "phase": "m24-controls",
+      "seconds": 409.690974819001,
+      "status": 0
+    },
+    {
+      "phase": "m24-fixtures",
+      "seconds": 88.0293427659999,
+      "status": 0
+    },
+    {
+      "phase": "m25-controls",
+      "seconds": 594.356807078002,
+      "status": 0
+    },
+    {
+      "phase": "m25-fixtures",
+      "seconds": 11.69360947899986,
+      "status": 0
+    },
+    {
+      "phase": "m25-lifecycle",
+      "seconds": 9.21015591899777,
+      "status": 0
+    },
+    {
+      "phase": "m26-fixtures",
+      "seconds": 5.756389496003976,
+      "status": 0
+    },
+    {
+      "phase": "m26-extra-controls",
+      "seconds": 86.1774233660035,
+      "status": 0
+    },
+    {
+      "phase": "original-audits",
+      "seconds": 464.2477735279972,
+      "status": 0
+    },
+    {
+      "phase": "cd-native-source",
+      "seconds": 2.6116818059963407,
+      "status": 0
+    },
+    {
+      "phase": "m26-m27-controls",
+      "seconds": 701.8071971840036,
+      "status": 0
+    },
+    {
+      "phase": "m28-controls",
+      "seconds": 294.9927418340012,
+      "status": 0
+    },
+    {
+      "phase": "m28-r-economic-parity",
+      "seconds": 130.9913886880022,
+      "status": 0
+    },
+    {
+      "phase": "m29-checkpoint",
+      "seconds": 64.45790652900178,
+      "status": 0
+    },
+    {
+      "phase": "m29-main-matrix",
+      "seconds": 784.0273493899986,
+      "status": 0
+    },
+    {
+      "phase": "performance-smoke",
+      "seconds": 2.990970738006581,
+      "status": 0
+    }
+  ],
+  "commands": [
+    "godot --headless --no-header --path . --script res://tests/run_tests.gd",
+    "python3 -B -m unittest discover -s tests -p 'test_*.py'",
+    "python3 -B scripts/tools/check_historical.py --output work/m29/historical.csv",
+    "python3 -B scripts/tools/run_labor_market.py --legacy-controls --output work/m29/m23-controls",
+    "python3 -B scripts/tools/run_labor_market.py --verify-pins docs/M24_RUNS.csv --output work/m29/m24-controls",
+    "python3 -B scripts/tools/run_labor_market.py --fixtures --verify-pins docs/M24_VACANCIES.csv --output work/m29/m24-fixtures",
+    "python3 -B scripts/tools/run_binding.py --verify-pins docs/M25_RUNS.csv --output work/m29/m25-controls",
+    "python3 -B scripts/tools/run_binding.py --fixtures --verify-pins docs/M25_FIXTURES.csv --output work/m29/m25-fixtures",
+    "python3 -B scripts/tools/check_binding_lifecycle.py --output work/m29/m25-lifecycle",
+    "python3 -B scripts/tools/check_demand_fixtures.py --output work/m29/m26-fixtures",
+    "python3 -B scripts/tools/check_diagnostic_controls.py --output work/m29/m26-extra-controls",
+    "python3 -B scripts/tools/check_input_controls.py --output work/m29/m26-m27-controls",
+    "python3 -B scripts/tools/check_cash_controls.py --output work/m29/m28-controls --old-traces work/m28/traces",
+    "python3 -B scripts/tools/check_diagnostic_controls.py --cd --reuse-cd work/m28/legacy-controls --output work/m29/legacy-controls",
+    "python3 -B scripts/tools/measure_planning_jobs.py --phase audit --output work/m29/legacy-controls",
+    "python3 -B scripts/tools/run_cash_allocation.py --checkpoint --output work/m29/checkpoint --traces work/m29/traces --old-traces work/m28/traces",
+    "python3 -B scripts/tools/run_cash_allocation.py --reuse-checkpoint --output work/m29/experiments --traces work/m29/traces --old-traces work/m28/traces",
+    "python3 -B scripts/tools/summarize_cash_allocation.py --input work/m29/experiments --traces work/m29/traces --output docs",
+    "python3 -B scripts/tools/performance_smoke.py --output work/m29/smoke.json --verification-times work/m29/verification-phases.csv",
+    "godot --headless --no-header --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_cash_allocation --condition scarce --arm R_input_aware --allocation households_330 3 42 --report-json"
+  ],
+  "experimental_model": {
+    "captures": 96,
+    "cases": 48,
+    "command_seconds": 784.0273493899986,
+    "model": {
+      "base": "29aae2f3852965968a9cefcf06f508c2ff469890",
+      "cash_cli": "05f4ec3b6fc9a1b0a1e3448e98405267e83a3b1226fd6f84883646f05eb25cf6",
+      "godot": "4.6.3.stable.official.7d41c59c4",
+      "native_source_sha256": "dbfa07c3ce3a989bd42f591281a17376a5772bee8fdecc658c26336dd9bf9619"
+    },
+    "original_parity_cases": 16
+  },
+  "cache_note": "48 actual short captures reused from checkpoint with exact model/engine and two distinct fresh-process replays;48 new thirty-day captures. All28 M28 pinned raw controls reused on unchanged reachable source and full independent audits rerun. Twelve C/D raw traces reused after38-file dependency, engine/native-build and published raw SHA checks; original independent audits rerun. M28/R17 economic parities recomputed using existing run_input.economic_parity and original pinned R inputs (two staggered R controls freshly captured). No cached audit conclusion substitutes for event replay.",
+  "source_checksums": {
+    "scripts/sim/cash_allocation_config.gd": "b8c71c4ddf6f00ba72da4845aa003b9a24d4e44edd76eeb1b81579ce71790524",
+    "scripts/sim/cash_allocation_runner.gd": "a928ba1c53cfbbb2d2f813840e2635617b99e927d6047dbedeae9eb9739ccfdd",
+    "scripts/sim/cash_allocation_world.gd": "ae97ec87f14bfbbef79ed4d27a01f9a9f0278be13bbcb9bafa99311960fa2b54",
+    "scripts/tools/cash_allocation_audit.py": "2dd9fced42cbbe2ad83695c9a677bc887232082b7635825f8ededd6248052283",
+    "scripts/tools/check_cash_controls.py": "cd88b615114ca97c47fb93cf9067941ecd5f3471c170080ce9e886feb425b04b",
+    "scripts/tools/run_cash_allocation.py": "383dcd3fe9c0c5a6d9451094b1d625cf5a40f174ae67e2628fdb18eeb1d682f2",
+    "scripts/tools/summarize_cash_allocation.py": "dd014a6e2cfc36fd8d70eb36d3ca0465f1eaae10f712d227d49ef589647dd0cd",
+    "scripts/tools/run_cash_allocation.gd": "686609dee684f99a6bd9d27bae9ec075ceca2701662f45aa3ba3c241c730fd9d",
+    "scripts/tools/run_simulation.gd": "b71363de1fa87fb44101b00fb1a00a46e7d2db31fb0618ef7cee4b95484e3a3a",
+    "tests/cash_allocation_tests.gd": "b2c5740ea36768608b52bc5425fd16c9509e53c1ea56d722892e6092381cdecd",
+    "tests/run_cash_allocation_tests.gd": "c612eaa12f93341a357302c51c5aa135b3f4048a39d4cd78790a65bc9ee3056c",
+    "tests/test_cash_allocation.py": "0e8298e8a30aa8e9e726a822bd86234f889f336151e1c705b81790707148d040",
+    "tests/run_tests.gd": "044b27937f43f26d4659bbcd8d644379eca2f53adbeba9b274f3ce906dcca7b9"
+  },
+  "development_attempt": {
+    "status": 1,
+    "methods": 7,
+    "failures": 1,
+    "errors": 1,
+    "test_field_errors": [
+      "capital_floor instead of actual distribution_policy.reserve",
+      "spent instead of bread_spending+ale_spending"
+    ],
+    "evidence": "M29_DEVELOPMENT_FIRST.txt",
+    "corrected_before_checkpoint": true,
+    "economic_policy_changed": false,
+    "final_focused": "82 native assertions and7 Python methods pass"
+  },
+  "final_acceptance_passed": true,
+  "smoke_status": "passed; matching reference metadata, no advisory warnings",
+  "artifact_checks": {
+    "capture_payloads": 96,
+    "checks": "CSV totals agree with fully audited native reports; each day has fifteen resident meals/misses and9192 actual coins.",
+    "day_rows": 720,
+    "firm_days": 2880,
+    "firm_rows": 96,
+    "initial_accounts": 480,
+    "matched_contrasts": 36,
+    "resident_rows": 360,
+    "thirty_day_cases": 24,
+    "input_aware_firms_vs_original_resident_firm_day_and_term_rows_verified": 4
+  },
+  "cost_note": "Shared-host correctness verification walls overlap; do not sum them as elapsed work or simulation speed. All M29 longitudinal timing captures were sequential without concurrent verification; full Python and final smoke isolated.",
+  "host": {
+    "godot": "4.6.3.stable.official.7d41c59c4",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "machine": "x86_64",
+    "cpus": 3,
+    "cpu_max": "200000 100000",
+    "memory_max": "8589934592",
+    "rust_sha256": "a7c9f739c84aa83fcbd4f1c9554080d53932d2ba69144e77054615e72bc3c462",
+    "bridge_sha256": "feee66ececa02b22294955e587447a3b52a9eb33503d0d5c19bcf5275f827cc3"
+  },
+  "additional_control_commands_note": "M29_VERIFICATION_COMMANDS.txt preserves the exact standalone M28/R parity program and the cross-table comparison used in the report."
+}

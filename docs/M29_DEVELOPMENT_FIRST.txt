@@ -1,0 +1,51 @@
+Before checkpoint: incorrect test field names, corrected without economic changes. Final focused checks and full acceptance are separate.
+
+SCRIPT ERROR: Invalid access to property or key 'capital_floor' on a base object of type 'Dictionary'.
+          at: run (res://tests/cash_allocation_tests.gd:20)
+          GDScript backtrace (most recent call first):
+              [0] run (res://tests/cash_allocation_tests.gd:20)
+              [1] _init (res://tests/run_cash_allocation_tests.gd:8)
+M29 checks: 22, failures: 0
+
+test_exact_initial_accounts_native_replay_and_no_operating_income (test_cash_allocation.CashTests.test_exact_initial_accounts_native_replay_and_no_operating_income) ... ok
+test_extra_cash_never_becomes_free_food_or_excess_allowance (test_cash_allocation.CashTests.test_extra_cash_never_becomes_free_food_or_excess_allowance) ... ERROR
+test_firm_treasury_retains_realized_income_distribution_rules (test_cash_allocation.CashTests.test_firm_treasury_retains_realized_income_distribution_rules) ... ok
+test_native_creation_and_utility_guards (test_cash_allocation.CashTests.test_native_creation_and_utility_guards) ... FAIL
+test_original_exact_native_ledger_full_report_and_terms (test_cash_allocation.CashTests.test_original_exact_native_ledger_full_report_and_terms) ... ok
+test_read_only_deterministic_fresh_process (test_cash_allocation.CashTests.test_read_only_deterministic_fresh_process) ... ok
+test_rehashed_initial_and_runtime_forgeries_reject (test_cash_allocation.CashTests.test_rehashed_initial_and_runtime_forgeries_reject) ... ok
+
+======================================================================
+ERROR: test_extra_cash_never_becomes_free_food_or_excess_allowance (test_cash_allocation.CashTests.test_extra_cash_never_becomes_free_food_or_excess_allowance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/simulated-town-rpg/tests/test_cash_allocation.py", line 48, in test_extra_cash_never_becomes_free_food_or_excess_allowance
+    for v in data['report']['day_results'][0]['visitors'].values():self.assertLessEqual(v['spent'],10)
+                                                                                        ~^^^^^^^^^
+KeyError: 'spent'
+
+======================================================================
+FAIL: test_native_creation_and_utility_guards (test_cash_allocation.CashTests.test_native_creation_and_utility_guards)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/simulated-town-rpg/tests/test_cash_allocation.py", line 16, in test_native_creation_and_utility_guards
+    self.assertEqual((r.returncode,r.stderr),(0,b''));self.assertIn(b'failures: 0',r.stdout)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: (0, b"SCRIPT ERROR: Invalid access to property[313 chars])\n") != (0, b'')
+
+First differing element 1:
+b"SCRIPT ERROR: Invalid access to property[312 chars]8)\n"
+b''
+
++ (0, b'')
+- (0,
+-  b"SCRIPT ERROR: Invalid access to property or key 'capital_floor' on a base ob"
+-  b"ject of type 'Dictionary'.\n          at: run (res://tests/cash_allocatio"
+-  b'n_tests.gd:20)\n          GDScript backtrace (most recent call first):\n  '
+-  b'            [0] run (res://tests/cash_allocation_tests.gd:20)\n          '
+-  b'    [1] _init (res://tests/run_cash_allocation_tests.gd:8)\n')
+
+----------------------------------------------------------------------
+Ran 7 tests in 10.722s
+
+FAILED (failures=1, errors=1)

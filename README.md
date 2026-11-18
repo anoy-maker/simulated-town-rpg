@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0–M27 preserved; M28 local input forecast experiment for review; GDScript remains the default
+**Status:** M0–M28 preserved; M29 initial cash ownership experiment for review; GDScript remains the default
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -724,3 +724,21 @@ The [frozen protocol](docs/M28_INPUT_FEASIBILITY.md),
 [actual outcomes](docs/M28_RESULTS.md) and [artifact definitions](docs/M28_SCHEMAS.md)
 separate business survival from individual food access. Results are mixed and
 the mechanism is not adopted as a default. Stop after M28 for review; no M29.
+
+## M29: initial cash ownership sensitivity
+
+```sh
+godot --headless --no-header --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_cash_allocation --condition scarce --arm R_input_aware --allocation households_330 30 42 --report-json
+python3 -B scripts/tools/run_cash_allocation.py --checkpoint --output work/m29/checkpoint --traces work/m29/traces
+python3 -B scripts/tools/run_cash_allocation.py --reuse-checkpoint --output work/m29/experiments --traces work/m29/traces
+python3 -B scripts/tools/summarize_cash_allocation.py --input work/m29/experiments --traces work/m29/traces --output work/m29/published
+```
+
+This optional scenario changes only initial coin ownership: `original`,
+`households_330` (eleven non-owners +30 each), or `firms_330` (four firms
++83/+83/+82/+82), with both treatments drawing330 from initial visitor cash.
+Every case retains9192 coins, unchanged B/I policies, contracts, prices, goods,
+visitor budgets and realized-income distribution rules. No later transfer policy
+or default endowment changes. See [protocol](docs/M29_CASH_ALLOCATION_FEASIBILITY.md),
+[actual results](docs/M29_RESULTS.md) and [schemas](docs/M29_SCHEMAS.md).
+Stop after M29 for review; no M30 or adopted economic baseline.
