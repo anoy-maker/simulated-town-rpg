@@ -50,6 +50,9 @@ class EconomicAudit(DemandAudit):
             for firm in OWNERS:
                 self.firm_days[day,firm]=dict(day=day,firm=firm,opening_cash=self.entities[firm]['money'],
                     opening_inventory=copy.deepcopy(self.entities[firm]['inventory']),produced=0,productive=0,standby=0,
+                    opening_cargo=copy.deepcopy(self.cargo[firm]['inventory']),opening_arrears=self.arrears(firm),
+                    active_workers=self.staff(firm),produced_goods=dict.fromkeys(PRODUCT.values(),0),
+                    consumed_inputs=dict.fromkeys(PRODUCT.values(),0),purchased_inputs=dict.fromkeys(PRODUCT.values(),0),sold_goods=dict.fromkeys(PRODUCT.values(),0),
                     accrued_wages=0,paid_wages=0,distributions=0,sales=0,input_spending=0,
                     requested=0,fulfilled=0,unfilled=0,minimum_cash=self.entities[firm]['money'],source_ids=[])
             for cohort in ('resident','visitor'):
@@ -89,7 +92,10 @@ class EconomicAudit(DemandAudit):
                 f=self.firm_days[day,w]
                 f['input_spending' if a=='purchase' else 'paid_wages' if purpose=='wage' else 'distributions']+=amount
                 f['minimum_cash']=min(f['minimum_cash'],now[w]);f['source_ids'].append(e['id'])
-            if b in OWNERS:self.firm_days[day,b]['sales']+=amount;self.firm_days[day,b]['source_ids'].append(e['id'])
+                if a=='purchase':f['purchased_inputs'][d['item']]+=d['quantity']
+            if b in OWNERS:
+                self.firm_days[day,b]['sales']+=amount;self.firm_days[day,b]['source_ids'].append(e['id'])
+                if a=='purchase':self.firm_days[day,b]['sold_goods'][d['item']]+=d['quantity']
             self.last_cash=now
         if a in ('harvest','produce','spatial_deposited','purchase'):
             self.flows.append(dict(day=day,minute=e['minute'],event_id=e['id'],action=a,actor=w,target=b,
@@ -98,6 +104,9 @@ class EconomicAudit(DemandAudit):
         if a in ('harvest','produce'):
             qty=d['amount'] if a=='harvest' else d['outputs'][PRODUCT[w]]
             self.firm_days[day,w]['produced']+=qty
+            f=self.firm_days[day,w];f['produced_goods'][PRODUCT[w]]+=qty;f['source_ids'].append(e['id'])
+            for item,quantity in d.get('inputs',{}).items():f['consumed_inputs'][item]+=quantity
+        if a=='spatial_deposited':self.firm_days[day,b]['source_ids'].append(e['id'])
         if a=='work_shift':self.firm_days[day,b]['productive']+=1
         if a=='contract_attended' and d['kind']=='standby':
             self.firm_days[day,b]['standby']+=1;self.flag(e,'standby_obligation',b,'verified hour earns wage without output')
@@ -167,8 +176,12 @@ class EconomicAudit(DemandAudit):
             assert liabilities==receivables==sum(c['amount']-c['paid'] for c in self.bound['obligations'].values())
             self.claim_totals.append(dict(day=day,event_id=e['id'],payable=liabilities,receivable=receivables))
             for firm in OWNERS:
-                f=self.firm_days[day,firm];f.update(closing_cash=self.entities[firm]['money'],closing_inventory=copy.deepcopy(self.entities[firm]['inventory']),
+                f=self.firm_days[day,firm];f.update(closing_cash=self.entities[firm]['money'],closing_inventory=copy.deepcopy(self.entities[firm]['inventory']),closing_cargo=copy.deepcopy(self.cargo[firm]['inventory']),
                     arrears=d['liabilities'][firm],future_guarantees=sum(10*max(0,t['end_day']-max(day+1,t['start_day'])) for t in self.bound['terms'].values() if t['status']=='active' and t['business']==firm))
+                assert f['closing_cash']==f['opening_cash']+f['sales']-f['input_spending']-f['paid_wages']-f['distributions']
+                assert f['opening_arrears']+f['accrued_wages']-f['paid_wages']==f['arrears']
+                for item in PRODUCT.values():
+                    assert f['opening_inventory'][item]+f['opening_cargo'][item]+f['produced_goods'][item]+f['purchased_inputs'][item]-f['consumed_inputs'][item]-f['sold_goods'][item]==f['closing_inventory'][item]+f['closing_cargo'][item]
                 if firm=='farm' and f['produced']==self.r['initial']['brewery']['supply_cap']:
                     self.flag(e,'natural_resource_cap',firm,'actual harvest reaches daily cap; not a new-job profitability statement')
                 if f['productive']==self.firms[firm]['assets']['daily_slots']:

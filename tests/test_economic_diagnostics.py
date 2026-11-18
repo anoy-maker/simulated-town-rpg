@@ -27,6 +27,10 @@ class EconomicDiagnosticsTests(unittest.TestCase):
         self.assertEqual(first,analyze(d));self.assertEqual(digest(d),before)
         self.assertEqual(first['audit']['money'],9192)
         self.assertEqual(set(first['snapshots']),{'1','3'})
+        for f in first['firm_days']:
+            self.assertEqual(f['opening_arrears']+f['accrued_wages']-f['paid_wages'],f['arrears'])
+            for item in ('wheat','flour','bread','ale'):
+                self.assertEqual(f['opening_inventory'][item]+f['opening_cargo'][item]+f['produced_goods'][item]+f['purchased_inputs'][item]-f['consumed_inputs'][item]-f['sold_goods'][item],f['closing_inventory'][item]+f['closing_cargo'][item])
 
     def test_final_cash_is_not_a_substitute_for_native_events(self):
         with self.assertRaisesRegex(ValueError,'full native events'):analyze(dict(report=self.traces['reference']['report']))

@@ -17,12 +17,14 @@ from run_brewery import digest
 
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--input',type=Path,required=True);p.add_argument('--traces',type=Path,required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args();a.output.mkdir(parents=True,exist_ok=True)
-    for name in ('cases','performance','cash_timelines','cohort_days','legacy-parity'):
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--input',type=Path,required=True);p.add_argument('--traces',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--parity-input',type=Path);a=p.parse_args();a.output.mkdir(parents=True,exist_ok=True)
+    for name in ('cases','performance','cash_timelines','cohort_days'):
         shutil.copy2(a.input/(name+'.csv'),a.output/('M27_'+name.upper().replace('-','_')+'.csv'))
+    parity=a.parity_input or a.input
+    shutil.copy2(parity/'legacy-parity.csv',a.output/'M27_LEGACY_PARITY.csv')
     shutil.copy2(a.input/'conditional-wedges.json',a.output/'M27_CONDITIONAL_WEDGES.json')
-    shutil.copy2(a.input/'verification.json',a.output/'M27_CASE_MANIFEST.json')
-    physical=[];failures=[];firms=[];constraints=[];proof_index=[];bound_count=0
+    write_json(a.output/'M27_CASE_MANIFEST.json',dict(final_reader=json.loads((a.input/'verification.json').read_text()),original_capture_and_parity=json.loads((parity/'verification.json').read_text())))
+    physical=[];failures=[];firms=[];constraints=[];proof_index=[];orders=[];bound_count=0
     for file in sorted((a.input/'analyses').glob('*-30-*.json')):
         diagnostic=json.loads(file.read_text());name=file.stem
         data=json.loads((a.traces/(name+'.json')).read_text());r=data['report']
@@ -66,12 +68,21 @@ def main():
         for g in grouped.values():
             row={k:sorted(v) if isinstance(v,set) else v for k,v in g.items()};row.update(first_minute=min(row['minutes']),last_minute=max(row['minutes']));del row['minutes']
             constraints.append(flatten(dict(**tag,**row)))
-    for name,rows in [('PHYSICAL_WITNESSES',physical),('FIRM_DAYS',firms),('FAILURE_ATTRIBUTIONS',failures),('CONSTRAINTS',constraints),('CERTIFICATE_INDEX',proof_index)]:
+        order_groups={}
+        for event in data['events']:
+            if event['action']!='demand_order_observed' or not event['success']:continue
+            d=event['details'];buyer=d['buyer'] if d['kind']!='retail' else 'visitors' if d['buyer'].startswith('visitor:') else 'residents'
+            q=d['quote'];key=event['day'],event['minute'],d['seller'],buyer,d['item'],d['kind'],q['unit_price'],q['version']
+            g=order_groups.setdefault(key,dict(day=event['day'],minute=event['minute'],seller=d['seller'],buyer_or_cohort=buyer,item=d['item'],kind=d['kind'],unit_price=q['unit_price'],quote_version=q['version'],requests=0,requested=0,filled=0,unfilled=0,paid_coins=0,event_ids=[],request_source_ids=[]))
+            g['requests']+=1;g['requested']+=d['quantity'];g['filled']+=d['filled'];g['unfilled']+=d['unfilled'];g['paid_coins']+=d['filled']*q['unit_price']
+            g['event_ids'].append(event['id']);g['request_source_ids'].extend(d['source_ids'])
+        orders.extend(flatten(dict(**tag,**g)) for g in order_groups.values())
+    for name,rows in [('PHYSICAL_WITNESSES',physical),('FIRM_DAYS',firms),('FAILURE_ATTRIBUTIONS',failures),('CONSTRAINTS',constraints),('CERTIFICATE_INDEX',proof_index),('ORDERS',orders)]:
         write_rows(a.output/('M27_'+name+'.csv'),rows)
     write_json(a.output/'M27_CERTIFICATE_CHECKS.json',dict(all_arm_certificates_rechecked=bound_count,complete_committed_examples=len(proof_index),selection='all L cases, days1/3, both tiers; never selected by outcome',
         example_encoding='Proof financial steps omit exact-zero inventory/cargo cells; declared holders/items define zeros.',
         incentive_compatible='unproven; current policy quantity agreement is a different claim'))
-    print('Rechecked',bound_count,'certificates; published',len(proof_index),'preselected complete L examples',flush=True)
+    print('Rechecked',bound_count,'certificates; published',len(proof_index),'representative complete L examples',flush=True)
 
 
 if __name__=='__main__':main()
