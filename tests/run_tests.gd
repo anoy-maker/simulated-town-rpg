@@ -77,6 +77,7 @@ func _init() -> void:
 	preload("res://tests/labor_market_tests.gd").run(self)
 	preload("res://tests/binding_tests.gd").run(self)
 	preload("res://tests/demand_tests.gd").run(self)
+	preload("res://tests/input_tests.gd").run(self)
 	ProfileTests.run(self)
 	ContinuationTests.run(self)
 	print("Tests: %d checks, %d failures" % [_checks, _failures])

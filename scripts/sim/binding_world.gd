@@ -188,10 +188,11 @@ func vacancy_observation(owner: String,b: String) -> Dictionary:
 		else:retained+=1
 	var remaining: int=mini(o.production.output_stock,maxi(0,o.previous_sales-_sales.get(_day,{}).get(b,0))) if _space.minute<Brew.TRADE[b][1] else 0
 	return {"owner":owner,"business":b,"day":_day,"production":o.production,"demand":o.previous_sales,"remaining_sales":remaining,"retained":retained,"expiring":expiring,"reserved":o.reserved,"capacity":o.capacity,"farm_cap":o.farm_cap,"disabled":o.disabled,"arrears":arrears(b),"mode":renewal_mode}
-func _assessment(b: String) -> Dictionary:return Planning.renewal(vacancy_observation(Brew.OWNERS[b],b))
+func _renewal_plan(o: Dictionary) -> Dictionary:return Planning.renewal(o)
+func _assessment(b: String) -> Dictionary:return _renewal_plan(vacancy_observation(Brew.OWNERS[b],b))
 func advertise(owner: String,b: String) -> bool:
 	if not _at_board(owner) or not _businesses.has(b) or Brew.OWNERS[b]!=owner:return _reject("labor_vacancy_assessed",owner,b,{},"owner_not_at_board")
-	var o: Dictionary=vacancy_observation(owner,b);var p: Dictionary=Planning.renewal(o)
+	var o: Dictionary=vacancy_observation(owner,b);var p: Dictionary=_renewal_plan(o)
 	_record("labor_vacancy_assessed",owner,b,true,{"observation":o,"proposal":p})
 	return post_job(owner,b,"notice:%04d:%s"%[_day,b],10,1,1,3,p.vacancies) if p.vacancies>0 else true
 func _eligible_applicant(w: String,p: Dictionary) -> String:
@@ -206,7 +207,7 @@ func _entry_reason(w: String,p: Dictionary) -> String:
 	if not _notices.has(p.id) or not p.active or _notices[p.id].latest_start!=_day+1:return "expired_or_closed_notice"
 	if p.wage!=10 or p.duration_days!=3 or p.cycle_days!=1 or p.guaranteed_shifts!=1 or not p.required_skills.is_empty():return "changed_fixed_terms"
 	if _employment.get(w,{}).get("active",false) and _employment[w].end_day>_day+1:return "binding_term_active"
-	var o: Dictionary=vacancy_observation(p.employer,p.business);var plan: Dictionary=Planning.renewal(o)
+	var o: Dictionary=vacancy_observation(p.employer,p.business);var plan: Dictionary=_renewal_plan(o)
 	return "changed_capacity_or_funding" if o.retained+o.reserved>o.capacity or plan.headcount<o.retained+o.reserved else ""
 func request_resignation(w: String,b: String) -> bool:
 	if _pending_hires.has(w) and _employment.get(w,{}).get("business","")==b and _employment[w].end_day==_day+1:return true # Natural expiry; no resignation is created.
