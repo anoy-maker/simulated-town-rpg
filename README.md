@@ -51,6 +51,7 @@ This is a working direction, not a commitment to a particular Godot minor releas
 - [Design principles and feature boundaries](docs/DESIGN.md)
 - [Technical architecture and simulation invariants](docs/ARCHITECTURE.md)
 - [Incremental roadmap](docs/ROADMAP.md)
+- [Research index — engineering experiments, economic research and R-series reviews](docs/RESEARCH_INDEX.md)
 - [Codex development instructions](AGENTS.md)
 - [First Codex implementation task](prompts/FIRST_CODEX_TASK.md)
 
