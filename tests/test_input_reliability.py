@@ -56,6 +56,7 @@ class InputTests(unittest.TestCase):
                 for c in e['details']['proposal']['candidates']:
                     self.assertEqual(c,BindingAudit.forecast(None,o,c['headcount']))
                     self.assertEqual(c['guaranteed_wages'],30*c['headcount'])
+                    self.assertEqual(projection(o,c['headcount'],True),projection(o,c['headcount'],False))
 
     def test_native_filled_rationed_and_unknown_orders_have_distinct_provenance(self):
         for data in self.fixtures.values():self.assertEqual(analyze(data)['audit']['money'],9192)

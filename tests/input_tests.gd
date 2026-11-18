@@ -42,7 +42,7 @@ static func run(t: SceneTree) -> void:
 		var o: Dictionary=r.world.vacancy_observation(r.Brew.OWNERS[b],b)
 		for n in range(o.capacity+1):
 			var old: Dictionary=Bound.forecast(o,n);var same: Dictionary=Forecast.project(o,n,true)
-			t._check(old==same.summary,"no history every full-term candidate identical "+b+str(n))
+			t._check(old==same.summary and same==Forecast.project(o,n,false),"no history every candidate and three-day cash/wage trajectory identical "+b+str(n))
 		if b=="farm":continue
 		o.input_reliability={"numerator":1,"denominator":12};o.production.input_stock=2*o.production.rule.take
 		var poor: Dictionary=Forecast.project(o,2,true)
