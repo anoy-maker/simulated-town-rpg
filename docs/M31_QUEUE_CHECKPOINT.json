@@ -1,0 +1,165 @@
+{
+  "base": "f142f7b665206ef490d5da046510d672f9f5f466",
+  "command_seconds": 61.234113584999704,
+  "commands": [
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_planning_jobs.py"
+      ],
+      "log": "focused.log",
+      "name": "focused",
+      "reported_checks": [
+        4
+      ],
+      "reported_failures": [],
+      "seconds": 21.13391561499975,
+      "status": 0
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "scripts/tools/performance_smoke.py",
+        "--output",
+        "/workspace/work/m31/final-queue-checkpoint/queue-smoke.json"
+      ],
+      "log": "queue-smoke.log",
+      "name": "queue-smoke",
+      "reported_checks": [],
+      "reported_failures": [],
+      "seconds": 3.026385880000362,
+      "status": 0
+    }
+  ],
+  "deferred": [
+    "complete Godot/Python suites",
+    "169 historical byte pins",
+    "88 M23\u2013M25 pinned pairs",
+    "36 M26/M27 controls, 48 proofs and 16 certificates",
+    "76 M28/M29 controls",
+    "full 28-case M30 matrix and 14 economic parities",
+    "12 original C/D independent audits"
+  ],
+  "dependencies_sha256": "f7b994f75f9a25227b25401fafd8cd687cd8a473e9aeaa0a599a0a7aaab96588",
+  "full_acceptance": false,
+  "full_commands": [],
+  "level": "checkpoint",
+  "queue_checkpoint": {
+    "captures": [
+      {
+        "audit_seconds": 1.0063376309999512,
+        "command_seconds": 0.9384737529999256,
+        "days": 1,
+        "ledger_sha256": "6b9ff7bdea00c3872a8ef3c9aefa789ae8b3bbc882dde3dfc849fd05eeaafbaa",
+        "mode": "sync",
+        "native_run_seconds": 0.29117,
+        "stage": "C",
+        "summary_sha256": "93006cc9d697fd9455527fb604e6eeebe54eefc3c43925a93b119bd0cdd7f966"
+      },
+      {
+        "audit_seconds": 0.9507009479998487,
+        "command_seconds": 1.1239647659999719,
+        "days": 1,
+        "ledger_sha256": "6b9ff7bdea00c3872a8ef3c9aefa789ae8b3bbc882dde3dfc849fd05eeaafbaa",
+        "mode": "scheduled",
+        "native_run_seconds": 0.346393,
+        "stage": "C",
+        "summary_sha256": "93006cc9d697fd9455527fb604e6eeebe54eefc3c43925a93b119bd0cdd7f966"
+      },
+      {
+        "audit_seconds": 3.4134420229997886,
+        "command_seconds": 1.9488424559999658,
+        "days": 3,
+        "ledger_sha256": "19d28a3f16f7f34eb993678bdf6f5e7ab45d817e93b2f46fa6b66c88d1e569f4",
+        "mode": "sync",
+        "native_run_seconds": 0.999089,
+        "stage": "C",
+        "summary_sha256": "4694b026a9728a6241061e1ffcdfd5dade9b4c256f32bbfdccaabf32bac4faa6"
+      },
+      {
+        "audit_seconds": 3.358521193999877,
+        "command_seconds": 2.045061528000133,
+        "days": 3,
+        "ledger_sha256": "19d28a3f16f7f34eb993678bdf6f5e7ab45d817e93b2f46fa6b66c88d1e569f4",
+        "mode": "scheduled",
+        "native_run_seconds": 1.112379,
+        "stage": "C",
+        "summary_sha256": "4694b026a9728a6241061e1ffcdfd5dade9b4c256f32bbfdccaabf32bac4faa6"
+      },
+      {
+        "audit_seconds": 1.6727151320001212,
+        "command_seconds": 1.021265191999646,
+        "days": 1,
+        "ledger_sha256": "6b9ff7bdea00c3872a8ef3c9aefa789ae8b3bbc882dde3dfc849fd05eeaafbaa",
+        "mode": "sync",
+        "native_run_seconds": 0.298741,
+        "stage": "D",
+        "summary_sha256": "572964383ed21e7ff013ba0192cd9db8dd42cfd5e0a584096bb8934c8e2be784"
+      },
+      {
+        "audit_seconds": 1.5478479049997986,
+        "command_seconds": 1.1157166719999623,
+        "days": 1,
+        "ledger_sha256": "6b9ff7bdea00c3872a8ef3c9aefa789ae8b3bbc882dde3dfc849fd05eeaafbaa",
+        "mode": "scheduled",
+        "native_run_seconds": 0.366694,
+        "stage": "D",
+        "summary_sha256": "572964383ed21e7ff013ba0192cd9db8dd42cfd5e0a584096bb8934c8e2be784"
+      },
+      {
+        "audit_seconds": 6.006410993999907,
+        "command_seconds": 1.9515042220000396,
+        "days": 3,
+        "ledger_sha256": "19d28a3f16f7f34eb993678bdf6f5e7ab45d817e93b2f46fa6b66c88d1e569f4",
+        "mode": "sync",
+        "native_run_seconds": 0.987313,
+        "stage": "D",
+        "summary_sha256": "7cd7357cf7894c38f7c18c6446c74c7198252042cc0718f5fe588f63d7ac72ef"
+      },
+      {
+        "audit_seconds": 5.763029423999797,
+        "command_seconds": 2.243984117999844,
+        "days": 3,
+        "ledger_sha256": "19d28a3f16f7f34eb993678bdf6f5e7ab45d817e93b2f46fa6b66c88d1e569f4",
+        "mode": "scheduled",
+        "native_run_seconds": 1.134949,
+        "stage": "D",
+        "summary_sha256": "7cd7357cf7894c38f7c18c6446c74c7198252042cc0718f5fe588f63d7ac72ef"
+      }
+    ],
+    "deterministic_cases": 4,
+    "independent_audits": 8,
+    "raw_reuse": false
+  },
+  "queue_smoke": {
+    "cases": {
+      "C1": {
+        "canonical_sha256": "93006cc9d697fd9455527fb604e6eeebe54eefc3c43925a93b119bd0cdd7f966",
+        "peak_rss_kib": 85972,
+        "run_seconds": 0.078096
+      },
+      "D1": {
+        "canonical_sha256": "572964383ed21e7ff013ba0192cd9db8dd42cfd5e0a584096bb8934c8e2be784",
+        "peak_rss_kib": 85844,
+        "run_seconds": 0.086241
+      },
+      "queue10": {
+        "peak_rss_kib": 71012,
+        "proposal_digest": "c834cc0509c6784b9cdf7c93de29a0d7d2d5b6158601fff8bca4d8565c6fe6ba",
+        "release_digest": "5eb58dc71956864da7ae1f7a3e81d15e2ed1ce91653c3eb160317744df52d629",
+        "run_seconds": 0.783172
+      }
+    },
+    "warnings": []
+  },
+  "status": "passed",
+  "subsystem": "queue"
+}

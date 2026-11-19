@@ -1,0 +1,204 @@
+{
+  "base": "f142f7b665206ef490d5da046510d672f9f5f466",
+  "command_seconds": 0.00011201000006622053,
+  "commands": [],
+  "deferred": [],
+  "full_acceptance": false,
+  "full_commands": [
+    {
+      "command": [
+        "godot",
+        "--headless",
+        "--no-header",
+        "--path",
+        ".",
+        "--script",
+        "res://tests/run_tests.gd"
+      ],
+      "name": "full-godot"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_*.py"
+      ],
+      "name": "full-python"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "scripts/tools/check_historical.py",
+        "--output",
+        "/workspace/work/m31/published-full-plan/historical.csv"
+      ],
+      "name": "historical"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "scripts/tools/run_labor_market.py",
+        "--legacy-controls",
+        "--output",
+        "/workspace/work/m31/published-full-plan/m23"
+      ],
+      "name": "m23"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "scripts/tools/run_labor_market.py",
+        "--verify-pins",
+        "docs/M24_RUNS.csv",
+        "--output",
+        "/workspace/work/m31/published-full-plan/m24"
+      ],
+      "name": "m24"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "scripts/tools/run_labor_market.py",
+        "--fixtures",
+        "--verify-pins",
+        "docs/M24_VACANCIES.csv",
+        "--output",
+        "/workspace/work/m31/published-full-plan/m24-fixtures"
+      ],
+      "name": "m24-fixtures"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "scripts/tools/run_binding.py",
+        "--verify-pins",
+        "docs/M25_RUNS.csv",
+        "--output",
+        "/workspace/work/m31/published-full-plan/m25"
+      ],
+      "name": "m25"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "scripts/tools/run_binding.py",
+        "--fixtures",
+        "--verify-pins",
+        "docs/M25_FIXTURES.csv",
+        "--output",
+        "/workspace/work/m31/published-full-plan/m25-fixtures"
+      ],
+      "name": "m25-fixtures"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "scripts/tools/check_binding_lifecycle.py",
+        "--output",
+        "/workspace/work/m31/published-full-plan/m25-lifecycle"
+      ],
+      "name": "m25-lifecycle"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "scripts/tools/check_demand_fixtures.py",
+        "--output",
+        "/workspace/work/m31/published-full-plan/m26-fixtures"
+      ],
+      "name": "m26-fixtures"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "scripts/tools/check_diagnostic_controls.py",
+        "--output",
+        "/workspace/work/m31/published-full-plan/m26-extra"
+      ],
+      "name": "m26-extra"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "scripts/tools/check_input_controls.py",
+        "--output",
+        "/workspace/work/m31/published-full-plan/m26-m27"
+      ],
+      "name": "m26-m27"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "scripts/tools/check_wage_controls.py",
+        "--output",
+        "/workspace/work/m31/published-full-plan/m28-m29"
+      ],
+      "name": "m28-m29"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "scripts/tools/check_diagnostic_controls.py",
+        "--cd",
+        "--output",
+        "/workspace/work/m31/published-full-plan/cd"
+      ],
+      "name": "cd-capture"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "scripts/tools/measure_planning_jobs.py",
+        "--phase",
+        "audit",
+        "--output",
+        "/workspace/work/m31/published-full-plan/cd"
+      ],
+      "name": "cd-independent-audits"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "scripts/tools/run_wages.py",
+        "--output",
+        "/workspace/work/m31/published-full-plan/m30",
+        "--traces",
+        "/workspace/work/m31/published-full-plan/m30-traces"
+      ],
+      "name": "m30-matrix"
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "scripts/tools/performance_smoke.py",
+        "--output",
+        "/workspace/work/m31/published-full-plan/smoke.json"
+      ],
+      "name": "performance-smoke"
+    }
+  ],
+  "level": "full",
+  "status": "planned",
+  "subsystem": null
+}

@@ -51,7 +51,9 @@ checkpoint uses the full focused Python module plus1/3-day controls. Wages and
 inputs compare both arms; contracts compare both original modes. Default short
 condition scarce, seed42, original funds. These are control probes, not newly
 chosen economic experiments. Queue profile uses existing Rust C/D smoke and
-planning-job tests without raw reuse. Full acceptance retains all old coverage.
+planning-job tests without raw reuse; final review adds original independent
+C/D1/3 sync/scheduled auditing at checkpoint (the first queue timing lacked this
+coverage and is retained as superseded). Full acceptance retains all old coverage.
 
 Measurement fixed before comparisons: run the existing wage Python group once
 and the existing16-case short driver once; do NOT run the full M30 matrix.

@@ -433,3 +433,20 @@ prices, viable autonomous settlement policy or structural demand identification.
 - No price/skill reform, wage floor, machinery, new population, rescue or adoption.
 
 **Stop after M30 for review. Do not begin M31.**
+
+
+## M31: development and verification workflow
+
+**Status:** Tooling delivered for review; [results](M31_RESULTS.md).
+Comprehensive M31 acceptance is deliberately pending under its tooling-only scope.
+
+- Explicit development/checkpoint/full commands reuse existing tests, captures,
+  complete economic comparisons and independent auditors.
+- Conservative immutable raw short-probe reuse; uncertain dependencies recapture,
+  every audit reruns, no golden or correctness assertion changes.
+- Measured paired cold/warm feedback, real negative witnesses, complete full-plan
+  preservation and a proposed small future CI pilot with explicit cost limits.
+- No economic, state, scheduling, native-kernel or gameplay changes; no adopted
+  worker-bidding baseline and no CI migration.
+
+**Stop after M31 for review.**

@@ -1,6 +1,6 @@
 # Simulated Town RPG
 
-**Status:** M0–M29 preserved; M30 negotiated-wage experiment for review; GDScript remains the default
+**Status:** M0–M30 preserved; M31 developer workflow for review; M30 bidding remains experimental; GDScript remains the default
 
 **Working title:** Simulated Town RPG (subject to change)
 
@@ -769,3 +769,26 @@ python3 -B scripts/tools/summarize_wages.py --input work/m30/experiments --trace
 Use a common parent directory for checkpoint and experiment outputs. The matrix
 has seed42, core horizons1/3/30 and the declared two-condition household-cash
 sensitivity at30; it is not a365-day stability test. Stop after M30 for review.
+
+## M31: faster verification during development
+
+Run explicit focused, checkpoint and full levels from the repository root:
+
+```sh
+# Choose wages, inputs, contracts, queue or workflow; use a fresh output folder.
+python3 -B scripts/tools/verify_workflow.py development --subsystem wages --output work/dev-01 --cache-dir work/verified-traces
+python3 -B scripts/tools/verify_workflow.py checkpoint --subsystem wages --output work/check-01 --cache-dir work/verified-traces
+
+# Inspect full coverage without running the expensive certification.
+python3 -B scripts/tools/verify_workflow.py full --plan --output work/full-plan-01
+# Execute it only when full acceptance is intended:
+python3 -B scripts/tools/verify_workflow.py full --output work/full-01
+```
+
+Cached raw probes require exact dependency/runtime/input/output evidence; original
+independent auditors run again on every hit. Changed or uncertain simulation/capture
+sources force fresh execution. Fast passes defer named full checks and cannot
+certify the whole milestone. See [commands and policy](docs/PERFORMANCE.md),
+[actual timings and limitations](docs/M31_RESULTS.md), and
+[verification evidence](docs/M31_VERIFICATION.json). M31 full acceptance is
+explicitly pending; M30's economic rules and experimental status are unchanged.

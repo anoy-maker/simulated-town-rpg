@@ -1,0 +1,21 @@
+test_cache_reuses_two_distinct_captures_but_never_audit_conclusions (test_verification_workflow.WorkflowTests.test_cache_reuses_two_distinct_captures_but_never_audit_conclusions) ... ok
+test_failed_stage_cannot_certify_full_acceptance (test_verification_workflow.WorkflowTests.test_failed_stage_cannot_certify_full_acceptance) ... ok
+test_full_pin_comparison_checks_complete_case_set_and_duplicates (test_verification_workflow.WorkflowTests.test_full_pin_comparison_checks_complete_case_set_and_duplicates) ... ok
+test_full_plan_keeps_expensive_controls_and_has_no_reuse_shortcut (test_verification_workflow.WorkflowTests.test_full_plan_keeps_expensive_controls_and_has_no_reuse_shortcut) ... ok
+test_json_counters_report_counts_and_cannot_hide_failure_behind_zero_exit (test_verification_workflow.WorkflowTests.test_json_counters_report_counts_and_cannot_hide_failure_behind_zero_exit) ... ok
+test_missing_or_corrupt_receipt_recaptures_explicitly (test_verification_workflow.WorkflowTests.test_missing_or_corrupt_receipt_recaptures_explicitly) ... ok
+test_optimized_python_cannot_disable_independent_assertions (test_verification_workflow.WorkflowTests.test_optimized_python_cannot_disable_independent_assertions) ... ok
+test_original_auditor_rejects_a_rehashed_real_money_forgery (test_verification_workflow.WorkflowTests.test_original_auditor_rejects_a_rehashed_real_money_forgery) ... ok
+test_queue_checkpoint_audits_every_capture_and_detects_nonaggregate_drift (test_verification_workflow.WorkflowTests.test_queue_checkpoint_audits_every_capture_and_detects_nonaggregate_drift) ... ok
+test_real_subprocess_failure_is_reported_and_nonzero (test_verification_workflow.WorkflowTests.test_real_subprocess_failure_is_reported_and_nonzero) ... ok
+test_rehashed_cache_cannot_bypass_reauditing (test_verification_workflow.WorkflowTests.test_rehashed_cache_cannot_bypass_reauditing) ... ok
+test_source_engine_build_inputs_and_expectations_invalidate (test_verification_workflow.WorkflowTests.test_source_engine_build_inputs_and_expectations_invalidate) ... ok
+test_uncertain_modified_source_is_never_reused (test_verification_workflow.WorkflowTests.test_uncertain_modified_source_is_never_reused) ... ok
+test_uncertain_symlink_or_runtime_dependency_fails_closed (test_verification_workflow.WorkflowTests.test_uncertain_symlink_or_runtime_dependency_fails_closed) ... ok
+test_untracked_new_dependencies_and_deletion_change_closure (test_verification_workflow.WorkflowTests.test_untracked_new_dependencies_and_deletion_change_closure) ... ok
+test_wrong_seed_or_missing_expected_case_is_not_a_cache_hit (test_verification_workflow.WorkflowTests.test_wrong_seed_or_missing_expected_case_is_not_a_cache_hit) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 1.370s
+
+OK
