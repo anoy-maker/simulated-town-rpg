@@ -101,6 +101,15 @@ class WorkflowTests(unittest.TestCase):
             flow.run_command('failing',[sys.executable,'-c','raise SystemExit(7)'],Path(self.temp.name))
         self.assertEqual(error.exception.args[0]['status'],7)
 
+    def test_json_counters_report_counts_and_cannot_hide_failure_behind_zero_exit(self):
+        output=Path(self.temp.name)
+        row=flow.run_command('json-pass',[sys.executable,'-c','print(\'{"checks":3,"failures":0}\')'],output)
+        self.assertEqual(row['reported_checks'],[3]);self.assertEqual(row['reported_failures'],[0])
+        with self.assertRaises(RuntimeError) as error:
+            flow.run_command('json-fail',[sys.executable,'-c','print(\'{"checks":3,"failures":1}\')'],output)
+        self.assertEqual(error.exception.args[0]['status'],0)
+        self.assertEqual(error.exception.args[0]['reported_failures'],[1])
+
     def test_failed_stage_cannot_certify_full_acceptance(self):
         output=Path(self.temp.name)/'output';row=dict(status=9,name='focused')
         args=['verify_workflow.py','development','--subsystem','wages','--output',str(output)]

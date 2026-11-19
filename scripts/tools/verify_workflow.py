@@ -267,9 +267,18 @@ def run_command(name, command, output):
         result = subprocess.run(command, cwd=ROOT, env=godot_environment(), stdout=f, stderr=subprocess.STDOUT)
     text = log.read_text()
     counts = re.findall(r'(?:Ran (\d+) tests|checks: (\d+)|Tests: (\d+) checks)', text)
+    printed=[int(next(v for v in c if v)) for c in counts];failures=[]
+    for line in text.splitlines():
+        if not line.startswith('{'):continue
+        try:value=json.loads(line)
+        except ValueError:continue
+        if isinstance(value,dict) and 'checks' in value and 'failures' in value:
+            if any(type(value[k]) is not int or value[k]<0 for k in ('checks','failures')):
+                raise RuntimeError('Malformed native test counters')
+            printed.append(value['checks']);failures.append(value['failures'])
     row = dict(name=name, command=command, seconds=time.perf_counter()-stamp, status=result.returncode,
-               reported_checks=[int(next(v for v in c if v)) for c in counts], log=log.name)
-    if result.returncode or re.search(r'OK \(skipped=|SCRIPT ERROR:|^FAIL:', text, re.M):
+               reported_checks=printed, reported_failures=failures, log=log.name)
+    if result.returncode or any(failures) or re.search(r'OK \(skipped=|SCRIPT ERROR:|^FAIL:', text, re.M):
         raise RuntimeError(row)
     return row
 
