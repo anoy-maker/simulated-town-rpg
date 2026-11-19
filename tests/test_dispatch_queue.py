@@ -1,7 +1,7 @@
-import json,subprocess,sys,unittest
+import json,subprocess,sys,tempfile,unittest
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts/tools'))
-from planning_load_tools import capture,quantiles
+from planning_load_tools import _optional_cgroup_limit,capture,quantiles
 from profile_simulation import ROOT,godot_environment
 from performance_smoke import regression_warnings
 class GuardrailTests(unittest.TestCase):
@@ -12,6 +12,18 @@ class GuardrailTests(unittest.TestCase):
         comparable,warnings=regression_warnings(worse,base)
         self.assertTrue(comparable);self.assertEqual(len(warnings),3)
         worse['host']=dict(host,cpu_max='different');self.assertFalse(regression_warnings(worse,base)[0])
+    def test_optional_cgroup_limits_are_not_made_up(self):
+        with tempfile.TemporaryDirectory() as temp:
+            path=Path(temp)/'cpu.max'
+            self.assertEqual(_optional_cgroup_limit(path),'unavailable')
+            path.write_text('200000 100000\n')
+            self.assertEqual(_optional_cgroup_limit(path),'200000 100000')
+            path.write_text('\n')
+            self.assertEqual(_optional_cgroup_limit(path),'unavailable')
+        old=dict(host=dict(godot='4.6',machine='x86',cpu_max='unavailable',rust_sha256='same'),cases={})
+        comparable,warnings=regression_warnings(old,old)
+        self.assertFalse(comparable)
+        self.assertTrue(any('informational' in warning for warning in warnings))
     def test_sample_size_quantiles(self):
         self.assertIsNone(quantiles([1,2,3])['p95']);self.assertIsNone(quantiles(list(range(20)))['p99'])
         self.assertEqual(quantiles(list(range(100)))['p99'],98)
