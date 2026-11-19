@@ -1,0 +1,111 @@
+{
+	"cases": [
+		{
+			"case": "C-1",
+			"day": 1,
+			"input_hash": "706977ddd1e9c3d2dcfee73f0ba05bd66f255b0c5df4aa4607ffcdfc44e501c7",
+			"proposal_bytes": 16460,
+			"proposal_hash": "fd1140e3f7a0a1ea9b3a54dcad42363170717ea237ce94b1063ebdb4f21f0c6b",
+			"request_bytes": 1564,
+			"request_hash": "accb95ce67493c98e29495a3103aecc4f581db80dd070d80a6f670e00b8feca4",
+			"selected_price": 5,
+			"source_ledger_sha256": "e114b7fdc3415be342c6a298bb09b98f950250bb62143f1535f9af766fc2735d",
+			"source_report_sha256": "e4d15eb097eeaf1f31aa8b9b642dc29e9e1771989d0326724c007d0c1fce6711",
+			"stage": "C"
+		},
+		{
+			"case": "C-3",
+			"day": 3,
+			"input_hash": "e4abe874e7e1ef1d1aa98e889acdae383d371171af831357e4d9e6abcf5300ac",
+			"proposal_bytes": 21852,
+			"proposal_hash": "a892fe743f411b7f4101bcef819181c4b4f5acd6312f564c9760bfc7571ebcd1",
+			"request_bytes": 1580,
+			"request_hash": "ca0919fd7ace5b769da61949afa1ad081a23117a20becaadbbfa84c1d3aa6a58",
+			"selected_price": 7,
+			"source_ledger_sha256": "e114b7fdc3415be342c6a298bb09b98f950250bb62143f1535f9af766fc2735d",
+			"source_report_sha256": "e4d15eb097eeaf1f31aa8b9b642dc29e9e1771989d0326724c007d0c1fce6711",
+			"stage": "C"
+		},
+		{
+			"case": "C-15",
+			"day": 15,
+			"input_hash": "1efc3d1fbc2d7bbab17e018cc05104e99607e04a22d2fe7982116c8063ac8e3b",
+			"proposal_bytes": 22140,
+			"proposal_hash": "95fc6ff238bf83f1b60809f7f05fc34acd64e5c05aa97110c17309fee160088d",
+			"request_bytes": 1588,
+			"request_hash": "2bbdeeef2941d9880884287652baf39b01a21c0346f353647a7480cd4bd849c0",
+			"selected_price": 6,
+			"source_ledger_sha256": "e114b7fdc3415be342c6a298bb09b98f950250bb62143f1535f9af766fc2735d",
+			"source_report_sha256": "e4d15eb097eeaf1f31aa8b9b642dc29e9e1771989d0326724c007d0c1fce6711",
+			"stage": "C"
+		},
+		{
+			"case": "C-30",
+			"day": 30,
+			"input_hash": "d4ff5daf1b5e5617800f190334590fcfaf14612c3f318a9a6898dabd71bb5a97",
+			"proposal_bytes": 22140,
+			"proposal_hash": "afb8df647ac31ea11c7ad7792ab0fdd6188f5dcd53537e24d8c4d7d1f382c7c3",
+			"request_bytes": 1588,
+			"request_hash": "3645e398ca6f9e44d2bab95c3063001dc63815980be2877d9e4b48a7c8a0ed27",
+			"selected_price": 6,
+			"source_ledger_sha256": "e114b7fdc3415be342c6a298bb09b98f950250bb62143f1535f9af766fc2735d",
+			"source_report_sha256": "e4d15eb097eeaf1f31aa8b9b642dc29e9e1771989d0326724c007d0c1fce6711",
+			"stage": "C"
+		},
+		{
+			"case": "D-1",
+			"day": 1,
+			"input_hash": "bc769cda4d650365a1f92f275583f80d2d7ac4f5a27edbbc01cae42b75f841e6",
+			"proposal_bytes": 16464,
+			"proposal_hash": "06edff738edb1f167fbbe666d5354ec9de98d5dc4def45ad8f1c090ede7c79fc",
+			"request_bytes": 1564,
+			"request_hash": "2aa6a3687592cd7f2a97ed08b5ccc382ca14b011031bf553db713729f213360a",
+			"selected_price": 5,
+			"source_ledger_sha256": "0c954776afb75834c7ca3900fad7e0117848767e03a55f0213380fb96317b3f7",
+			"source_report_sha256": "0ee67b3939cf202bfa6a9f3fd276beca814b9bdf8652f36b6278b730249d068f",
+			"stage": "D"
+		},
+		{
+			"case": "D-3",
+			"day": 3,
+			"input_hash": "7378a6e856cec4cd0052834f7f339ae4b71b38088374fa540e54c9ae01975618",
+			"proposal_bytes": 21844,
+			"proposal_hash": "4f51d2fcae57c1451d5f9e35ba75b9cbd05c7886c318ae7ef43d043476990f16",
+			"request_bytes": 1580,
+			"request_hash": "1b3147b4334cab60a25ae7c83ed01c81f65f4d74e480f63b0f614f54d7d7b655",
+			"selected_price": 7,
+			"source_ledger_sha256": "0c954776afb75834c7ca3900fad7e0117848767e03a55f0213380fb96317b3f7",
+			"source_report_sha256": "0ee67b3939cf202bfa6a9f3fd276beca814b9bdf8652f36b6278b730249d068f",
+			"stage": "D"
+		},
+		{
+			"case": "D-15",
+			"day": 15,
+			"input_hash": "e858729e21d1aea46a2b725b56228c2154a67ddfc7d6210c8a21898ac32a897a",
+			"proposal_bytes": 22136,
+			"proposal_hash": "f689f9560bf7ce595fe312fa825b8faaa585a95e34ecf0d56f161bfd353b6734",
+			"request_bytes": 1588,
+			"request_hash": "0167e388063fe3e2b3b947cb7020b03ccedfb96ebc6f76b45bdd213af5506b90",
+			"selected_price": 7,
+			"source_ledger_sha256": "0c954776afb75834c7ca3900fad7e0117848767e03a55f0213380fb96317b3f7",
+			"source_report_sha256": "0ee67b3939cf202bfa6a9f3fd276beca814b9bdf8652f36b6278b730249d068f",
+			"stage": "D"
+		},
+		{
+			"case": "D-30",
+			"day": 30,
+			"input_hash": "8cf121cd8a8f4df120fac74e7c9b78e2dd7159c7b3a2d6ba55b30fafd2721fe5",
+			"proposal_bytes": 22132,
+			"proposal_hash": "fd7ba3be14341277bafa28dd385c3740dc9d1e99436197385c79b4de804aee0b",
+			"request_bytes": 1588,
+			"request_hash": "ee3fb8fde4d6cac7515e42b18c24e294c89dd9fd5131d83330ef606f2d36b632",
+			"selected_price": 6,
+			"source_ledger_sha256": "0c954776afb75834c7ca3900fad7e0117848767e03a55f0213380fb96317b3f7",
+			"source_report_sha256": "0ee67b3939cf202bfa6a9f3fd276beca814b9bdf8652f36b6278b730249d068f",
+			"stage": "D"
+		}
+	],
+	"godot": "4.6.3-stable (official)",
+	"source": "M21 unchanged synchronous Rust runner; seed42; source full hashes verified",
+	"version": 1
+}

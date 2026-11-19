@@ -1,0 +1,8 @@
+{
+  "python": "3.12.14",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "visible_cpus": 3,
+  "godot": "4.6.3.stable.official.7d41c59c4",
+  "cpu_quota": "200000 100000",
+  "memory_limit": "8589934592"
+}

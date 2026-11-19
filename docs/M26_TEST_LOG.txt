@@ -1,0 +1,47 @@
+Complete Godot suite
+M0–M16 regression checks: 2932
+M17 control days=1 meals=12 visitors=6 shifts=9 money=9192 steps=220
+M17 control days=3 meals=36 visitors=18 shifts=27 money=9192 steps=660
+M17 control days=30 meals=360 visitors=180 shifts=270 money=9192 steps=6600
+Tests: 3272 checks, 0 failures
+
+Complete Python suite
+...............................................................................................................
+----------------------------------------------------------------------
+Ran 111 tests in 204.079s
+
+OK
+
+Focused Python suite
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 15.198s
+
+OK
+
+Historical hash sweep (last line)
+UNCHANGED 169 / 169 M18 D-30 0ee67b3939cf202bfa6a9f3fd276beca814b9bdf8652f36b6278b730249d068f
+
+Original C/D independent audits
+audited C-1-sync-none
+audited C-1-scheduled-none
+audited C-3-sync-none
+audited C-3-scheduled-none
+audited C-30-sync-none
+audited C-30-scheduled-none
+audited D-1-sync-none
+audited D-1-scheduled-none
+audited D-3-sync-none
+audited D-3-scheduled-none
+audited D-30-sync-none
+audited D-30-scheduled-none
+
+Seller fixture replay/audits
+poor_visitors full native economic/evidence audit and process replay PASS
+cashless_buyers full native economic/evidence audit and process replay PASS
+remote_farm full native economic/evidence audit and process replay PASS
+duplicate full native economic/evidence audit and process replay PASS
+
+Public CLI canonical report/ledger PASS
+M22 smoke: comparable=true; warnings=[]
+All final verification phase exit codes: 0

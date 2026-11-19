@@ -1,0 +1,8 @@
+.godot/
+work/
+__pycache__/
+native/m20/bin/
+native/m20/rust/target/
+native/m20/.sconsign.dblite
+native/m20/**/*.os
+native/m20/*.gdextension

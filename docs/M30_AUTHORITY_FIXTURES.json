@@ -1,0 +1,187 @@
+{
+  "fixtures": [
+    {
+      "arrears": 0,
+      "cash_allocation": "original",
+      "claim_survives_expiry": false,
+      "currency": 9192,
+      "days": 4,
+      "fixture": "manual_mixed",
+      "independent_full_audit": true,
+      "kira_late_claims": [
+        {
+          "amount": 5,
+          "attendance_event_id": 4935,
+          "breach_event_id": null,
+          "business": "farm",
+          "day": 4,
+          "due_event_id": 4732,
+          "id": "0004:farm:kira",
+          "minute": 600,
+          "paid": 5,
+          "payments": [
+            {
+              "amount": 5,
+              "day": 4,
+              "minute": 600,
+              "payment_event_id": 4941
+            }
+          ],
+          "term": "term:0004:farm:kira",
+          "worker": "kira"
+        }
+      ],
+      "ledger_sha256": "b0ed2e84f33d645be31ee92a03cdcd00392b75b4f4c44d49f76858f92b021881",
+      "new_terms": [
+        {
+          "end": 7,
+          "start": 4,
+          "wage": 10,
+          "worker": "dain"
+        },
+        {
+          "end": 7,
+          "start": 4,
+          "wage": 8,
+          "worker": "finn"
+        },
+        {
+          "end": 7,
+          "start": 4,
+          "wage": 5,
+          "worker": "kira"
+        }
+      ],
+      "summary_sha256": "d60eb0c5bbf0ac99dd0daed1a2a4babcecb20682431bf6e046402d6ddb9b3eb3"
+    },
+    {
+      "arrears": 3,
+      "cash_allocation": "technical_partial",
+      "claim_survives_expiry": true,
+      "currency": 9192,
+      "days": 6,
+      "fixture": "manual_partial",
+      "independent_full_audit": true,
+      "kira_late_claims": [
+        {
+          "amount": 5,
+          "attendance_event_id": 4921,
+          "breach_event_id": null,
+          "business": "farm",
+          "day": 4,
+          "due_event_id": 4718,
+          "id": "0004:farm:kira",
+          "minute": 600,
+          "paid": 5,
+          "payments": [
+            {
+              "amount": 5,
+              "day": 4,
+              "minute": 600,
+              "payment_event_id": 4927
+            }
+          ],
+          "term": "term:0004:farm:kira",
+          "worker": "kira"
+        },
+        {
+          "amount": 5,
+          "attendance_event_id": 6286,
+          "breach_event_id": null,
+          "business": "farm",
+          "day": 5,
+          "due_event_id": 6089,
+          "id": "0005:farm:kira",
+          "minute": 600,
+          "paid": 5,
+          "payments": [
+            {
+              "amount": 5,
+              "day": 5,
+              "minute": 600,
+              "payment_event_id": 6292
+            }
+          ],
+          "term": "term:0004:farm:kira",
+          "worker": "kira"
+        },
+        {
+          "amount": 5,
+          "attendance_event_id": 7640,
+          "breach_event_id": 7648,
+          "business": "farm",
+          "day": 6,
+          "due_event_id": 7443,
+          "id": "0006:farm:kira",
+          "minute": 600,
+          "paid": 2,
+          "payments": [
+            {
+              "amount": 2,
+              "day": 6,
+              "minute": 600,
+              "payment_event_id": 7646
+            }
+          ],
+          "term": "term:0004:farm:kira",
+          "worker": "kira"
+        }
+      ],
+      "ledger_sha256": "ea95f81c20db3accdad9d012cfa78127209adf39c34119e283ce16129ebcf305",
+      "new_terms": [
+        {
+          "end": 7,
+          "start": 4,
+          "wage": 10,
+          "worker": "dain"
+        },
+        {
+          "end": 7,
+          "start": 4,
+          "wage": 8,
+          "worker": "finn"
+        },
+        {
+          "end": 7,
+          "start": 4,
+          "wage": 5,
+          "worker": "kira"
+        }
+      ],
+      "summary_sha256": "0011fea77a3257d9ee7c69ff8140bbe6730c117039c6975b4136a8a0e7f01e8c"
+    },
+    {
+      "arrears": 0,
+      "cash_allocation": "original",
+      "claim_survives_expiry": false,
+      "currency": 9192,
+      "days": 4,
+      "fixture": "manual_no_show",
+      "independent_full_audit": true,
+      "kira_late_claims": [],
+      "ledger_sha256": "d868f70ebe2cdc8fac07341a608d55765829c4a99d5a7f40f084d83cc227f8bd",
+      "new_terms": [
+        {
+          "end": 7,
+          "start": 4,
+          "wage": 10,
+          "worker": "dain"
+        },
+        {
+          "end": 7,
+          "start": 4,
+          "wage": 8,
+          "worker": "finn"
+        },
+        {
+          "end": 7,
+          "start": 4,
+          "wage": 5,
+          "worker": "kira"
+        }
+      ],
+      "summary_sha256": "71b5b5612d1d9498c92f5f2fe0d7ca131af94385e37e57ed3dbbd9c847dc2471"
+    }
+  ],
+  "seconds": 34.886630344997684
+}

@@ -1,0 +1,17 @@
+condition,days,arm,fixture,seed,repeat,metric,n,min,median,p95,p99,worst
+tight,30,legacy_instrumented,staggered,42,1,appointment,870,0.126,1.8410000000000002,13.078,21.606,95.889
+tight,30,legacy_instrumented,staggered,42,1,tick,8640,0.026,0.117,0.51,1.221,4.61
+tight,30,legacy_instrumented,staggered,42,2,appointment,870,0.097,1.9849999999999999,13.241,19.376,37.654
+tight,30,legacy_instrumented,staggered,42,2,tick,8640,0.026,0.116,0.506,1.258,6.565
+tight,30,requests_smoothed,staggered,42,1,appointment,870,0.109,2.048,14.754,27.049,39.409
+tight,30,requests_smoothed,staggered,42,1,tick,8640,0.027,0.114,0.563,1.305,20.193
+tight,30,requests_smoothed,staggered,42,2,appointment,870,0.095,2.1654999999999998,15.235,26.627,41.51
+tight,30,requests_smoothed,staggered,42,2,tick,8640,0.026,0.113,0.573,1.537,17.8
+scarce,30,legacy_instrumented,staggered,42,1,appointment,870,0.094,2.1740000000000004,15.042,27.805,44.666
+scarce,30,legacy_instrumented,staggered,42,1,tick,8640,0.027,0.121,0.595,1.504,17.704
+scarce,30,legacy_instrumented,staggered,42,2,appointment,870,0.097,2.144,14.157,25.95,71.338
+scarce,30,legacy_instrumented,staggered,42,2,tick,8640,0.027,0.115,0.573,1.527,7.293
+scarce,30,requests_smoothed,staggered,42,1,appointment,870,0.103,1.985,13.9,24.452,37.172
+scarce,30,requests_smoothed,staggered,42,1,tick,8640,0.027,0.113,0.525,1.281,10.906
+scarce,30,requests_smoothed,staggered,42,2,appointment,870,0.103,2.1855,16.454,28.092,41.809
+scarce,30,requests_smoothed,staggered,42,2,tick,8640,0.027,0.12,0.622,1.505,4.633

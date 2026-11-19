@@ -1,0 +1,239 @@
+{
+  "base": "e735df8cf3dd46fe32f2bee5b22f2b366cc70d73",
+  "preregistration_commit": "f80b291",
+  "implementation_commit": "ad5737d",
+  "final_source_commit": "1bc23d2",
+  "checks": {
+    "native_checks": 3334,
+    "previous_native_checks": 3272,
+    "python_methods": 133,
+    "previous_python_methods": 123,
+    "focused_native_assertions": 62,
+    "focused_python_methods": 10,
+    "old_payload_pins": 169,
+    "published_m23_m24_m25_report_and_ledger_pairs": 88,
+    "fresh_M26_report_and_ledger_pairs": 36,
+    "unchanged_M27_diagnostic_digests": 36,
+    "unchanged_M27_checkpoint_proofs": 48,
+    "complete_committed_M27_certificates": 16,
+    "M25_M26_normalized_parity_cases": 12,
+    "M28_main_baseline_parity_cases": 12,
+    "M28_staggered_baseline_parity_cases": 2,
+    "input_aware_reference_parity_cases": 3,
+    "additional_M26_pinned_controls": 8,
+    "original_cd_independent_audits": 12,
+    "M28_main_cases": 24,
+    "M28_main_fresh_captures": 48,
+    "M28_sensitivity_cases": 4,
+    "M28_sensitivity_fresh_captures": 8,
+    "primary_coin_supply": 9192,
+    "unresolved_correctness_failures": [],
+    "isolated_M22_smoke": true,
+    "smoke_warnings": []
+  },
+  "phases": [
+    {
+      "phase": "full-godot",
+      "seconds": 768.5224593850035,
+      "status": 0
+    },
+    {
+      "phase": "historical",
+      "seconds": 1340.484559853001,
+      "status": 0
+    },
+    {
+      "phase": "full-python",
+      "seconds": 221.59706333400027,
+      "status": 0
+    },
+    {
+      "phase": "m23-controls",
+      "seconds": 106.94959036999717,
+      "status": 0
+    },
+    {
+      "phase": "m24-controls",
+      "seconds": 489.4420838160004,
+      "status": 0
+    },
+    {
+      "phase": "m24-fixtures",
+      "seconds": 70.02193894800075,
+      "status": 0
+    },
+    {
+      "phase": "m25-controls",
+      "seconds": 661.3705780980017,
+      "status": 0
+    },
+    {
+      "phase": "m25-fixtures",
+      "seconds": 31.052382800000487,
+      "status": 0
+    },
+    {
+      "phase": "m25-lifecycle",
+      "seconds": 15.949400921999768,
+      "status": 0
+    },
+    {
+      "phase": "m26-fixtures",
+      "seconds": 8.06184731400208,
+      "status": 0
+    },
+    {
+      "phase": "m26-extra-controls",
+      "seconds": 94.64841774399974,
+      "status": 0
+    },
+    {
+      "phase": "original-audits",
+      "seconds": 584.414237803001,
+      "status": 0
+    },
+    {
+      "phase": "cd-native-source",
+      "seconds": 4.75888581700201,
+      "status": 0
+    },
+    {
+      "phase": "m26-m27-controls",
+      "seconds": 613.1333109139996,
+      "status": 0
+    },
+    {
+      "phase": "full-python-shared-host-first",
+      "seconds": 666.5481256959974,
+      "status": 1
+    },
+    {
+      "phase": "queue-isolated",
+      "seconds": 5.413436727998487,
+      "status": 0
+    },
+    {
+      "phase": "m28-checkpoint",
+      "seconds": 41.7219822809966,
+      "status": 0
+    },
+    {
+      "phase": "m28-main-matrix",
+      "seconds": 265.54058757299936,
+      "status": 0
+    },
+    {
+      "phase": "m28-staggered-sensitivity",
+      "seconds": 151.97529903199757,
+      "status": 0
+    },
+    {
+      "phase": "performance-smoke",
+      "seconds": 3.2755200889987464,
+      "status": 0
+    }
+  ],
+  "commands": [
+    "godot --headless --no-header --path . --script res://tests/run_tests.gd",
+    "python3 -B -m unittest discover -s tests -p 'test_*.py'",
+    "python3 -B scripts/tools/check_historical.py --output work/m28/historical.csv",
+    "python3 -B scripts/tools/run_labor_market.py --legacy-controls --output work/m28/m23-controls",
+    "python3 -B scripts/tools/run_labor_market.py --verify-pins docs/M24_RUNS.csv --output work/m28/m24-controls",
+    "python3 -B scripts/tools/run_labor_market.py --fixtures --verify-pins docs/M24_VACANCIES.csv --output work/m28/m24-fixtures",
+    "python3 -B scripts/tools/run_binding.py --verify-pins docs/M25_RUNS.csv --output work/m28/m25-controls",
+    "python3 -B scripts/tools/run_binding.py --fixtures --verify-pins docs/M25_FIXTURES.csv --output work/m28/m25-fixtures",
+    "python3 -B scripts/tools/check_binding_lifecycle.py --output work/m28/m25-lifecycle",
+    "python3 -B scripts/tools/check_demand_fixtures.py --output work/m28/m26-fixtures",
+    "python3 -B scripts/tools/check_diagnostic_controls.py --output work/m28/m26-extra-controls",
+    "python3 -B scripts/tools/check_input_controls.py --output work/m28/m26-m27-controls",
+    "python3 -B scripts/tools/check_diagnostic_controls.py --cd --reuse-cd work/m27/legacy-controls --output work/m28/legacy-controls",
+    "python3 -B scripts/tools/measure_planning_jobs.py --phase audit --output work/m28/legacy-controls",
+    "python3 -B scripts/tools/run_input.py --checkpoint --output work/m28/checkpoint --traces work/m28/traces --old-traces work/m27/traces",
+    "python3 -B scripts/tools/run_input.py --reuse-checkpoint --output work/m28/experiments --traces work/m28/traces --old-traces work/m27/traces",
+    "python3 -B scripts/tools/run_input.py --staggered --output work/m28/staggered --traces work/m28/traces",
+    "python3 -B scripts/tools/summarize_input.py --input work/m28 --traces work/m28/traces --output docs",
+    "python3 -B scripts/tools/performance_smoke.py --output work/m28/smoke.json --verification-times work/m28/verification-phases.csv"
+  ],
+  "experimental_model": {
+    "experiments": {
+      "cases": 24,
+      "command_seconds": 265.54058757299936,
+      "fresh_process_repeats": 2,
+      "identity": {
+        "base": "e735df8cf3dd46fe32f2bee5b22f2b366cc70d73",
+        "godot": "4.6.3.stable.official.7d41c59c4",
+        "native_source_sha256": "33b24031d0c29609653639c192c8aa0978ca83dd4068034962a56ea1eaa9a642"
+      },
+      "parity_cases": 12,
+      "scope": "main"
+    },
+    "staggered": {
+      "cases": 4,
+      "command_seconds": 151.97529903199757,
+      "fresh_process_repeats": 2,
+      "identity": {
+        "base": "e735df8cf3dd46fe32f2bee5b22f2b366cc70d73",
+        "godot": "4.6.3.stable.official.7d41c59c4",
+        "native_source_sha256": "33b24031d0c29609653639c192c8aa0978ca83dd4068034962a56ea1eaa9a642"
+      },
+      "parity_cases": 2,
+      "scope": "staggered initial legal endowment"
+    }
+  },
+  "original_M27_tools_note": "Exact old source CLI guard preserved; default observer output digests and generator/checker proofs checked on fresh M26 native captures.",
+  "cache_note": "32 short M28 captures reused from checkpoint with exact source/engine and two distinct fresh-process event/report replays. C/D raw traces reused from M27 after 38-file dependency, build and published trace SHA checks; original independent audits rerun.",
+  "source_checksums": {
+    "scripts/sim/input_memory.gd": "2b406148627e497f49411ea1f34353cbde281044729f91de907bccbeab6b83c2",
+    "scripts/sim/input_projection.gd": "fe6bc7434c2e107a33add767faed3059c3b331643213ae0718f2daa800045b91",
+    "scripts/sim/input_runner.gd": "7a6007f0562e5a125bd140e692682e5615201806a399250aeb3b2c18439cbe73",
+    "scripts/sim/input_world.gd": "2975654365d7257e5abf76b7d6f858f844503626ef324f5f8a584583e9a82d91",
+    "scripts/tools/check_input_controls.py": "79c4590f4bb95e46ec25eade144f778b18547a1ecf60fe40e4c418f654fc3f06",
+    "scripts/tools/input_audit.py": "566fd17ff8fa7b4d14b42768822b3133f43cd7aad9c524591b093ea10d7e85d4",
+    "scripts/tools/run_input.py": "51ba626a6db67d6f6592c067504585b6a75adb0b53937c58229aed74aed4af58",
+    "scripts/tools/summarize_input.py": "cba9873f518d5df54cabec6956a6f1239d0c1ba4fcacc471695ebc3cf0e1da5f",
+    "scripts/tools/run_input.gd": "cb3dd8fd245af381c204b1f468a1703e6aca17432c3f0fdb46531398a0468558",
+    "scripts/sim/binding_policy.gd": "9fefa90f92615b5b8dbe31e933e747633aeaebc11ce11ccb1627faeffca66ad2",
+    "scripts/sim/binding_world.gd": "8d487d51e82def24ff7025550211f62e1f43dccb1a328fd532c3ac5e47a99c9c",
+    "scripts/tools/economic_diagnostics.py": "3f64bd060e5da9c226dfaf3c1eeeb988fcdff944d897ce6259b3fd7419f52e5e",
+    "tests/input_fixture_world.gd": "466fb78a5a03b8863564a3b559a054152df186d7e27d76a0d7f701e9f4388422",
+    "tests/input_tests.gd": "6805f9e9d49ae655d9084989dae0e62a6eb0bef7b60979963e1735331591844a",
+    "tests/run_input_fixture.gd": "e4f0f2338abd50393454460bf64d690ef825bb7cadcbd20e12d88c277e381998",
+    "tests/run_input_tests.gd": "46f247723a2ba7fa0fe7ac26f521882e2746c0ec3d80489204048c4e55777f81",
+    "tests/test_input_reliability.py": "c1cf94d4532913e2c403a423878d9c2ca4bd69ce6ea8dbd93f9ed66eafcd5b7a"
+  },
+  "initial_python_attempt": {
+    "status": 1,
+    "methods": 133,
+    "failures": 1,
+    "test": "test_dispatch_queue.DispatchTests.test_pool_and_order_parity",
+    "assertion": "forced completion reversal was not demonstrated under concurrent verification",
+    "evidence": "M28_PYTHON_SHARED_HOST_FIRST.txt",
+    "queue_source_unchanged": true,
+    "isolated_queue_retest": "4 methods pass",
+    "full_rerun": "same unmodified source; no concurrent verification"
+  },
+  "final_acceptance_passed": true,
+  "smoke_status": "passed; matching reference metadata, no advisory warnings",
+  "cost_note": "Shared-host verification walls overlap; do not sum as elapsed work or simulation speed.",
+  "host": {
+    "godot": "4.6.3.stable.official.7d41c59c4",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "machine": "x86_64",
+    "cpus": 3,
+    "cpu_max": "200000 100000",
+    "memory_max": "8589934592",
+    "rust_sha256": "a7c9f739c84aa83fcbd4f1c9554080d53932d2ba69144e77054615e72bc3c462",
+    "bridge_sha256": "feee66ececa02b22294955e587447a3b52a9eb33503d0d5c19bcf5275f827cc3"
+  },
+  "artifact_checks": {
+    "cases": 12,
+    "actual_firm_days": 1440,
+    "resident_days": 5400,
+    "beliefs": 1440,
+    "candidate_day_rows": 9654,
+    "actual_positive_input_orders": 994,
+    "selected_forecast_comparisons": 944,
+    "unscored_comparisons": 100,
+    "checks": "Published reports agree with independent native-audit case summaries; fiscal/goods/wage/candidate and unknown-vs-zero identities pass."
+  }
+}

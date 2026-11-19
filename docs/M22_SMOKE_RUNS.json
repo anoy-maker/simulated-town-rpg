@@ -1,0 +1,284 @@
+[
+  {
+    "version": 1,
+    "host": {
+      "godot": "4.6.3.stable.official.7d41c59c4",
+      "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+      "machine": "x86_64",
+      "cpus": 3,
+      "cpu_max": "200000 100000",
+      "memory_max": "8589934592",
+      "rust_sha256": "a7c9f739c84aa83fcbd4f1c9554080d53932d2ba69144e77054615e72bc3c462",
+      "bridge_sha256": "feee66ececa02b22294955e587447a3b52a9eb33503d0d5c19bcf5275f827cc3"
+    },
+    "cases": {
+      "C1": {
+        "run_seconds": 0.075001,
+        "command_seconds": 0.8005621610027447,
+        "report_seconds": 0.129875,
+        "peak_rss_kib": 85736,
+        "event_count": 913,
+        "canonical_sha256": "93006cc9d697fd9455527fb604e6eeebe54eefc3c43925a93b119bd0cdd7f966",
+        "decision_work_ms": {
+          "n": 1,
+          "min": 44.756,
+          "median": 44.756,
+          "p95": null,
+          "p99": null,
+          "worst": 44.756
+        },
+        "worst_appointment_ms": 44.904,
+        "worst_tick_ms": 0.775
+      },
+      "D1": {
+        "run_seconds": 0.086749,
+        "command_seconds": 0.7301190239995776,
+        "report_seconds": 0.117247,
+        "peak_rss_kib": 85744,
+        "event_count": 913,
+        "canonical_sha256": "572964383ed21e7ff013ba0192cd9db8dd42cfd5e0a584096bb8934c8e2be784",
+        "decision_work_ms": {
+          "n": 1,
+          "min": 55.045,
+          "median": 55.045,
+          "p95": null,
+          "p99": null,
+          "worst": 55.045
+        },
+        "worst_appointment_ms": 55.201,
+        "worst_tick_ms": 0.419
+      },
+      "queue10": {
+        "run_seconds": 0.816098,
+        "command_seconds": 1.2142128870000306,
+        "peak_rss_kib": 71184,
+        "event_count": 0,
+        "callback_ms": {
+          "n": 49,
+          "min": 0.053,
+          "median": 0.087,
+          "p95": 1.955,
+          "p99": null,
+          "worst": 2.416
+        },
+        "queue_wait_ms": {
+          "n": 10,
+          "min": 1.119,
+          "median": 359.11400000000003,
+          "p95": null,
+          "p99": null,
+          "worst": 684.192
+        },
+        "decision_work_ms": {
+          "n": 10,
+          "min": 62.116,
+          "median": 68.602,
+          "p95": null,
+          "p99": null,
+          "worst": 80.427
+        },
+        "maxima": {
+          "completed": 1,
+          "input_bytes": 15880,
+          "output_bytes": 23116,
+          "outstanding": 10,
+          "running": 1,
+          "waiting": 9
+        },
+        "proposal_digest": "c834cc0509c6784b9cdf7c93de29a0d7d2d5b6158601fff8bca4d8565c6fe6ba",
+        "release_digest": "5eb58dc71956864da7ae1f7a3e81d15e2ed1ce91653c3eb160317744df52d629"
+      }
+    },
+    "command_wall_seconds": 2.793127682998602,
+    "verification_phases": [],
+    "warnings": []
+  },
+  {
+    "version": 1,
+    "host": {
+      "godot": "4.6.3.stable.official.7d41c59c4",
+      "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+      "machine": "x86_64",
+      "cpus": 3,
+      "cpu_max": "200000 100000",
+      "memory_max": "8589934592",
+      "rust_sha256": "a7c9f739c84aa83fcbd4f1c9554080d53932d2ba69144e77054615e72bc3c462",
+      "bridge_sha256": "feee66ececa02b22294955e587447a3b52a9eb33503d0d5c19bcf5275f827cc3"
+    },
+    "cases": {
+      "C1": {
+        "run_seconds": 0.088421,
+        "command_seconds": 0.7581170789999305,
+        "report_seconds": 0.120746,
+        "peak_rss_kib": 85812,
+        "event_count": 913,
+        "canonical_sha256": "93006cc9d697fd9455527fb604e6eeebe54eefc3c43925a93b119bd0cdd7f966",
+        "decision_work_ms": {
+          "n": 1,
+          "min": 54.614,
+          "median": 54.614,
+          "p95": null,
+          "p99": null,
+          "worst": 54.614
+        },
+        "worst_appointment_ms": 54.773,
+        "worst_tick_ms": 0.558
+      },
+      "D1": {
+        "run_seconds": 0.094584,
+        "command_seconds": 0.7376963120004802,
+        "report_seconds": 0.10636,
+        "peak_rss_kib": 85728,
+        "event_count": 913,
+        "canonical_sha256": "572964383ed21e7ff013ba0192cd9db8dd42cfd5e0a584096bb8934c8e2be784",
+        "decision_work_ms": {
+          "n": 1,
+          "min": 61.062,
+          "median": 61.062,
+          "p95": null,
+          "p99": null,
+          "worst": 61.062
+        },
+        "worst_appointment_ms": 61.221,
+        "worst_tick_ms": 0.769
+      },
+      "queue10": {
+        "run_seconds": 0.765622,
+        "command_seconds": 1.2143815909985278,
+        "peak_rss_kib": 71288,
+        "event_count": 0,
+        "callback_ms": {
+          "n": 46,
+          "min": 0.052,
+          "median": 0.0805,
+          "p95": 2.259,
+          "p99": null,
+          "worst": 3.582
+        },
+        "queue_wait_ms": {
+          "n": 10,
+          "min": 0.756,
+          "median": 334.097,
+          "p95": null,
+          "p99": null,
+          "worst": 651.077
+        },
+        "decision_work_ms": {
+          "n": 10,
+          "min": 60.966,
+          "median": 64.065,
+          "p95": null,
+          "p99": null,
+          "worst": 69.775
+        },
+        "maxima": {
+          "completed": 1,
+          "input_bytes": 15880,
+          "output_bytes": 23116,
+          "outstanding": 10,
+          "running": 1,
+          "waiting": 9
+        },
+        "proposal_digest": "c834cc0509c6784b9cdf7c93de29a0d7d2d5b6158601fff8bca4d8565c6fe6ba",
+        "release_digest": "5eb58dc71956864da7ae1f7a3e81d15e2ed1ce91653c3eb160317744df52d629"
+      }
+    },
+    "command_wall_seconds": 2.7544989560010436,
+    "verification_phases": [],
+    "warnings": []
+  },
+  {
+    "version": 1,
+    "host": {
+      "godot": "4.6.3.stable.official.7d41c59c4",
+      "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+      "machine": "x86_64",
+      "cpus": 3,
+      "cpu_max": "200000 100000",
+      "memory_max": "8589934592",
+      "rust_sha256": "a7c9f739c84aa83fcbd4f1c9554080d53932d2ba69144e77054615e72bc3c462",
+      "bridge_sha256": "feee66ececa02b22294955e587447a3b52a9eb33503d0d5c19bcf5275f827cc3"
+    },
+    "cases": {
+      "C1": {
+        "run_seconds": 0.078548,
+        "command_seconds": 0.73613330200169,
+        "report_seconds": 0.111748,
+        "peak_rss_kib": 85712,
+        "event_count": 913,
+        "canonical_sha256": "93006cc9d697fd9455527fb604e6eeebe54eefc3c43925a93b119bd0cdd7f966",
+        "decision_work_ms": {
+          "n": 1,
+          "min": 42.722,
+          "median": 42.722,
+          "p95": null,
+          "p99": null,
+          "worst": 42.722
+        },
+        "worst_appointment_ms": 42.874,
+        "worst_tick_ms": 2.019
+      },
+      "D1": {
+        "run_seconds": 0.082987,
+        "command_seconds": 0.7400458209995122,
+        "report_seconds": 0.11024,
+        "peak_rss_kib": 85744,
+        "event_count": 913,
+        "canonical_sha256": "572964383ed21e7ff013ba0192cd9db8dd42cfd5e0a584096bb8934c8e2be784",
+        "decision_work_ms": {
+          "n": 1,
+          "min": 52.193,
+          "median": 52.193,
+          "p95": null,
+          "p99": null,
+          "worst": 52.193
+        },
+        "worst_appointment_ms": 52.366,
+        "worst_tick_ms": 0.419
+      },
+      "queue10": {
+        "run_seconds": 0.799846,
+        "command_seconds": 1.2176420770010736,
+        "peak_rss_kib": 71008,
+        "event_count": 0,
+        "callback_ms": {
+          "n": 48,
+          "min": 0.068,
+          "median": 0.0825,
+          "p95": 1.952,
+          "p99": null,
+          "worst": 2.273
+        },
+        "queue_wait_ms": {
+          "n": 10,
+          "min": 0.851,
+          "median": 342.22400000000005,
+          "p95": null,
+          "p99": null,
+          "worst": 667.37
+        },
+        "decision_work_ms": {
+          "n": 10,
+          "min": 63.226,
+          "median": 69.863,
+          "p95": null,
+          "p99": null,
+          "worst": 80.546
+        },
+        "maxima": {
+          "completed": 1,
+          "input_bytes": 15880,
+          "output_bytes": 23116,
+          "outstanding": 10,
+          "running": 1,
+          "waiting": 9
+        },
+        "proposal_digest": "c834cc0509c6784b9cdf7c93de29a0d7d2d5b6158601fff8bca4d8565c6fe6ba",
+        "release_digest": "5eb58dc71956864da7ae1f7a3e81d15e2ed1ce91653c3eb160317744df52d629"
+      }
+    },
+    "command_wall_seconds": 2.7451974700015853,
+    "verification_phases": [],
+    "warnings": []
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "cases": 12,
+  "actual_firm_days": 1440,
+  "resident_days": 5400,
+  "beliefs": 1440,
+  "candidate_day_rows": 9654,
+  "actual_positive_input_orders": 994,
+  "selected_forecast_comparisons": 944,
+  "unscored_comparisons": 100,
+  "checks": "Published reports agree with independent native-audit case summaries; fiscal/goods/wage/candidate and unknown-vs-zero identities pass."
+}

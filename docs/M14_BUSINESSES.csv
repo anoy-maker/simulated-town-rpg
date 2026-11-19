@@ -1,0 +1,16 @@
+seed,days,actor,name,role,coins,bread,flour,wheat,consumed,earned,last_business_day,last_production_day,last_work_day,profit_distributions_paid,profit_distributions_received,purchases,purchases_failed,purchases_successful,sales,shifts,spent,wages_paid,wages_received,produced_bread,produced_flour,produced_wheat,business_idle_days_at_end,can_fund_one_shift,production_idle_days_at_end,schedule_reasons,operating_distributions,operating_inputs,operating_payroll,operating_sales,scenario
+42,1,bakery,Bakery,baker,120,0,0,0,0,48,1,1,0,4,0,32,0,2,48,2,48,12,0,12,0,0,0,True,0,{},4,32,12,48,settlement_profitable_reference
+42,1,farm,Farm,farmer,120,0,0,0,0,16,1,1,0,4,0,0,0,0,16,2,16,12,0,0,0,8,0,True,0,{},4,0,12,16,settlement_profitable_reference
+42,1,mill,Mill,miller,120,0,0,0,0,32,1,1,0,4,0,16,0,2,32,2,32,12,0,0,8,0,0,True,0,{},4,16,12,32,settlement_profitable_reference
+42,2,bakery,Bakery,baker,120,0,0,0,0,96,2,2,0,8,0,64,0,4,96,4,96,24,0,24,0,0,0,True,0,{},8,64,24,96,settlement_profitable_reference
+42,2,farm,Farm,farmer,120,0,0,0,0,32,2,2,0,8,0,0,0,0,32,4,32,24,0,0,0,16,0,True,0,{},8,0,24,32,settlement_profitable_reference
+42,2,mill,Mill,miller,120,0,0,0,0,64,2,2,0,8,0,32,0,4,64,4,64,24,0,0,16,0,0,True,0,{},8,32,24,64,settlement_profitable_reference
+42,3,bakery,Bakery,baker,120,0,0,0,0,144,3,3,0,12,0,96,0,6,144,6,144,36,0,36,0,0,0,True,0,{},12,96,36,144,settlement_profitable_reference
+42,3,farm,Farm,farmer,120,0,0,0,0,48,3,3,0,12,0,0,0,0,48,6,48,36,0,0,0,24,0,True,0,{},12,0,36,48,settlement_profitable_reference
+42,3,mill,Mill,miller,120,0,0,0,0,96,3,3,0,12,0,48,0,6,96,6,96,36,0,0,24,0,0,True,0,{},12,48,36,96,settlement_profitable_reference
+42,30,bakery,Bakery,baker,120,0,0,0,0,1440,30,30,0,120,0,960,0,60,1440,60,1440,360,0,360,0,0,0,True,0,{},120,960,360,1440,settlement_profitable_reference
+42,30,farm,Farm,farmer,120,0,0,0,0,480,30,30,0,120,0,0,0,0,480,60,480,360,0,0,0,240,0,True,0,{},120,0,360,480,settlement_profitable_reference
+42,30,mill,Mill,miller,120,0,0,0,0,960,30,30,0,120,0,480,0,60,960,60,960,360,0,0,240,0,0,True,0,{},120,480,360,960,settlement_profitable_reference
+42,365,bakery,Bakery,baker,120,0,0,0,0,17520,365,365,0,1460,0,11680,0,730,17520,730,17520,4380,0,4380,0,0,0,True,0,{},1460,11680,4380,17520,settlement_profitable_reference
+42,365,farm,Farm,farmer,120,0,0,0,0,5840,365,365,0,1460,0,0,0,0,5840,730,5840,4380,0,0,0,2920,0,True,0,{},1460,0,4380,5840,settlement_profitable_reference
+42,365,mill,Mill,miller,120,0,0,0,0,11680,365,365,0,1460,0,5840,0,730,11680,730,11680,4380,0,0,2920,0,0,True,0,{},1460,5840,4380,11680,settlement_profitable_reference

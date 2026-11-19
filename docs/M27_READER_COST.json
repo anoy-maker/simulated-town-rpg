@@ -1,0 +1,19 @@
+{
+  "case": "reference-30-legacy_instrumented",
+  "sample_count": 1,
+  "isolated_from_other_acceptance_processes": true,
+  "events": 48363,
+  "parse_seconds": 0.4995245160025661,
+  "analysis_seconds": 5.365675555996859,
+  "replay_seconds": 5.984702751000441,
+  "witnesses_seconds": 0.11580934399898979,
+  "certificates": 4,
+  "body_wall_seconds": 11.965724361001776,
+  "process_peak_rss_kib": 122736,
+  "report_sha256": "275fcbb8537deb5835642939f58c597dc5f851c16ad9c543ecfad1202f2aebbb",
+  "ledger_sha256": "b37ba72faa0abad005494f06b2cdcc4f2ce4a0b9f2dac04f450e6d4123ecb9de",
+  "diagnostic_sha256": "d3d977cef79e909e094075a6488ff694b74fcfe0c75be777c56f4fd8f7a4b46a",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "interpretation": "One offline audit/replay cost sample, not a simulation speedup, comparative benchmark or NPC latency."
+}

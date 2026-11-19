@@ -1,0 +1,186 @@
+{
+  "version": 1,
+  "host": {
+    "godot": "4.6.3.stable.official.7d41c59c4",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "machine": "x86_64",
+    "cpus": 3,
+    "cpu_max": "200000 100000",
+    "memory_max": "8589934592",
+    "rust_sha256": "a7c9f739c84aa83fcbd4f1c9554080d53932d2ba69144e77054615e72bc3c462",
+    "bridge_sha256": "feee66ececa02b22294955e587447a3b52a9eb33503d0d5c19bcf5275f827cc3"
+  },
+  "cases": {
+    "C1": {
+      "run_seconds": 0.064871,
+      "command_seconds": 0.7483867859991733,
+      "report_seconds": 0.106883,
+      "peak_rss_kib": 85916,
+      "event_count": 913,
+      "canonical_sha256": "93006cc9d697fd9455527fb604e6eeebe54eefc3c43925a93b119bd0cdd7f966",
+      "decision_work_ms": {
+        "n": 1,
+        "min": 39.149,
+        "median": 39.149,
+        "p95": null,
+        "p99": null,
+        "worst": 39.149
+      },
+      "worst_appointment_ms": 39.323,
+      "worst_tick_ms": 0.445
+    },
+    "D1": {
+      "run_seconds": 0.110446,
+      "command_seconds": 0.8270172179982183,
+      "report_seconds": 0.115558,
+      "peak_rss_kib": 85956,
+      "event_count": 913,
+      "canonical_sha256": "572964383ed21e7ff013ba0192cd9db8dd42cfd5e0a584096bb8934c8e2be784",
+      "decision_work_ms": {
+        "n": 1,
+        "min": 65.767,
+        "median": 65.767,
+        "p95": null,
+        "p99": null,
+        "worst": 65.767
+      },
+      "worst_appointment_ms": 65.922,
+      "worst_tick_ms": 2.092
+    },
+    "queue10": {
+      "run_seconds": 0.797974,
+      "command_seconds": 1.264211012996384,
+      "peak_rss_kib": 71168,
+      "event_count": 0,
+      "callback_ms": {
+        "n": 47,
+        "min": 0.036,
+        "median": 0.07,
+        "p95": 1.956,
+        "p99": null,
+        "worst": 4.032
+      },
+      "queue_wait_ms": {
+        "n": 10,
+        "min": 0.8,
+        "median": 317.317,
+        "p95": null,
+        "p99": null,
+        "worst": 682.275
+      },
+      "decision_work_ms": {
+        "n": 10,
+        "min": 56.45,
+        "median": 59.7395,
+        "p95": null,
+        "p99": null,
+        "worst": 132.936
+      },
+      "maxima": {
+        "completed": 1,
+        "input_bytes": 15880,
+        "output_bytes": 23116,
+        "outstanding": 10,
+        "running": 1,
+        "waiting": 9
+      },
+      "proposal_digest": "c834cc0509c6784b9cdf7c93de29a0d7d2d5b6158601fff8bca4d8565c6fe6ba",
+      "release_digest": "5eb58dc71956864da7ae1f7a3e81d15e2ed1ce91653c3eb160317744df52d629"
+    }
+  },
+  "command_wall_seconds": 2.8870387819988537,
+  "verification_phases": [
+    {
+      "phase": "full-godot",
+      "seconds": "642.7841336850033",
+      "status": "0"
+    },
+    {
+      "phase": "historical",
+      "seconds": "1277.666555826996",
+      "status": "0"
+    },
+    {
+      "phase": "full-python",
+      "seconds": "209.51907767399825",
+      "status": "0"
+    },
+    {
+      "phase": "m23-controls",
+      "seconds": "78.1592644620032",
+      "status": "0"
+    },
+    {
+      "phase": "m24-controls",
+      "seconds": "409.690974819001",
+      "status": "0"
+    },
+    {
+      "phase": "m24-fixtures",
+      "seconds": "88.0293427659999",
+      "status": "0"
+    },
+    {
+      "phase": "m25-controls",
+      "seconds": "594.356807078002",
+      "status": "0"
+    },
+    {
+      "phase": "m25-fixtures",
+      "seconds": "11.69360947899986",
+      "status": "0"
+    },
+    {
+      "phase": "m25-lifecycle",
+      "seconds": "9.21015591899777",
+      "status": "0"
+    },
+    {
+      "phase": "m26-fixtures",
+      "seconds": "5.756389496003976",
+      "status": "0"
+    },
+    {
+      "phase": "m26-extra-controls",
+      "seconds": "86.1774233660035",
+      "status": "0"
+    },
+    {
+      "phase": "original-audits",
+      "seconds": "464.2477735279972",
+      "status": "0"
+    },
+    {
+      "phase": "cd-native-source",
+      "seconds": "2.6116818059963407",
+      "status": "0"
+    },
+    {
+      "phase": "m26-m27-controls",
+      "seconds": "701.8071971840036",
+      "status": "0"
+    },
+    {
+      "phase": "m28-controls",
+      "seconds": "294.9927418340012",
+      "status": "0"
+    },
+    {
+      "phase": "m28-r-economic-parity",
+      "seconds": "130.9913886880022",
+      "status": "0"
+    },
+    {
+      "phase": "m29-checkpoint",
+      "seconds": "64.45790652900178",
+      "status": "0"
+    },
+    {
+      "phase": "m29-main-matrix",
+      "seconds": "784.0273493899986",
+      "status": "0"
+    }
+  ],
+  "warnings": [],
+  "comparable": true
+}

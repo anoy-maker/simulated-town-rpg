@@ -1,0 +1,171 @@
+{
+  "version": 1,
+  "host": {
+    "godot": "4.6.3.stable.official.7d41c59c4",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "machine": "x86_64",
+    "cpus": 3,
+    "cpu_max": "200000 100000",
+    "memory_max": "8589934592",
+    "rust_sha256": "a7c9f739c84aa83fcbd4f1c9554080d53932d2ba69144e77054615e72bc3c462",
+    "bridge_sha256": "feee66ececa02b22294955e587447a3b52a9eb33503d0d5c19bcf5275f827cc3"
+  },
+  "cases": {
+    "C1": {
+      "run_seconds": 0.077619,
+      "command_seconds": 0.7349667009998484,
+      "report_seconds": 0.112354,
+      "peak_rss_kib": 85956,
+      "event_count": 913,
+      "canonical_sha256": "93006cc9d697fd9455527fb604e6eeebe54eefc3c43925a93b119bd0cdd7f966",
+      "decision_work_ms": {
+        "n": 1,
+        "min": 45.804,
+        "median": 45.804,
+        "p95": null,
+        "p99": null,
+        "worst": 45.804
+      },
+      "worst_appointment_ms": 46.03,
+      "worst_tick_ms": 0.522
+    },
+    "D1": {
+      "run_seconds": 0.07681,
+      "command_seconds": 0.6579293310001049,
+      "report_seconds": 0.11366,
+      "peak_rss_kib": 85960,
+      "event_count": 913,
+      "canonical_sha256": "572964383ed21e7ff013ba0192cd9db8dd42cfd5e0a584096bb8934c8e2be784",
+      "decision_work_ms": {
+        "n": 1,
+        "min": 46.621,
+        "median": 46.621,
+        "p95": null,
+        "p99": null,
+        "worst": 46.621
+      },
+      "worst_appointment_ms": 46.782,
+      "worst_tick_ms": 0.576
+    },
+    "queue10": {
+      "run_seconds": 0.751716,
+      "command_seconds": 1.1110241589999532,
+      "peak_rss_kib": 71216,
+      "event_count": 0,
+      "callback_ms": {
+        "n": 44,
+        "min": 0.053,
+        "median": 0.075,
+        "p95": 1.863,
+        "p99": null,
+        "worst": 3.119
+      },
+      "queue_wait_ms": {
+        "n": 10,
+        "min": 1.024,
+        "median": 317.361,
+        "p95": null,
+        "p99": null,
+        "worst": 617.592
+      },
+      "decision_work_ms": {
+        "n": 10,
+        "min": 61.633,
+        "median": 63.516999999999996,
+        "p95": null,
+        "p99": null,
+        "worst": 75.786
+      },
+      "maxima": {
+        "completed": 1,
+        "input_bytes": 15880,
+        "output_bytes": 23116,
+        "outstanding": 10,
+        "running": 1,
+        "waiting": 9
+      },
+      "proposal_digest": "c834cc0509c6784b9cdf7c93de29a0d7d2d5b6158601fff8bca4d8565c6fe6ba",
+      "release_digest": "5eb58dc71956864da7ae1f7a3e81d15e2ed1ce91653c3eb160317744df52d629"
+    }
+  },
+  "command_wall_seconds": 2.5494339290003154,
+  "verification_phases": [
+    {
+      "phase": "original-audits",
+      "seconds": "431.9325441680003",
+      "status": "0"
+    },
+    {
+      "phase": "m26-public-cli",
+      "seconds": "1.4210867070000859",
+      "status": "0"
+    },
+    {
+      "phase": "full-godot",
+      "seconds": "633.1737328510001",
+      "status": "0"
+    },
+    {
+      "phase": "legacy-capture",
+      "seconds": "125.52200116299991",
+      "status": "0"
+    },
+    {
+      "phase": "historical",
+      "seconds": "1000.784658757",
+      "status": "0"
+    },
+    {
+      "phase": "m23-controls",
+      "seconds": "75.88245412200013",
+      "status": "0"
+    },
+    {
+      "phase": "m24-controls",
+      "seconds": "373.81408418800015",
+      "status": "0"
+    },
+    {
+      "phase": "m24-fixtures",
+      "seconds": "38.28905678199999",
+      "status": "0"
+    },
+    {
+      "phase": "m25-controls",
+      "seconds": "320.1133677460002",
+      "status": "0"
+    },
+    {
+      "phase": "m25-fixtures",
+      "seconds": "52.0621676159999",
+      "status": "0"
+    },
+    {
+      "phase": "m25-lifecycle",
+      "seconds": "37.94468638299986",
+      "status": "0"
+    },
+    {
+      "phase": "m26-fixtures",
+      "seconds": "22.69907183300029",
+      "status": "0"
+    },
+    {
+      "phase": "full-python",
+      "seconds": "204.55998208999972",
+      "status": "0"
+    },
+    {
+      "phase": "m26-reference-final",
+      "seconds": "91.44749005800031",
+      "status": "0"
+    },
+    {
+      "phase": "m26-final-audits",
+      "seconds": "373.08952494000005",
+      "status": "0"
+    }
+  ],
+  "warnings": [],
+  "comparable": true
+}

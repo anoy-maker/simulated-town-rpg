@@ -1,0 +1,63 @@
+Actual acceptance commands; run from repository root with writable XDG data/config/cache directories. Paths name the recorded workspace; adjust work roots when reproducing.
+
+godot --headless --no-header --path . --script res://tests/run_tests.gd
+python3 -B -m unittest discover -s tests -p 'test_*.py'
+python3 -B scripts/tools/check_historical.py --output work/m29/historical.csv
+python3 -B scripts/tools/run_labor_market.py --legacy-controls --output work/m29/m23-controls
+python3 -B scripts/tools/run_labor_market.py --verify-pins docs/M24_RUNS.csv --output work/m29/m24-controls
+python3 -B scripts/tools/run_labor_market.py --fixtures --verify-pins docs/M24_VACANCIES.csv --output work/m29/m24-fixtures
+python3 -B scripts/tools/run_binding.py --verify-pins docs/M25_RUNS.csv --output work/m29/m25-controls
+python3 -B scripts/tools/run_binding.py --fixtures --verify-pins docs/M25_FIXTURES.csv --output work/m29/m25-fixtures
+python3 -B scripts/tools/check_binding_lifecycle.py --output work/m29/m25-lifecycle
+python3 -B scripts/tools/check_demand_fixtures.py --output work/m29/m26-fixtures
+python3 -B scripts/tools/check_diagnostic_controls.py --output work/m29/m26-extra-controls
+python3 -B scripts/tools/check_input_controls.py --output work/m29/m26-m27-controls
+python3 -B scripts/tools/check_cash_controls.py --output work/m29/m28-controls --old-traces work/m28/traces
+python3 -B scripts/tools/check_diagnostic_controls.py --cd --reuse-cd work/m28/legacy-controls --output work/m29/legacy-controls
+python3 -B scripts/tools/measure_planning_jobs.py --phase audit --output work/m29/legacy-controls
+python3 -B scripts/tools/run_cash_allocation.py --checkpoint --output work/m29/checkpoint --traces work/m29/traces --old-traces work/m28/traces
+python3 -B scripts/tools/run_cash_allocation.py --reuse-checkpoint --output work/m29/experiments --traces work/m29/traces --old-traces work/m28/traces
+python3 -B scripts/tools/summarize_cash_allocation.py --input work/m29/experiments --traces work/m29/traces --output docs
+python3 -B scripts/tools/performance_smoke.py --output work/m29/smoke.json --verification-times work/m29/verification-phases.csv
+
+Additional M28/R parity check (existing unchanged parity/audit functions):
+python3 -B - <<'PY'
+import csv,hashlib,json,sys,time
+from pathlib import Path
+sys.path.insert(0,'scripts/tools')
+from run_input import economic_parity
+from run_demand import capture
+from demand_audit import audit
+from run_brewery import digest
+from run_economic_diagnostics import write_json,write_rows
+b=Path('/workspace/work/m29');traces=Path('/workspace/work/m28/traces');oldpath=Path('/workspace/work/m27/traces');seen={};rows=[]
+pins={(r['condition'],r['days']):r for r in csv.DictReader(open('docs/M26_RUNS.csv')) if r['arm']=='requests_smoothed'}
+stagger={r['condition']:r for r in csv.DictReader(open('docs/M26_STAGGERED_RUNS.csv')) if r['arm']=='requests_smoothed'}
+for c,d,arm,fixture in [(c,d,'R_baseline_instrumented','none') for c in ['reference','tight','scarce','no_brew_request'] for d in [1,3,30]]+ [('reference',d,'R_input_aware','none') for d in [1,3,30]]+[(c,30,'R_baseline_instrumented','staggered') for c in ['tight','scarce']]:
+ new=json.loads((traces/f'{c}-{d}-{arm}-{fixture}-1.json').read_text());key=c,d,fixture
+ if key not in seen:
+  path=oldpath/f'{c}-{d}-requests_smoothed.json'
+  old=json.loads(path.read_text()) if fixture=='none' else capture(c,d,'requests_smoothed',fixture)
+  audit(old);pin=pins[c,str(d)] if fixture=='none' else stagger[c]
+  assert digest(dict(report=old['report']))==pin['summary_sha256'] and old['report']['ledger_sha256']==pin['ledger_sha256'];seen[key]=old
+ rows.append(dict(condition=c,days=d,arm=arm,fixture=fixture,**economic_parity(new,seen[key]),M26_pins_unchanged=True))
+ write_rows(b/'m28-economic-parity.csv',rows)
+ print(c,d,arm,fixture,'M28/R full economic event/report/receipt parity PASS',flush=True)
+assert len(rows)==17
+
+PY
+
+Cross-table check supporting unchanged real activity in input-aware F/O cases:
+python3 - <<'PY_CHECK'
+import csv
+for name,exclude in [('RESIDENTS',{'allocation'}),('FIRMS',{'allocation','initial_cash','cash'}),('DAYS',{'allocation','firm_cash','visitor_cash'}),('TERMS',{'allocation'})]:
+ rows=list(csv.DictReader(open('docs/M29_'+name+'.csv')))
+ for c in ['scarce','no_brew_request','tight','reference']:
+  pairs=[[{k:v for k,v in r.items() if k not in exclude} for r in rows if r['condition']==c and r['arm']=='R_input_aware' and r['allocation']==a] for a in ['original','firms_330']]
+  assert pairs[0]==pairs[1],(name,c)
+PY_CHECK
+
+Default CLI dispatch check (compare report to scarce-3-R_input_aware-households_330 checkpoint):
+godot --headless --no-header --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_cash_allocation --condition scarce --arm R_input_aware --allocation households_330 3 42 --report-json
+
+The additional parity program uses recorded immutable historical raw caches. Without those caches, regenerate M28 raw controls with run_input.py into a fresh traces directory, and obtain the original R payloads with run_demand.capture(condition,days,"requests_smoothed",fixture); verify the published M26 pins and demand_audit.audit before economic_parity. No audit conclusion is reused.

@@ -1,0 +1,19 @@
+.....................................F...............................................................................................
+======================================================================
+FAIL: test_pool_and_order_parity (test_dispatch_queue.DispatchTests.test_pool_and_order_parity)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/simulated-town-rpg/tests/test_dispatch_queue.py", line 27, in test_pool_and_order_parity
+    changed=capture(10,2,'ordering');self.assertEqual([x['id'] for x in changed['ledger']],[f'work-{i:03d}' for i in range(10)])
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/simulated-town-rpg/scripts/tools/planning_load_tools.py", line 19, in capture
+    validate(data)
+  File "/workspace/simulated-town-rpg/scripts/tools/planning_load_tools.py", line 35, in validate
+    assert finished!=ids and finished.index('work-000')>0
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+----------------------------------------------------------------------
+Ran 133 tests in 665.770s
+
+FAILED (failures=1)

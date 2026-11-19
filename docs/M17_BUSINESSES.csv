@@ -1,0 +1,10 @@
+case,days,business,coins,bread,flour,wheat,capital_asset_sales,capital_contributions,capital_purchases,distributions,inputs,payroll,sales,paid_shifts
+control,30,farm,120,0,0,0,0,0,0,180,0,540,720,90
+control,30,mill,120,0,0,0,0,0,0,180,720,540,1440,90
+control,30,bakery,120,0,0,0,0,0,0,180,1440,540,2160,90
+late_worker,1,farm,120,0,0,0,0,0,0,4,0,12,16,2
+late_worker,1,mill,120,0,0,0,0,0,0,4,16,12,32,2
+late_worker,1,bakery,120,0,0,0,0,0,0,4,32,12,48,2
+early_close,1,farm,120,0,0,0,0,0,0,6,0,18,24,3
+early_close,1,mill,120,0,0,0,0,0,0,6,24,18,48,3
+early_close,1,bakery,54,18,0,0,0,0,0,0,48,18,0,3

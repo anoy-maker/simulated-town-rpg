@@ -1,0 +1,75 @@
+Complete native suite
+M0 regression checks: 147
+M0/M1 regression checks: 436
+M0/M1/M2 regression checks: 530
+M0/M1/M2/M3 regression checks: 633
+M0–M4 regression checks: 834
+M0–M5 regression checks: 1024
+M0–M6 regression checks: 1409
+M0–M6B regression checks: 1780
+M0–M8 regression checks: 2513
+M0–M9 regression checks: 2572
+M0–M10 regression checks: 2615
+M11 reference: days=1 meals=12 shifts=6 missed=0 currency=432 invariants=true
+M11 reference: days=2 meals=24 shifts=12 missed=0 currency=432 invariants=true
+M11 reference: days=30 meals=360 shifts=180 missed=0 currency=432 invariants=true
+M11 reference: days=365 meals=4380 shifts=2190 missed=0 currency=432 invariants=true
+M0–M11 regression checks: 2673
+M12 employer choice: days=2 meals=18 missed=6 shifts=12 currency=432
+M12 employer choice: days=30 meals=117 missed=243 shifts=61 currency=432
+M12 employer choice: days=365 meals=1122 missed=3258 shifts=563 currency=432
+M0–M12 regression checks: 2703
+M13 settlement_fixed_owner_first days=2 meals=18 missed=6 shifts=12 first_cash_short=<null>
+M13 settlement_fixed_owner_first days=7 meals=48 missed=36 shifts=40 first_cash_short=6
+M13 settlement_fixed_owner_first days=30 meals=160 missed=200 shifts=119 first_cash_short=6
+M13 settlement_fixed_owner_first days=365 meals=1182 missed=3198 shifts=631 first_cash_short=6
+M13 settlement_sales_rotating days=2 meals=24 missed=0 shifts=12 first_cash_short=<null>
+M13 settlement_sales_rotating days=7 meals=84 missed=0 shifts=42 first_cash_short=<null>
+M13 settlement_sales_rotating days=30 meals=360 missed=0 shifts=180 first_cash_short=<null>
+M13 settlement_sales_rotating days=365 meals=4380 missed=0 shifts=2190 first_cash_short=<null>
+M0–M13 regression checks: 2754
+M14 profitable reference: days=1 meals=12 shifts=6 employee_wages=36 owner_income=12 breaches=0 currency=432
+M14 profitable reference: days=2 meals=24 shifts=12 employee_wages=72 owner_income=24 breaches=0 currency=432
+M14 profitable reference: days=3 meals=36 shifts=18 employee_wages=108 owner_income=36 breaches=0 currency=432
+M14 profitable reference: days=30 meals=360 shifts=180 employee_wages=1080 owner_income=360 breaches=0 currency=432
+M14 profitable reference: days=365 meals=4380 shifts=2190 employee_wages=13140 owner_income=4380 breaches=0 currency=432
+M0–M14 regression checks: 2803
+M15 A days=1 village=456 external=8736 combined=9192 meals=12 visitor_bread=6 shifts=9
+M15 A days=3 village=504 external=8688 combined=9192 meals=36 visitor_bread=18 shifts=27
+M15 A days=30 village=1152 external=8040 combined=9192 meals=360 visitor_bread=180 shifts=270
+M15 A days=365 village=9192 external=0 combined=9192 meals=4380 visitor_bread=2190 shifts=3285
+M0–M15 regression checks: 2867
+M0–M16 regression checks: 2932
+M17 control days=1 meals=12 visitors=6 shifts=9 money=9192 steps=220
+M17 control days=3 meals=36 visitors=18 shifts=27 money=9192 steps=660
+M17 control days=30 meals=360 visitors=180 shifts=270 money=9192 steps=6600
+Tests: 3272 checks, 0 failures
+
+Complete Python suite
+...........................................................................................................................
+----------------------------------------------------------------------
+Ran 123 tests in 703.256s
+
+OK
+
+Focused final goods/cargo/wage checks
+test_day_three_uses_actual_owned_stock_terms_and_household_money (test_economic_diagnostics.EconomicDiagnosticsTests.test_day_three_uses_actual_owned_stock_terms_and_household_money) ... ok
+test_due_wages_precede_owner_capital_floor_and_claims_survive (test_economic_diagnostics.EconomicDiagnosticsTests.test_due_wages_precede_owner_capital_floor_and_claims_survive) ... ok
+test_final_cash_is_not_a_substitute_for_native_events (test_economic_diagnostics.EconomicDiagnosticsTests.test_final_cash_is_not_a_substitute_for_native_events) ... ok
+test_invalid_physical_and_financial_certificates_reject (test_economic_diagnostics.EconomicDiagnosticsTests.test_invalid_physical_and_financial_certificates_reject) ... ok
+test_late_visitors_and_sales_do_not_finance_early_wages (test_economic_diagnostics.EconomicDiagnosticsTests.test_late_visitors_and_sales_do_not_finance_early_wages) ... ok
+test_poor_visitors_and_cashless_b2b_do_not_become_invented_demand (test_economic_diagnostics.EconomicDiagnosticsTests.test_poor_visitors_and_cashless_b2b_do_not_become_invented_demand) ... ok
+test_reader_is_read_only_and_replay_deterministic (test_economic_diagnostics.EconomicDiagnosticsTests.test_reader_is_read_only_and_replay_deterministic) ... ok
+test_reference_witness_reproduces_m23_books_with_binding_payroll (test_economic_diagnostics.EconomicDiagnosticsTests.test_reference_witness_reproduces_m23_books_with_binding_payroll) ... ok
+test_rehashed_native_evidence_corruption_still_fails_original_audit (test_economic_diagnostics.EconomicDiagnosticsTests.test_rehashed_native_evidence_corruption_still_fails_original_audit) ... ok
+test_resource_cap_and_new_job_profitability_are_distinct (test_economic_diagnostics.EconomicDiagnosticsTests.test_resource_cap_and_new_job_profitability_are_distinct) ... ok
+test_scarce_recorded_orders_vs_voluntary_alternative (test_economic_diagnostics.EconomicDiagnosticsTests.test_scarce_recorded_orders_vs_voluntary_alternative) ... ok
+test_shopping_cash_and_stockout_causes_have_actual_provenance (test_economic_diagnostics.EconomicDiagnosticsTests.test_shopping_cash_and_stockout_causes_have_actual_provenance) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 41.904s
+
+OK
+
+Standalone certificate
+Independent physical/time/cash certificate PASS

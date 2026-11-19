@@ -1,0 +1,191 @@
+{
+  "version": 1,
+  "host": {
+    "godot": "4.6.3.stable.official.7d41c59c4",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "machine": "x86_64",
+    "cpus": 3,
+    "cpu_max": "200000 100000",
+    "memory_max": "8589934592",
+    "rust_sha256": "a7c9f739c84aa83fcbd4f1c9554080d53932d2ba69144e77054615e72bc3c462",
+    "bridge_sha256": "feee66ececa02b22294955e587447a3b52a9eb33503d0d5c19bcf5275f827cc3"
+  },
+  "cases": {
+    "C1": {
+      "run_seconds": 0.071854,
+      "command_seconds": 0.7370291120023467,
+      "report_seconds": 0.156577,
+      "peak_rss_kib": 85988,
+      "event_count": 913,
+      "canonical_sha256": "93006cc9d697fd9455527fb604e6eeebe54eefc3c43925a93b119bd0cdd7f966",
+      "decision_work_ms": {
+        "n": 1,
+        "min": 43.087,
+        "median": 43.087,
+        "p95": null,
+        "p99": null,
+        "worst": 43.087
+      },
+      "worst_appointment_ms": 43.255,
+      "worst_tick_ms": 0.604
+    },
+    "D1": {
+      "run_seconds": 0.072065,
+      "command_seconds": 0.7303197989967884,
+      "report_seconds": 0.116286,
+      "peak_rss_kib": 85856,
+      "event_count": 913,
+      "canonical_sha256": "572964383ed21e7ff013ba0192cd9db8dd42cfd5e0a584096bb8934c8e2be784",
+      "decision_work_ms": {
+        "n": 1,
+        "min": 45.18,
+        "median": 45.18,
+        "p95": null,
+        "p99": null,
+        "worst": 45.18
+      },
+      "worst_appointment_ms": 45.338,
+      "worst_tick_ms": 0.337
+    },
+    "queue10": {
+      "run_seconds": 0.682775,
+      "command_seconds": 1.009345487000246,
+      "peak_rss_kib": 71416,
+      "event_count": 0,
+      "callback_ms": {
+        "n": 41,
+        "min": 0.037,
+        "median": 0.074,
+        "p95": 1.934,
+        "p99": null,
+        "worst": 2.286
+      },
+      "queue_wait_ms": {
+        "n": 10,
+        "min": 1.502,
+        "median": 284.0775,
+        "p95": null,
+        "p99": null,
+        "worst": 567.725
+      },
+      "decision_work_ms": {
+        "n": 10,
+        "min": 55.034,
+        "median": 60.0205,
+        "p95": null,
+        "p99": null,
+        "worst": 62.775
+      },
+      "maxima": {
+        "completed": 1,
+        "input_bytes": 15880,
+        "output_bytes": 23116,
+        "outstanding": 10,
+        "running": 1,
+        "waiting": 9
+      },
+      "proposal_digest": "c834cc0509c6784b9cdf7c93de29a0d7d2d5b6158601fff8bca4d8565c6fe6ba",
+      "release_digest": "5eb58dc71956864da7ae1f7a3e81d15e2ed1ce91653c3eb160317744df52d629"
+    }
+  },
+  "command_wall_seconds": 2.514990695999586,
+  "verification_phases": [
+    {
+      "phase": "full-godot",
+      "seconds": "983.6318121329969",
+      "status": "0"
+    },
+    {
+      "phase": "historical",
+      "seconds": "1593.1058240109996",
+      "status": "0"
+    },
+    {
+      "phase": "full-python",
+      "seconds": "241.69274398499692",
+      "status": "0"
+    },
+    {
+      "phase": "m23-controls",
+      "seconds": "158.87224945399794",
+      "status": "0"
+    },
+    {
+      "phase": "m24-controls",
+      "seconds": "705.4126344230026",
+      "status": "0"
+    },
+    {
+      "phase": "m24-fixtures",
+      "seconds": "86.77724163400126",
+      "status": "0"
+    },
+    {
+      "phase": "m25-controls",
+      "seconds": "683.7382185320021",
+      "status": "0"
+    },
+    {
+      "phase": "m25-fixtures",
+      "seconds": "16.0896474809997",
+      "status": "0"
+    },
+    {
+      "phase": "m25-lifecycle",
+      "seconds": "12.688092811993556",
+      "status": "0"
+    },
+    {
+      "phase": "m26-fixtures",
+      "seconds": "6.888163866002287",
+      "status": "0"
+    },
+    {
+      "phase": "m26-extra-controls",
+      "seconds": "80.56300231099885",
+      "status": "0"
+    },
+    {
+      "phase": "original-audits",
+      "seconds": "607.1867387829989",
+      "status": "0"
+    },
+    {
+      "phase": "cd-native-source",
+      "seconds": "3.69065750700247",
+      "status": "0"
+    },
+    {
+      "phase": "m26-m27-controls",
+      "seconds": "816.2248130699954",
+      "status": "0"
+    },
+    {
+      "phase": "m28-m29-fresh-controls",
+      "seconds": "1732.2536713079971",
+      "status": "0"
+    },
+    {
+      "phase": "m30-checkpoint",
+      "seconds": "50.20505084400065",
+      "status": "0"
+    },
+    {
+      "phase": "m30-main-matrix",
+      "seconds": "492.86409138399904",
+      "status": "0"
+    },
+    {
+      "phase": "m30-authority-fixtures",
+      "seconds": "34.886630344997684",
+      "status": "0"
+    },
+    {
+      "phase": "m30-opt-in-dispatch",
+      "seconds": "7.409594766002556",
+      "status": "0"
+    }
+  ],
+  "warnings": [],
+  "comparable": true
+}

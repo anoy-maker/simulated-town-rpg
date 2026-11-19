@@ -1,0 +1,58 @@
+zero.err
+SCRIPT ERROR: Parse Error: The member "Projection" cannot have the same name as a builtin type.
+          at: GDScript::reload (res://scripts/sim/wage_policy.gd:4)
+SCRIPT ERROR: Parse Error: Cannot find member "project" in base "Projection".
+          at: GDScript::reload (res://scripts/sim/wage_policy.gd:56)
+SCRIPT ERROR: Parse Error: Function "project()" not found in base Projection.
+          at: GDScript::reload (res://scripts/sim/wage_policy.gd:56)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+          at: GDScript::reload (res://scripts/sim/wage_world.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+          at: GDScript::reload (res://scripts/sim/wage_runner.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+          at: GDScript::reload (res://scripts/tools/run_wages.gd:0)
+ERROR: Failed to load script "res://scripts/tools/run_wages.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript.cpp:2907)
+
+
+math-first.log
+FAIL: own declared belief can rationally select below bread affordability
+FAIL: better own savings can change the utility-optimal ask
+M30 focused checks: 41, failures: 2
+
+
+one-first.log
+captured fixed10_instrumented
+audited {'events': 1567, 'days': 1, 'money': 9192, 'financial_spatial_goods_and_decisions': True}
+Traceback (most recent call last):
+  File "<stdin>", line 8, in <module>
+  File "/workspace/simulated-town-rpg/scripts/tools/run_wages.py", line 31, in parity
+    kept=walk(events);assert kept==old['events'],'F native economic event/receipt drift'
+                             ^^^^^^^^^^^^^^^^^^^
+AssertionError: F native economic event/receipt drift
+
+
+one-final.log
+captured fixed10_instrumented
+audited {'events': 1567, 'days': 1, 'money': 9192, 'financial_spatial_goods_and_decisions': True}
+{'all_native_events': True, 'full_normalized_report': True, 'normalized_ledger_sha256': '5cf00a6f30aeae20e8e551cbeb3f76e3cecbe3b0294bea7c672761b3bf0c58cc', 'instrumented_ledger_sha256': '85095b58540fb10aafa3c5004cbae1cc8a1e4679e559a0a686eee2304e8419a2'}
+captured worker_bids
+Traceback (most recent call last):
+  File "<stdin>", line 7, in <module>
+  File "/workspace/simulated-town-rpg/scripts/tools/wage_audit.py", line 174, in analyze
+    observer=WageAudit();result=replay(data,observer,fixture=True);result['source']['base']=BASE
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/simulated-town-rpg/scripts/tools/economic_diagnostics.py", line 201, in analyze
+    result=replay(data,fixture=fixture or 'demand_fixture' in data['report']['initial'],labor=observer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/simulated-town-rpg/scripts/tools/brewery_audit.py", line 338, in audit
+    else:assert action in ('initialize','day_started','spatial_clock','spatial_shop_closed','labor_environment'),('unrecognized successful event',action)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('unrecognized successful event', 'wage_portfolio_selected')
+
+
+Discarded successful development checkpoint: final sources differ; all32 recaptured.
+{"F_parity_cases":8,"captures":32,"cases":16,"command_seconds":49.82984066499921,"model":{"base":"9f7268e130d5e1efa341c858e9b14c4d42ab5e80","godot":"4.6.3.stable.official.7d41c59c4","native_source_sha256":"13a012a1357c95c0b681dba452299d879771633ef6ba7af285811784a5e935bf","wage_cli":"8d9c12b9f847fd8a774a69fbae424ced6f43e51459de3b0e1d7c981123c9a1a1","wage_policy":"cdce3dce4ae189f93b10494f7683872a6b01fc30dfdce86720183b081b8b08b6"}}
+
+
+Reporting-only preparation corrections: unselected-bid applicant-count join used bid business, not missing native application target; scratch dependency helper imported host from planning_load_tools after nonexistent profile_simulation.metadata import failed. No economic policy changes.
