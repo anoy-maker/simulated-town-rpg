@@ -148,7 +148,7 @@ jobs:
           print("M31 full acceptance confirmed:", len(report.get("commands", [])), "stages")
           PY
 
-      - name: Preserve compact full-acceptance summary
+      - name: Preserve full-acceptance summary and stage logs
         if: ${{ always() && github.event_name == 'workflow_dispatch' && inputs.scope == 'm31-full' }}
         uses: actions/upload-artifact@v4
         with:
@@ -156,5 +156,6 @@ jobs:
           path: |
             work/ci/m31-full/summary.json
             work/ci/m31-full/dependencies.json
+            work/ci/m31-full/*.log
           retention-days: 3
           if-no-files-found: ignore
