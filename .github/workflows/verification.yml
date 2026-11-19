@@ -1,5 +1,5 @@
-# Public-repository CI pilot. No secrets, paid APIs, or privileged tokens.
-# Main pushes run the M30 test suites. The full M31 certification is manual-only.
+# Read-only regression CI on main; full milestone acceptance is deliberately manual.
+# No secrets, external APIs, or privileged tokens.
 name: Simulation verification
 
 on:
@@ -14,20 +14,20 @@ on:
   workflow_dispatch:
     inputs:
       scope:
-        description: 'Test suites on the selected ref, or full M31 acceptance on the M31 draft'
+        description: 'Regression suites, or all milestone acceptance stages (longer manual run)'
         required: true
         type: choice
         default: suites
         options:
           - suites
-          - m31-full
+          - full
 
 permissions:
   contents: read
 
 jobs:
   verify:
-    name: ${{ github.event_name == 'workflow_dispatch' && inputs.scope == 'm31-full' && 'M31 full acceptance (manual)' || 'M30 Godot + Python suites' }}
+    name: ${{ github.event_name == 'workflow_dispatch' && inputs.scope == 'full' && 'Full milestone acceptance (manual)' || 'Godot + Python regression suites' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 180
     env:
@@ -36,8 +36,7 @@ jobs:
       - name: Check out exact test source
         uses: actions/checkout@v4
         with:
-          # For full acceptance, run the draft M31 verifier, not the M30 main tree.
-          ref: ${{ (github.event_name == 'workflow_dispatch' && inputs.scope == 'm31-full') && 'codex/m31-fast-verification' || github.sha }}
+          # Checkout uses the exact event commit, including the selected manual ref.
           fetch-depth: 0
           persist-credentials: false
 
@@ -47,7 +46,7 @@ jobs:
           set -euo pipefail
           git rev-parse HEAD
           git status --short
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.scope }}" == "m31-full" ]]; then
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.scope }}" == "full" ]]; then
             test -f scripts/tools/verify_workflow.py
           fi
 
@@ -109,53 +108,70 @@ jobs:
           test -f native/m20/bin/libm20_bridge.so
           echo "Native arithmetic and bridge ready"
 
-      - name: Full M30 Godot test suite
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.scope != 'm31-full' }}
+      - name: Godot regression suite
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.scope != 'full' }}
         timeout-minutes: 35
         shell: bash
         run: |
           set -euo pipefail
           godot --headless --no-header --path . --script res://tests/run_tests.gd \
             2>&1 | tee "$RUNNER_TEMP/godot-tests.log"
-          grep -Eq '^Tests: 3482 checks, 0 failures$' "$RUNNER_TEMP/godot-tests.log"
+          python3 - <<'PY'
+          import os, re
+          from pathlib import Path
+          log = (Path(os.environ['RUNNER_TEMP']) / 'godot-tests.log').read_text()
+          counts = re.findall(r'(?m)^Tests: (\d+) checks, (\d+) failures$', log)
+          assert counts, 'Missing Godot test summary'
+          checks, failures = map(int, counts[-1])
+          assert failures == 0 and checks >= 3482, (checks, failures)
+          print(f'Godot regression gate passed: {checks} checks, no failures')
+          PY
 
-      - name: Full M30 Python test suite
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.scope != 'm31-full' }}
+      - name: Python regression suite
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.scope != 'full' }}
         timeout-minutes: 30
         shell: bash
         run: |
           set -euo pipefail
           python3 -B -m unittest discover -s tests -p 'test_*.py' -v \
             2>&1 | tee "$RUNNER_TEMP/python-tests.log"
-          grep -Eq '^Ran 149 tests in ' "$RUNNER_TEMP/python-tests.log"
+          python3 - <<'PY'
+          import os, re
+          from pathlib import Path
+          log = (Path(os.environ['RUNNER_TEMP']) / 'python-tests.log').read_text()
+          counts = re.findall(r'(?m)^Ran (\d+) tests in ', log)
+          minimum = 166 if Path('tests/test_verification_workflow.py').is_file() else 149
+          assert counts and int(counts[-1]) >= minimum, (counts, minimum)
+          print(f'Python regression gate passed: {counts[-1]} tests (minimum {minimum})')
+          PY
           grep -Eq '^OK$' "$RUNNER_TEMP/python-tests.log"
           ! grep -Eq '(^OK \(skipped=|^FAILED|skipped=[1-9])' "$RUNNER_TEMP/python-tests.log"
 
-      - name: Full M31 original independent acceptance (manual only)
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.scope == 'm31-full' }}
+      - name: Full milestone acceptance (manual only)
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.scope == 'full' }}
         shell: bash
         timeout-minutes: 165
         run: |
           set -euo pipefail
           mkdir -p work/ci
-          python3 -B scripts/tools/verify_workflow.py full --output work/ci/m31-full
+          python3 -B scripts/tools/verify_workflow.py full --output work/ci/full-acceptance
           python3 - <<'PY'
           import json
           from pathlib import Path
-          report = json.loads(Path("work/ci/m31-full/summary.json").read_text())
+          report = json.loads(Path("work/ci/full-acceptance/summary.json").read_text())
           assert report.get("full_acceptance") is True, report
           assert report.get("status") == "passed", report
-          print("M31 full acceptance confirmed:", len(report.get("commands", [])), "stages")
+          print("Full milestone acceptance confirmed:", len(report.get("commands", [])), "stages")
           PY
 
       - name: Preserve full-acceptance summary and stage logs
-        if: ${{ always() && github.event_name == 'workflow_dispatch' && inputs.scope == 'm31-full' }}
+        if: ${{ always() && github.event_name == 'workflow_dispatch' && inputs.scope == 'full' }}
         uses: actions/upload-artifact@v4
         with:
-          name: m31-full-summary-${{ github.run_id }}
+          name: full-acceptance-summary-${{ github.run_id }}
           path: |
-            work/ci/m31-full/summary.json
-            work/ci/m31-full/dependencies.json
-            work/ci/m31-full/*.log
+            work/ci/full-acceptance/summary.json
+            work/ci/full-acceptance/dependencies.json
+            work/ci/full-acceptance/*.log
           retention-days: 3
           if-no-files-found: ignore
