@@ -437,8 +437,8 @@ prices, viable autonomous settlement policy or structural demand identification.
 
 ## M31: development and verification workflow
 
-**Status:** Tooling delivered for review; [results](M31_RESULTS.md).
-Comprehensive M31 acceptance is deliberately pending under its tooling-only scope.
+**Status:** Completed, full 17-stage acceptance passed on [GitHub Actions](https://github.com/anoy-maker/simulated-town-rpg/actions/runs/44449713489), and [merged to main](https://github.com/anoy-maker/simulated-town-rpg/pull/47). See [results](M31_RESULTS.md).
+M31's initial development submission deliberately deferred full acceptance; this was subsequently completed without adopting new economic policies.
 
 - Explicit development/checkpoint/full commands reuse existing tests, captures,
   complete economic comparisons and independent auditors.
@@ -447,6 +447,7 @@ Comprehensive M31 acceptance is deliberately pending under its tooling-only scop
 - Measured paired cold/warm feedback, real negative witnesses, complete full-plan
   preservation and a proposed small future CI pilot with explicit cost limits.
 - No economic, state, scheduling, native-kernel or gameplay changes; no adopted
-  worker-bidding baseline and no CI migration.
+  worker-bidding baseline. The milestone itself was tooling-only; CI was subsequently
+  configured and accepted independently.
 
 **Stop after M31 for review.**
