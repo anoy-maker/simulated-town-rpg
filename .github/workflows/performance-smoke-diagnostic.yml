@@ -3,6 +3,11 @@
 name: M31 performance smoke diagnostic
 
 on:
+  # One CI pilot on a change to this workflow; other pushes do not launch it.
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/performance-smoke-diagnostic.yml'
   workflow_dispatch:
 
 permissions:
