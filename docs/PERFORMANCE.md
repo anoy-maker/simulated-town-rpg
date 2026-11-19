@@ -102,7 +102,7 @@ remains a real world-progression constraint.
 
 ## M31 versioned verification entry point
 
-Use the commands in [README](../README.md#m31-faster-verification-during-development)
+Use the commands in [M31 results](M31_RESULTS.md#three-explicit-levels)
 from the repository root, with a fresh output directory per invocation. Reuse a
 separate `--cache-dir` if desired. Output `summary.json` records status, command
 wall, printed test counts, probe/audit counts, hashes, deferred checks and the
