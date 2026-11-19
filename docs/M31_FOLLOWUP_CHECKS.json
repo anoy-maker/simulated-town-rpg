@@ -1,0 +1,1092 @@
+{
+  "runs": [
+    {
+      "label": "final-wages-development-cold",
+      "seconds": 7.035259640000049,
+      "status": 0,
+      "summary": {
+        "base": "f142f7b665206ef490d5da046510d672f9f5f466",
+        "command_seconds": 6.944557353999926,
+        "commands": [
+          {
+            "command": [
+              "godot",
+              "--headless",
+              "--no-header",
+              "--path",
+              ".",
+              "--script",
+              "res://tests/run_wage_tests.gd"
+            ],
+            "log": "focused.log",
+            "name": "focused",
+            "reported_checks": [
+              66
+            ],
+            "reported_failures": [],
+            "seconds": 1.2631598209998174,
+            "status": 0
+          }
+        ],
+        "deferred": [
+          "complete Godot/Python suites",
+          "169 historical byte pins",
+          "88 M23\u2013M25 pinned pairs",
+          "36 M26/M27 controls, 48 proofs and 16 certificates",
+          "76 M28/M29 controls",
+          "full 28-case M30 matrix and 14 economic parities",
+          "12 original C/D independent audits"
+        ],
+        "dependencies_sha256": "71eaffe109236e86155861bf58d053e86c81624c5953ce7471123cd5bfe3c63f",
+        "full_acceptance": false,
+        "full_commands": [],
+        "level": "development",
+        "smoke": {
+          "actual_native_processes": 5,
+          "captures": [
+            {
+              "audit_seconds": 0.11291336399995089,
+              "cache": "miss",
+              "capture_seconds": 1.0765227699998832,
+              "case": {
+                "allocation": "original",
+                "arm": "fixed10_instrumented",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "wage",
+                "seed": 42
+              },
+              "events": 1567,
+              "ledger_sha256": "c99c4dc2140c3d8fd591c54f6866337287eb8f9b0758d8d86d8ea7229d37a0ad",
+              "proof_sha256": "46d930eef7469543a635f8a0b89383fdc2f918f09be813924811b8f1e75cfbf7",
+              "repeat": 1,
+              "summary_sha256": "d88ad0ceeef87a471711537a5e56a74e60087a5491f2f512e6053b8c6282b7de",
+              "table": "M30_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.12648851699987063,
+              "cache": "miss",
+              "capture_seconds": 0.7464303300000665,
+              "case": {
+                "allocation": "original",
+                "arm": "fixed10_instrumented",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "wage",
+                "seed": 42
+              },
+              "events": 1567,
+              "ledger_sha256": "c99c4dc2140c3d8fd591c54f6866337287eb8f9b0758d8d86d8ea7229d37a0ad",
+              "proof_sha256": "46132ddb4e937ab2b3a1571dafc7aafb8461dd22fabaef3e5cafa0bf67976d97",
+              "repeat": 2,
+              "summary_sha256": "d88ad0ceeef87a471711537a5e56a74e60087a5491f2f512e6053b8c6282b7de",
+              "table": "M30_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.10358806699991874,
+              "cache": "miss",
+              "capture_seconds": 0.7436748410000291,
+              "case": {
+                "allocation": "original",
+                "arm": "R_input_aware",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "cash",
+                "seed": 42
+              },
+              "events": 1552,
+              "ledger_sha256": "5cf00a6f30aeae20e8e551cbeb3f76e3cecbe3b0294bea7c672761b3bf0c58cc",
+              "proof_sha256": "e29f642c784b7019cbe4fdb0f39a1878760a4124d68fd088310477e1ac77b154",
+              "repeat": 1,
+              "summary_sha256": "54c7c34b2f27b2a10753a5e7f20117bec2d1fdb39eb9eede0952a6de8cf888bf",
+              "table": "M29_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.10535852699990755,
+              "cache": "miss",
+              "capture_seconds": 0.7438552289997915,
+              "case": {
+                "allocation": "original",
+                "arm": "worker_bids",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "wage",
+                "seed": 42
+              },
+              "events": 1537,
+              "ledger_sha256": "4fff23998e7fb8bc54a8f0e7ad50713b00d8405972cbd13dac00f77fdc89b208",
+              "proof_sha256": "6b8d7171eb5ac899482982f97d31712f28652a74d169b142f9e3864ccdc779e1",
+              "repeat": 1,
+              "summary_sha256": "a53b06990f49361565eec015d2f4a12a03753a9119ecd84719e67f7886b70cf1",
+              "table": "M30_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.10557387900007598,
+              "cache": "miss",
+              "capture_seconds": 0.7583558420001282,
+              "case": {
+                "allocation": "original",
+                "arm": "worker_bids",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "wage",
+                "seed": 42
+              },
+              "events": 1537,
+              "ledger_sha256": "4fff23998e7fb8bc54a8f0e7ad50713b00d8405972cbd13dac00f77fdc89b208",
+              "proof_sha256": "e7ec77b684dd40d84cd5aeca61da33fb266fa5ebe6af0662772974c502bc7260",
+              "repeat": 2,
+              "summary_sha256": "a53b06990f49361565eec015d2f4a12a03753a9119ecd84719e67f7886b70cf1",
+              "table": "M30_RUNS.csv"
+            }
+          ],
+          "deterministic_cases": 2,
+          "full_economic_parities": [
+            {
+              "all_native_events": true,
+              "case": {
+                "allocation": "original",
+                "arm": "fixed10_instrumented",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "wage",
+                "seed": 42
+              },
+              "full_normalized_report": true,
+              "instrumented_ledger_sha256": "c99c4dc2140c3d8fd591c54f6866337287eb8f9b0758d8d86d8ea7229d37a0ad",
+              "normalized_ledger_sha256": "5cf00a6f30aeae20e8e551cbeb3f76e3cecbe3b0294bea7c672761b3bf0c58cc"
+            }
+          ],
+          "independent_audits": 5
+        },
+        "status": "passed",
+        "subsystem": "wages"
+      }
+    },
+    {
+      "label": "final-wages-development-warm",
+      "seconds": 2.364494180000065,
+      "status": 0,
+      "summary": {
+        "base": "f142f7b665206ef490d5da046510d672f9f5f466",
+        "command_seconds": 2.300713857000119,
+        "commands": [
+          {
+            "command": [
+              "godot",
+              "--headless",
+              "--no-header",
+              "--path",
+              ".",
+              "--script",
+              "res://tests/run_wage_tests.gd"
+            ],
+            "log": "focused.log",
+            "name": "focused",
+            "reported_checks": [
+              66
+            ],
+            "reported_failures": [],
+            "seconds": 0.9202801619999263,
+            "status": 0
+          }
+        ],
+        "deferred": [
+          "complete Godot/Python suites",
+          "169 historical byte pins",
+          "88 M23\u2013M25 pinned pairs",
+          "36 M26/M27 controls, 48 proofs and 16 certificates",
+          "76 M28/M29 controls",
+          "full 28-case M30 matrix and 14 economic parities",
+          "12 original C/D independent audits"
+        ],
+        "dependencies_sha256": "71eaffe109236e86155861bf58d053e86c81624c5953ce7471123cd5bfe3c63f",
+        "full_acceptance": false,
+        "full_commands": [],
+        "level": "development",
+        "smoke": {
+          "actual_native_processes": 0,
+          "captures": [
+            {
+              "audit_seconds": 0.10994881700003134,
+              "cache": "verified_hit",
+              "capture_seconds": 0,
+              "case": {
+                "allocation": "original",
+                "arm": "fixed10_instrumented",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "wage",
+                "seed": 42
+              },
+              "events": 1567,
+              "ledger_sha256": "c99c4dc2140c3d8fd591c54f6866337287eb8f9b0758d8d86d8ea7229d37a0ad",
+              "proof_sha256": "46d930eef7469543a635f8a0b89383fdc2f918f09be813924811b8f1e75cfbf7",
+              "repeat": 1,
+              "summary_sha256": "d88ad0ceeef87a471711537a5e56a74e60087a5491f2f512e6053b8c6282b7de",
+              "table": "M30_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.10912098800008607,
+              "cache": "verified_hit",
+              "capture_seconds": 0,
+              "case": {
+                "allocation": "original",
+                "arm": "fixed10_instrumented",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "wage",
+                "seed": 42
+              },
+              "events": 1567,
+              "ledger_sha256": "c99c4dc2140c3d8fd591c54f6866337287eb8f9b0758d8d86d8ea7229d37a0ad",
+              "proof_sha256": "46132ddb4e937ab2b3a1571dafc7aafb8461dd22fabaef3e5cafa0bf67976d97",
+              "repeat": 2,
+              "summary_sha256": "d88ad0ceeef87a471711537a5e56a74e60087a5491f2f512e6053b8c6282b7de",
+              "table": "M30_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.10309834999998202,
+              "cache": "verified_hit",
+              "capture_seconds": 0,
+              "case": {
+                "allocation": "original",
+                "arm": "R_input_aware",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "cash",
+                "seed": 42
+              },
+              "events": 1552,
+              "ledger_sha256": "5cf00a6f30aeae20e8e551cbeb3f76e3cecbe3b0294bea7c672761b3bf0c58cc",
+              "proof_sha256": "e29f642c784b7019cbe4fdb0f39a1878760a4124d68fd088310477e1ac77b154",
+              "repeat": 1,
+              "summary_sha256": "54c7c34b2f27b2a10753a5e7f20117bec2d1fdb39eb9eede0952a6de8cf888bf",
+              "table": "M29_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.10498553799993715,
+              "cache": "verified_hit",
+              "capture_seconds": 0,
+              "case": {
+                "allocation": "original",
+                "arm": "worker_bids",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "wage",
+                "seed": 42
+              },
+              "events": 1537,
+              "ledger_sha256": "4fff23998e7fb8bc54a8f0e7ad50713b00d8405972cbd13dac00f77fdc89b208",
+              "proof_sha256": "6b8d7171eb5ac899482982f97d31712f28652a74d169b142f9e3864ccdc779e1",
+              "repeat": 1,
+              "summary_sha256": "a53b06990f49361565eec015d2f4a12a03753a9119ecd84719e67f7886b70cf1",
+              "table": "M30_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.10277290899989566,
+              "cache": "verified_hit",
+              "capture_seconds": 0,
+              "case": {
+                "allocation": "original",
+                "arm": "worker_bids",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "wage",
+                "seed": 42
+              },
+              "events": 1537,
+              "ledger_sha256": "4fff23998e7fb8bc54a8f0e7ad50713b00d8405972cbd13dac00f77fdc89b208",
+              "proof_sha256": "e7ec77b684dd40d84cd5aeca61da33fb266fa5ebe6af0662772974c502bc7260",
+              "repeat": 2,
+              "summary_sha256": "a53b06990f49361565eec015d2f4a12a03753a9119ecd84719e67f7886b70cf1",
+              "table": "M30_RUNS.csv"
+            }
+          ],
+          "deterministic_cases": 2,
+          "full_economic_parities": [
+            {
+              "all_native_events": true,
+              "case": {
+                "allocation": "original",
+                "arm": "fixed10_instrumented",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "wage",
+                "seed": 42
+              },
+              "full_normalized_report": true,
+              "instrumented_ledger_sha256": "c99c4dc2140c3d8fd591c54f6866337287eb8f9b0758d8d86d8ea7229d37a0ad",
+              "normalized_ledger_sha256": "5cf00a6f30aeae20e8e551cbeb3f76e3cecbe3b0294bea7c672761b3bf0c58cc"
+            }
+          ],
+          "independent_audits": 5
+        },
+        "status": "passed",
+        "subsystem": "wages"
+      }
+    },
+    {
+      "label": "final-wages-checkpoint-cold",
+      "seconds": 37.7862384770001,
+      "status": 0,
+      "summary": {
+        "base": "f142f7b665206ef490d5da046510d672f9f5f466",
+        "command_seconds": 37.72390571699998,
+        "commands": [
+          {
+            "command": [
+              "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+              "-B",
+              "-m",
+              "unittest",
+              "discover",
+              "-s",
+              "tests",
+              "-p",
+              "test_wages.py"
+            ],
+            "log": "focused.log",
+            "name": "focused",
+            "reported_checks": [
+              9
+            ],
+            "reported_failures": [],
+            "seconds": 22.38638406899986,
+            "status": 0
+          }
+        ],
+        "deferred": [
+          "complete Godot/Python suites",
+          "169 historical byte pins",
+          "88 M23\u2013M25 pinned pairs",
+          "36 M26/M27 controls, 48 proofs and 16 certificates",
+          "76 M28/M29 controls",
+          "full 28-case M30 matrix and 14 economic parities",
+          "12 original C/D independent audits"
+        ],
+        "dependencies_sha256": "71eaffe109236e86155861bf58d053e86c81624c5953ce7471123cd5bfe3c63f",
+        "full_acceptance": false,
+        "full_commands": [],
+        "level": "checkpoint",
+        "smoke": {
+          "actual_native_processes": 10,
+          "captures": [
+            {
+              "audit_seconds": 0.11441119699998126,
+              "cache": "miss",
+              "capture_seconds": 0.8518445150000389,
+              "case": {
+                "allocation": "original",
+                "arm": "fixed10_instrumented",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "wage",
+                "seed": 42
+              },
+              "events": 1567,
+              "ledger_sha256": "c99c4dc2140c3d8fd591c54f6866337287eb8f9b0758d8d86d8ea7229d37a0ad",
+              "proof_sha256": "46d930eef7469543a635f8a0b89383fdc2f918f09be813924811b8f1e75cfbf7",
+              "repeat": 1,
+              "summary_sha256": "d88ad0ceeef87a471711537a5e56a74e60087a5491f2f512e6053b8c6282b7de",
+              "table": "M30_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.12278089699998418,
+              "cache": "miss",
+              "capture_seconds": 0.7469454790000327,
+              "case": {
+                "allocation": "original",
+                "arm": "fixed10_instrumented",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "wage",
+                "seed": 42
+              },
+              "events": 1567,
+              "ledger_sha256": "c99c4dc2140c3d8fd591c54f6866337287eb8f9b0758d8d86d8ea7229d37a0ad",
+              "proof_sha256": "46132ddb4e937ab2b3a1571dafc7aafb8461dd22fabaef3e5cafa0bf67976d97",
+              "repeat": 2,
+              "summary_sha256": "d88ad0ceeef87a471711537a5e56a74e60087a5491f2f512e6053b8c6282b7de",
+              "table": "M30_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.10707479300003797,
+              "cache": "miss",
+              "capture_seconds": 0.7401269529998444,
+              "case": {
+                "allocation": "original",
+                "arm": "R_input_aware",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "cash",
+                "seed": 42
+              },
+              "events": 1552,
+              "ledger_sha256": "5cf00a6f30aeae20e8e551cbeb3f76e3cecbe3b0294bea7c672761b3bf0c58cc",
+              "proof_sha256": "e29f642c784b7019cbe4fdb0f39a1878760a4124d68fd088310477e1ac77b154",
+              "repeat": 1,
+              "summary_sha256": "54c7c34b2f27b2a10753a5e7f20117bec2d1fdb39eb9eede0952a6de8cf888bf",
+              "table": "M29_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.11236271400002806,
+              "cache": "miss",
+              "capture_seconds": 0.9284230620000926,
+              "case": {
+                "allocation": "original",
+                "arm": "worker_bids",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "wage",
+                "seed": 42
+              },
+              "events": 1537,
+              "ledger_sha256": "4fff23998e7fb8bc54a8f0e7ad50713b00d8405972cbd13dac00f77fdc89b208",
+              "proof_sha256": "6b8d7171eb5ac899482982f97d31712f28652a74d169b142f9e3864ccdc779e1",
+              "repeat": 1,
+              "summary_sha256": "a53b06990f49361565eec015d2f4a12a03753a9119ecd84719e67f7886b70cf1",
+              "table": "M30_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.1088256379998711,
+              "cache": "miss",
+              "capture_seconds": 0.7418232609998086,
+              "case": {
+                "allocation": "original",
+                "arm": "worker_bids",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "wage",
+                "seed": 42
+              },
+              "events": 1537,
+              "ledger_sha256": "4fff23998e7fb8bc54a8f0e7ad50713b00d8405972cbd13dac00f77fdc89b208",
+              "proof_sha256": "e7ec77b684dd40d84cd5aeca61da33fb266fa5ebe6af0662772974c502bc7260",
+              "repeat": 2,
+              "summary_sha256": "a53b06990f49361565eec015d2f4a12a03753a9119ecd84719e67f7886b70cf1",
+              "table": "M30_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.3544124400000328,
+              "cache": "miss",
+              "capture_seconds": 1.4327114849997997,
+              "case": {
+                "allocation": "original",
+                "arm": "fixed10_instrumented",
+                "condition": "scarce",
+                "days": 3,
+                "kind": "wage",
+                "seed": 42
+              },
+              "events": 4816,
+              "ledger_sha256": "15c0314f0eaca4adc7b76fef97df3c2af8b3af6ca1a8e2bc6bef2b77cc75acda",
+              "proof_sha256": "ab095c772dfe5787cb82d6d504a769def0703154330d9beb7f1ab70ee00b8bea",
+              "repeat": 1,
+              "summary_sha256": "d63257e900151ca32f504e883a4016070d411657be71892d9bce95d888df5198",
+              "table": "M30_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.37743575600006807,
+              "cache": "miss",
+              "capture_seconds": 1.23790120700005,
+              "case": {
+                "allocation": "original",
+                "arm": "fixed10_instrumented",
+                "condition": "scarce",
+                "days": 3,
+                "kind": "wage",
+                "seed": 42
+              },
+              "events": 4816,
+              "ledger_sha256": "15c0314f0eaca4adc7b76fef97df3c2af8b3af6ca1a8e2bc6bef2b77cc75acda",
+              "proof_sha256": "1375bf88ba508ba4f9fce428155fac804fbeef30993ba0758dae5c5494b4e6cc",
+              "repeat": 2,
+              "summary_sha256": "d63257e900151ca32f504e883a4016070d411657be71892d9bce95d888df5198",
+              "table": "M30_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.3608907220000219,
+              "cache": "miss",
+              "capture_seconds": 1.2328493770000932,
+              "case": {
+                "allocation": "original",
+                "arm": "R_input_aware",
+                "condition": "scarce",
+                "days": 3,
+                "kind": "cash",
+                "seed": 42
+              },
+              "events": 4771,
+              "ledger_sha256": "174e2567c21331957df0f7a38836bd91b22060529d7bec633d7dc7e2b4d5b5ca",
+              "proof_sha256": "6f8c679c57cf7c7bfcad996a237a9e6e610291756c67780fea7cec1e26b9d174",
+              "repeat": 1,
+              "summary_sha256": "bd2f19d841a4b476f237e47d314945d25f495fd80224b907f8185874b84fbe31",
+              "table": "M29_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.37812037699995926,
+              "cache": "miss",
+              "capture_seconds": 1.5180094239999562,
+              "case": {
+                "allocation": "original",
+                "arm": "worker_bids",
+                "condition": "scarce",
+                "days": 3,
+                "kind": "wage",
+                "seed": 42
+              },
+              "events": 4685,
+              "ledger_sha256": "c8c0933e5ec6bc0ef266b1929b2fff7d161a0c35e3d4280dd39c3f99589aac16",
+              "proof_sha256": "a80f0e9b46667a4b4dd272499b1d60cbbf4cc8a653c9abb7771b342b597bff0d",
+              "repeat": 1,
+              "summary_sha256": "3433ca1cf76f5499c03987f8b760273ca78b849269693b565a23cd961c35b917",
+              "table": "M30_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.40384861600000477,
+              "cache": "miss",
+              "capture_seconds": 1.4186511670000073,
+              "case": {
+                "allocation": "original",
+                "arm": "worker_bids",
+                "condition": "scarce",
+                "days": 3,
+                "kind": "wage",
+                "seed": 42
+              },
+              "events": 4685,
+              "ledger_sha256": "c8c0933e5ec6bc0ef266b1929b2fff7d161a0c35e3d4280dd39c3f99589aac16",
+              "proof_sha256": "996285340b22b461a0927e38aa22d0729e46a7bd0800b9740e7ac7b0a528aa50",
+              "repeat": 2,
+              "summary_sha256": "3433ca1cf76f5499c03987f8b760273ca78b849269693b565a23cd961c35b917",
+              "table": "M30_RUNS.csv"
+            }
+          ],
+          "deterministic_cases": 4,
+          "full_economic_parities": [
+            {
+              "all_native_events": true,
+              "case": {
+                "allocation": "original",
+                "arm": "fixed10_instrumented",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "wage",
+                "seed": 42
+              },
+              "full_normalized_report": true,
+              "instrumented_ledger_sha256": "c99c4dc2140c3d8fd591c54f6866337287eb8f9b0758d8d86d8ea7229d37a0ad",
+              "normalized_ledger_sha256": "5cf00a6f30aeae20e8e551cbeb3f76e3cecbe3b0294bea7c672761b3bf0c58cc"
+            },
+            {
+              "all_native_events": true,
+              "case": {
+                "allocation": "original",
+                "arm": "fixed10_instrumented",
+                "condition": "scarce",
+                "days": 3,
+                "kind": "wage",
+                "seed": 42
+              },
+              "full_normalized_report": true,
+              "instrumented_ledger_sha256": "15c0314f0eaca4adc7b76fef97df3c2af8b3af6ca1a8e2bc6bef2b77cc75acda",
+              "normalized_ledger_sha256": "174e2567c21331957df0f7a38836bd91b22060529d7bec633d7dc7e2b4d5b5ca"
+            }
+          ],
+          "independent_audits": 10
+        },
+        "status": "passed",
+        "subsystem": "wages"
+      }
+    },
+    {
+      "label": "final-wages-checkpoint-warm",
+      "seconds": 26.55557958999998,
+      "status": 0,
+      "summary": {
+        "base": "f142f7b665206ef490d5da046510d672f9f5f466",
+        "command_seconds": 26.492134322999846,
+        "commands": [
+          {
+            "command": [
+              "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+              "-B",
+              "-m",
+              "unittest",
+              "discover",
+              "-s",
+              "tests",
+              "-p",
+              "test_wages.py"
+            ],
+            "log": "focused.log",
+            "name": "focused",
+            "reported_checks": [
+              9
+            ],
+            "reported_failures": [],
+            "seconds": 22.784100951000028,
+            "status": 0
+          }
+        ],
+        "deferred": [
+          "complete Godot/Python suites",
+          "169 historical byte pins",
+          "88 M23\u2013M25 pinned pairs",
+          "36 M26/M27 controls, 48 proofs and 16 certificates",
+          "76 M28/M29 controls",
+          "full 28-case M30 matrix and 14 economic parities",
+          "12 original C/D independent audits"
+        ],
+        "dependencies_sha256": "71eaffe109236e86155861bf58d053e86c81624c5953ce7471123cd5bfe3c63f",
+        "full_acceptance": false,
+        "full_commands": [],
+        "level": "checkpoint",
+        "smoke": {
+          "actual_native_processes": 0,
+          "captures": [
+            {
+              "audit_seconds": 0.10969549400010692,
+              "cache": "verified_hit",
+              "capture_seconds": 0,
+              "case": {
+                "allocation": "original",
+                "arm": "fixed10_instrumented",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "wage",
+                "seed": 42
+              },
+              "events": 1567,
+              "ledger_sha256": "c99c4dc2140c3d8fd591c54f6866337287eb8f9b0758d8d86d8ea7229d37a0ad",
+              "proof_sha256": "46d930eef7469543a635f8a0b89383fdc2f918f09be813924811b8f1e75cfbf7",
+              "repeat": 1,
+              "summary_sha256": "d88ad0ceeef87a471711537a5e56a74e60087a5491f2f512e6053b8c6282b7de",
+              "table": "M30_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.10494555699983721,
+              "cache": "verified_hit",
+              "capture_seconds": 0,
+              "case": {
+                "allocation": "original",
+                "arm": "fixed10_instrumented",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "wage",
+                "seed": 42
+              },
+              "events": 1567,
+              "ledger_sha256": "c99c4dc2140c3d8fd591c54f6866337287eb8f9b0758d8d86d8ea7229d37a0ad",
+              "proof_sha256": "46132ddb4e937ab2b3a1571dafc7aafb8461dd22fabaef3e5cafa0bf67976d97",
+              "repeat": 2,
+              "summary_sha256": "d88ad0ceeef87a471711537a5e56a74e60087a5491f2f512e6053b8c6282b7de",
+              "table": "M30_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.10540166000009776,
+              "cache": "verified_hit",
+              "capture_seconds": 0,
+              "case": {
+                "allocation": "original",
+                "arm": "R_input_aware",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "cash",
+                "seed": 42
+              },
+              "events": 1552,
+              "ledger_sha256": "5cf00a6f30aeae20e8e551cbeb3f76e3cecbe3b0294bea7c672761b3bf0c58cc",
+              "proof_sha256": "e29f642c784b7019cbe4fdb0f39a1878760a4124d68fd088310477e1ac77b154",
+              "repeat": 1,
+              "summary_sha256": "54c7c34b2f27b2a10753a5e7f20117bec2d1fdb39eb9eede0952a6de8cf888bf",
+              "table": "M29_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.11264226299999791,
+              "cache": "verified_hit",
+              "capture_seconds": 0,
+              "case": {
+                "allocation": "original",
+                "arm": "worker_bids",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "wage",
+                "seed": 42
+              },
+              "events": 1537,
+              "ledger_sha256": "4fff23998e7fb8bc54a8f0e7ad50713b00d8405972cbd13dac00f77fdc89b208",
+              "proof_sha256": "6b8d7171eb5ac899482982f97d31712f28652a74d169b142f9e3864ccdc779e1",
+              "repeat": 1,
+              "summary_sha256": "a53b06990f49361565eec015d2f4a12a03753a9119ecd84719e67f7886b70cf1",
+              "table": "M30_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.11597055700008241,
+              "cache": "verified_hit",
+              "capture_seconds": 0,
+              "case": {
+                "allocation": "original",
+                "arm": "worker_bids",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "wage",
+                "seed": 42
+              },
+              "events": 1537,
+              "ledger_sha256": "4fff23998e7fb8bc54a8f0e7ad50713b00d8405972cbd13dac00f77fdc89b208",
+              "proof_sha256": "e7ec77b684dd40d84cd5aeca61da33fb266fa5ebe6af0662772974c502bc7260",
+              "repeat": 2,
+              "summary_sha256": "a53b06990f49361565eec015d2f4a12a03753a9119ecd84719e67f7886b70cf1",
+              "table": "M30_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.3859112229999937,
+              "cache": "verified_hit",
+              "capture_seconds": 0,
+              "case": {
+                "allocation": "original",
+                "arm": "fixed10_instrumented",
+                "condition": "scarce",
+                "days": 3,
+                "kind": "wage",
+                "seed": 42
+              },
+              "events": 4816,
+              "ledger_sha256": "15c0314f0eaca4adc7b76fef97df3c2af8b3af6ca1a8e2bc6bef2b77cc75acda",
+              "proof_sha256": "ab095c772dfe5787cb82d6d504a769def0703154330d9beb7f1ab70ee00b8bea",
+              "repeat": 1,
+              "summary_sha256": "d63257e900151ca32f504e883a4016070d411657be71892d9bce95d888df5198",
+              "table": "M30_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.39809288399987963,
+              "cache": "verified_hit",
+              "capture_seconds": 0,
+              "case": {
+                "allocation": "original",
+                "arm": "fixed10_instrumented",
+                "condition": "scarce",
+                "days": 3,
+                "kind": "wage",
+                "seed": 42
+              },
+              "events": 4816,
+              "ledger_sha256": "15c0314f0eaca4adc7b76fef97df3c2af8b3af6ca1a8e2bc6bef2b77cc75acda",
+              "proof_sha256": "1375bf88ba508ba4f9fce428155fac804fbeef30993ba0758dae5c5494b4e6cc",
+              "repeat": 2,
+              "summary_sha256": "d63257e900151ca32f504e883a4016070d411657be71892d9bce95d888df5198",
+              "table": "M30_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.44130416500001957,
+              "cache": "verified_hit",
+              "capture_seconds": 0,
+              "case": {
+                "allocation": "original",
+                "arm": "R_input_aware",
+                "condition": "scarce",
+                "days": 3,
+                "kind": "cash",
+                "seed": 42
+              },
+              "events": 4771,
+              "ledger_sha256": "174e2567c21331957df0f7a38836bd91b22060529d7bec633d7dc7e2b4d5b5ca",
+              "proof_sha256": "6f8c679c57cf7c7bfcad996a237a9e6e610291756c67780fea7cec1e26b9d174",
+              "repeat": 1,
+              "summary_sha256": "bd2f19d841a4b476f237e47d314945d25f495fd80224b907f8185874b84fbe31",
+              "table": "M29_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.41771109499995873,
+              "cache": "verified_hit",
+              "capture_seconds": 0,
+              "case": {
+                "allocation": "original",
+                "arm": "worker_bids",
+                "condition": "scarce",
+                "days": 3,
+                "kind": "wage",
+                "seed": 42
+              },
+              "events": 4685,
+              "ledger_sha256": "c8c0933e5ec6bc0ef266b1929b2fff7d161a0c35e3d4280dd39c3f99589aac16",
+              "proof_sha256": "a80f0e9b46667a4b4dd272499b1d60cbbf4cc8a653c9abb7771b342b597bff0d",
+              "repeat": 1,
+              "summary_sha256": "3433ca1cf76f5499c03987f8b760273ca78b849269693b565a23cd961c35b917",
+              "table": "M30_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.35955516900003204,
+              "cache": "verified_hit",
+              "capture_seconds": 0,
+              "case": {
+                "allocation": "original",
+                "arm": "worker_bids",
+                "condition": "scarce",
+                "days": 3,
+                "kind": "wage",
+                "seed": 42
+              },
+              "events": 4685,
+              "ledger_sha256": "c8c0933e5ec6bc0ef266b1929b2fff7d161a0c35e3d4280dd39c3f99589aac16",
+              "proof_sha256": "996285340b22b461a0927e38aa22d0729e46a7bd0800b9740e7ac7b0a528aa50",
+              "repeat": 2,
+              "summary_sha256": "3433ca1cf76f5499c03987f8b760273ca78b849269693b565a23cd961c35b917",
+              "table": "M30_RUNS.csv"
+            }
+          ],
+          "deterministic_cases": 4,
+          "full_economic_parities": [
+            {
+              "all_native_events": true,
+              "case": {
+                "allocation": "original",
+                "arm": "fixed10_instrumented",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "wage",
+                "seed": 42
+              },
+              "full_normalized_report": true,
+              "instrumented_ledger_sha256": "c99c4dc2140c3d8fd591c54f6866337287eb8f9b0758d8d86d8ea7229d37a0ad",
+              "normalized_ledger_sha256": "5cf00a6f30aeae20e8e551cbeb3f76e3cecbe3b0294bea7c672761b3bf0c58cc"
+            },
+            {
+              "all_native_events": true,
+              "case": {
+                "allocation": "original",
+                "arm": "fixed10_instrumented",
+                "condition": "scarce",
+                "days": 3,
+                "kind": "wage",
+                "seed": 42
+              },
+              "full_normalized_report": true,
+              "instrumented_ledger_sha256": "15c0314f0eaca4adc7b76fef97df3c2af8b3af6ca1a8e2bc6bef2b77cc75acda",
+              "normalized_ledger_sha256": "174e2567c21331957df0f7a38836bd91b22060529d7bec633d7dc7e2b4d5b5ca"
+            }
+          ],
+          "independent_audits": 10
+        },
+        "status": "passed",
+        "subsystem": "wages"
+      }
+    },
+    {
+      "label": "final-contracts-development-fresh",
+      "seconds": 7.4785774250001396,
+      "status": 0,
+      "summary": {
+        "base": "f142f7b665206ef490d5da046510d672f9f5f466",
+        "command_seconds": 7.421362344000045,
+        "commands": [
+          {
+            "command": [
+              "godot",
+              "--headless",
+              "--no-header",
+              "--path",
+              ".",
+              "--script",
+              "res://tests/run_binding_tests.gd"
+            ],
+            "log": "focused.log",
+            "name": "focused",
+            "reported_checks": [
+              42
+            ],
+            "reported_failures": [
+              0
+            ],
+            "seconds": 3.732244524999942,
+            "status": 0
+          }
+        ],
+        "deferred": [
+          "complete Godot/Python suites",
+          "169 historical byte pins",
+          "88 M23\u2013M25 pinned pairs",
+          "36 M26/M27 controls, 48 proofs and 16 certificates",
+          "76 M28/M29 controls",
+          "full 28-case M30 matrix and 14 economic parities",
+          "12 original C/D independent audits"
+        ],
+        "dependencies_sha256": "71eaffe109236e86155861bf58d053e86c81624c5953ce7471123cd5bfe3c63f",
+        "full_acceptance": false,
+        "full_commands": [],
+        "level": "development",
+        "smoke": {
+          "actual_native_processes": 4,
+          "captures": [
+            {
+              "audit_seconds": 0.06310792300018875,
+              "cache": "disabled",
+              "capture_seconds": 0.6659849960001338,
+              "case": {
+                "allocation": "original",
+                "arm": "matching",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "binding",
+                "seed": 42
+              },
+              "events": 1441,
+              "ledger_sha256": "0f1f19176f1974babf33284080feab6767a8ae0722b6267458ab1ac1113cd9c5",
+              "proof_sha256": "ab7a6eb88fa3e276d911282f9a302991ad4e59e5defee3c4103cf8d393183931",
+              "repeat": 1,
+              "summary_sha256": "c068ac680359b63e2d7a12e5df5f1762f29d6e9af10d6b37110d16597cff5484",
+              "table": "M25_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.06539774499992745,
+              "cache": "disabled",
+              "capture_seconds": 0.6522488509999675,
+              "case": {
+                "allocation": "original",
+                "arm": "matching",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "binding",
+                "seed": 42
+              },
+              "events": 1441,
+              "ledger_sha256": "0f1f19176f1974babf33284080feab6767a8ae0722b6267458ab1ac1113cd9c5",
+              "proof_sha256": "a56baa4bae74bb5a69346de7d2da96cb58363741e21436d28e54194c13ed8493",
+              "repeat": 2,
+              "summary_sha256": "c068ac680359b63e2d7a12e5df5f1762f29d6e9af10d6b37110d16597cff5484",
+              "table": "M25_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.06736756500004049,
+              "cache": "disabled",
+              "capture_seconds": 0.6527799559999039,
+              "case": {
+                "allocation": "original",
+                "arm": "obligations_only",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "binding",
+                "seed": 42
+              },
+              "events": 1441,
+              "ledger_sha256": "13d6a669d7c60799e1e43a3184fab1d00c42faca33f194f3edcb79ef94088303",
+              "proof_sha256": "1667c400f304af3df73bb1b29f383e98264a132aeb57aecf708d8c36c567ca15",
+              "repeat": 1,
+              "summary_sha256": "2d7c55726df99063f749ce051ca27ea8531b70b39c6d7ff40296bd04b6c46741",
+              "table": "M25_RUNS.csv"
+            },
+            {
+              "audit_seconds": 0.07737762099986867,
+              "cache": "disabled",
+              "capture_seconds": 0.6535050459999638,
+              "case": {
+                "allocation": "original",
+                "arm": "obligations_only",
+                "condition": "scarce",
+                "days": 1,
+                "kind": "binding",
+                "seed": 42
+              },
+              "events": 1441,
+              "ledger_sha256": "13d6a669d7c60799e1e43a3184fab1d00c42faca33f194f3edcb79ef94088303",
+              "proof_sha256": "3bc8a58e97238f9b526434d16410c8647174d1cb2ce3540d54b082b4a64ff52a",
+              "repeat": 2,
+              "summary_sha256": "2d7c55726df99063f749ce051ca27ea8531b70b39c6d7ff40296bd04b6c46741",
+              "table": "M25_RUNS.csv"
+            }
+          ],
+          "deterministic_cases": 2,
+          "full_economic_parities": [],
+          "independent_audits": 4
+        },
+        "status": "passed",
+        "subsystem": "contracts"
+      }
+    },
+    {
+      "label": "final-queue-development-fresh",
+      "seconds": 4.67993959699993,
+      "status": 0,
+      "summary": {
+        "base": "f142f7b665206ef490d5da046510d672f9f5f466",
+        "command_seconds": 4.625561642000093,
+        "commands": [
+          {
+            "command": [
+              "godot",
+              "--headless",
+              "--no-header",
+              "--path",
+              ".",
+              "--script",
+              "res://tests/run_dispatch_queue_tests.gd"
+            ],
+            "log": "focused.log",
+            "name": "focused",
+            "reported_checks": [
+              33
+            ],
+            "reported_failures": [
+              0
+            ],
+            "seconds": 1.0285842529999627,
+            "status": 0
+          },
+          {
+            "command": [
+              "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+              "-B",
+              "scripts/tools/performance_smoke.py",
+              "--output",
+              "/workspace/work/m31/final-queue-development-fresh/queue-smoke.json"
+            ],
+            "log": "queue-smoke.log",
+            "name": "queue-smoke",
+            "reported_checks": [],
+            "reported_failures": [],
+            "seconds": 2.8350361109999085,
+            "status": 0
+          }
+        ],
+        "deferred": [
+          "complete Godot/Python suites",
+          "169 historical byte pins",
+          "88 M23\u2013M25 pinned pairs",
+          "36 M26/M27 controls, 48 proofs and 16 certificates",
+          "76 M28/M29 controls",
+          "full 28-case M30 matrix and 14 economic parities",
+          "12 original C/D independent audits"
+        ],
+        "dependencies_sha256": "71eaffe109236e86155861bf58d053e86c81624c5953ce7471123cd5bfe3c63f",
+        "full_acceptance": false,
+        "full_commands": [],
+        "level": "development",
+        "queue_smoke": {
+          "cases": {
+            "C1": {
+              "canonical_sha256": "93006cc9d697fd9455527fb604e6eeebe54eefc3c43925a93b119bd0cdd7f966",
+              "peak_rss_kib": 86012,
+              "run_seconds": 0.08408
+            },
+            "D1": {
+              "canonical_sha256": "572964383ed21e7ff013ba0192cd9db8dd42cfd5e0a584096bb8934c8e2be784",
+              "peak_rss_kib": 86024,
+              "run_seconds": 0.084627
+            },
+            "queue10": {
+              "peak_rss_kib": 71304,
+              "proposal_digest": "c834cc0509c6784b9cdf7c93de29a0d7d2d5b6158601fff8bca4d8565c6fe6ba",
+              "release_digest": "5eb58dc71956864da7ae1f7a3e81d15e2ed1ce91653c3eb160317744df52d629",
+              "run_seconds": 0.783225
+            }
+          },
+          "warnings": []
+        },
+        "status": "passed",
+        "subsystem": "queue"
+      }
+    }
+  ]
+}

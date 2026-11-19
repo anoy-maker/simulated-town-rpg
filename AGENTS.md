@@ -13,3 +13,5 @@ This repository is a **simulation-first Godot 4 RPG prototype**, not a text-adve
 - Avoid unnecessary scaffolding, grand refactors, and speculative features. Ask for input only when a missing decision genuinely blocks progress; otherwise state a conservative assumption.
 - For each change, summarize files touched, tested behavior, unresolved issues, and the next small increment.
 - Follow the targeted → three-day checkpoint → once-per-milestone full acceptance cadence in `docs/PERFORMANCE.md`; the opt-in performance smoke emits advisory relative warnings, never substitutes for correctness or independent audits.
+
+- Use `scripts/tools/verify_workflow.py` for explicit development/checkpoint/full levels; see `docs/PERFORMANCE.md`. Select the subsystem explicitly, retain full independent auditing on trace-cache hits, and never label a short or deliberately deferred run as full acceptance.

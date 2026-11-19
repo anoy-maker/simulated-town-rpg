@@ -98,3 +98,50 @@ Cora's M21 codec; add only the needed per-industry adapter when that industry is
 approved. No generic causality graph, distributed engine, forced sleep, population
 expansion or broader NPC agency is part of this workflow. M21's 12:25 barrier
 remains a real world-progression constraint.
+
+
+## M31 versioned verification entry point
+
+Use the commands in [M31 results](M31_RESULTS.md#three-explicit-levels)
+from the repository root, with a fresh output directory per invocation. Reuse a
+separate `--cache-dir` if desired. Output `summary.json` records status, command
+wall, printed test counts, probe/audit counts, hashes, deferred checks and the
+full-acceptance flag; raw command logs and detailed dependency proof stay in work.
+Never add those raw logs or verbose traces to an outcome report unnecessarily.
+
+| Level | Intended use and scope |
+| --- | --- |
+| `development --subsystem …` | Native focused group (workflow: its Python tests), plus one-day pinned complete replay/independent audit for the integer economic profiles. Queue uses the existing canonical/proposal/ten-job smoke; its independent accounting/numerical audit is deferred. |
+| `checkpoint --subsystem …` | Full focused Python module and one-/three-day probes. Wages/input controls use existing full event/receipt/report normalizers. Queue adds eight fresh C/D1/3 sync/scheduled independent audits and complete economic parity. |
+| `full` | Complete suites,169 historical pins, all M23–M30 controls, original C/D1/3/30 audits, full milestone matrix and final performance smoke. Serial commands keep full Python and timing smoke isolated. `full --plan` lists all17 stages without executing them. |
+
+Profiles are `wages`, `inputs`, `contracts`, `queue`, `workflow`. They are explicit
+coverage choices, not an automatic changed-file/dependency oracle. New subsystems
+need a reviewed registry entry using their existing focused/capture/audit tools.
+The wage smoke tests experimental M30 code; it does not adopt that economy.
+
+Optional immutable raw reuse is restricted to short integer-economic probes;
+never cache focused-test or independent-audit pass conclusions. A receipt binds
+all repository files/pins, engine binary/version, Python/runtime libraries,
+actual native build/binaries/configuration, environment digest, exact inputs and
+expected report/ledger hashes. Each hit still runs the original independent
+whole-event audit, complete replay and full applicable economic comparison.
+Two originally distinct native captures support each replay pair. Native run
+times retained in payloads are historical measurements, not new executions.
+
+Unchanged reviewed M30 native/capture sources define the current known closure.
+Changed/new sources are uncertain and force fresh execution on every invocation
+until a reviewed closure is explicitly registered; they are never auto-trusted
+under a new cache key. Unresolved/symlink dependencies fail closed. Whole-tree
+proofs are intentionally conservative; even documentation/environment changes
+can invalidate reuse. This is not a general cache for arbitrary scripts or a
+native build-cache manager. Rebuild changed kernels with the existing helper
+before verification; no new Rust/build policy is introduced.
+
+Nonzero process status, script errors, skipped required tests, or native JSON
+failure counters prevent acceptance. Short and planned runs always state
+`full_acceptance=false`. Full native/annual controls remain mandatory after
+meaningful simulation changes; M31's user-authorized tooling-only deferral is
+explicit, not a blanket exemption. [M31 results](M31_RESULTS.md) distinguish
+same-coverage cache savings from narrower tier coverage and preserve the
+superseded queue checkpoint finding. No CI migration is implemented here.
