@@ -4,7 +4,7 @@
 
 **Status (November 2026):** Active research prototype, **not yet a playable RPG**. The working title, design, and future commercial plans are subject to change.
 
-> **Looking for the actual simulation?** The default `main` branch still contains the original M0 foundation. Development through **M31** is available on the [latest development branch](https://github.com/anoy-maker/simulated-town-rpg/tree/codex/m31-fast-verification) and in [PR #47](https://github.com/anoy-maker/simulated-town-rpg/pull/47). The M30 economic experiment is completed and verified; M31's faster-development tooling is delivered for review, with comprehensive M31 acceptance pending. The branches have **not** been merged into `main`.
+> **Looking for the actual simulation?** The default [`main`](https://github.com/anoy-maker/simulated-town-rpg/tree/main) branch now includes the cumulative **M0–M31** implementation and research history. M31's verification tooling has passed all **17 full-acceptance stages** on [GitHub Actions](https://github.com/anoy-maker/simulated-town-rpg/actions/runs/44449713489) and was integrated via [PR #47](https://github.com/anoy-maker/simulated-town-rpg/pull/47). M30's negotiated-wage treatment remains experimental, not the adopted economic baseline.
 
 ## The vision
 
@@ -32,7 +32,7 @@ The current executable prototype is a **headless Godot 4 simulation**, developed
 
 The simulations deliberately allow economic failure. A run that conserves every coin and respects every contract can still produce unemployment, hunger, business losses, or supply-chain collapse. Those are outcomes to investigate, not automatically bugs to paper over.
 
-**Illustrative result:** M30 introduced optional worker wage bidding. Bids were legal and correctly accounted for, but the reference scenario's resident meals fell from **450 to 52 over 30 days** versus its fixed-wage control. The report traces this to the combined hiring/funding and application-selection rules—not simply to lower wages. This treatment is **not** an adopted economic baseline. See [M30 results](https://github.com/anoy-maker/simulated-town-rpg/blob/9f5e3ca9433540816f137aadea50e76a22d50b13/docs/M30_RESULTS.md).
+**Illustrative result:** M30 introduced optional worker wage bidding. Bids were legal and correctly accounted for, but the reference scenario's resident meals fell from **450 to 52 over 30 days** versus its fixed-wage control. The report traces this to the combined hiring/funding and application-selection rules—not simply to lower wages. This treatment is **not** an adopted economic baseline. See [M30 results](https://github.com/anoy-maker/simulated-town-rpg/blob/main/docs/M30_RESULTS.md).
 
 ## How we got here
 
@@ -46,27 +46,27 @@ This is a cumulative experimental project, not a collection of finished gameplay
 | **M19–M22** | Profiling, exact numerical optimization, narrow Rust/C++ ports, async-planning and queue benchmarks. |
 | **M23–M25** | Brewery and bakery grain competition, labor-market matching, binding wage contracts. |
 | **M26–M30** | Unmet demand, economic feasibility analysis, input reliability, initial cash distribution, and negotiated wages. |
-| **M31** | Development/checkpoint/full verification tiers and verified reuse of short captures; full M31 acceptance still pending. |
+| **M31** | Development/checkpoint/full verification tiers, verified reuse of short captures, and completed independent 17-stage full acceptance. |
 
 Key places to explore:
 
-- [Research index — measured experiments, findings, and limitations](https://github.com/anoy-maker/simulated-town-rpg/blob/9f5e3ca9433540816f137aadea50e76a22d50b13/docs/RESEARCH_INDEX.md)
-- [M30 — Negotiated wages and actual economic outcomes](https://github.com/anoy-maker/simulated-town-rpg/blob/9f5e3ca9433540816f137aadea50e76a22d50b13/docs/M30_RESULTS.md)
-- [M31 — Faster development and verification](https://github.com/anoy-maker/simulated-town-rpg/blob/9f5e3ca9433540816f137aadea50e76a22d50b13/docs/M31_RESULTS.md)
-- [M20 — GDScript, C++, and Rust performance comparison](https://github.com/anoy-maker/simulated-town-rpg/blob/9f5e3ca9433540816f137aadea50e76a22d50b13/docs/M20_RESULTS.md)
-- [M23 — Competing industries and shared grain](https://github.com/anoy-maker/simulated-town-rpg/blob/9f5e3ca9433540816f137aadea50e76a22d50b13/docs/M23_RESULTS.md)
-- [Design principles](https://github.com/anoy-maker/simulated-town-rpg/blob/9f5e3ca9433540816f137aadea50e76a22d50b13/docs/DESIGN.md) · [Architecture and invariants](https://github.com/anoy-maker/simulated-town-rpg/blob/9f5e3ca9433540816f137aadea50e76a22d50b13/docs/ARCHITECTURE.md) · [Development cadence](https://github.com/anoy-maker/simulated-town-rpg/blob/9f5e3ca9433540816f137aadea50e76a22d50b13/docs/PERFORMANCE.md)
+- [Research index — measured experiments, findings, and limitations](https://github.com/anoy-maker/simulated-town-rpg/blob/main/docs/RESEARCH_INDEX.md)
+- [M30 — Negotiated wages and actual economic outcomes](https://github.com/anoy-maker/simulated-town-rpg/blob/main/docs/M30_RESULTS.md)
+- [M31 — Faster development and verification](https://github.com/anoy-maker/simulated-town-rpg/blob/main/docs/M31_RESULTS.md)
+- [M20 — GDScript, C++, and Rust performance comparison](https://github.com/anoy-maker/simulated-town-rpg/blob/main/docs/M20_RESULTS.md)
+- [M23 — Competing industries and shared grain](https://github.com/anoy-maker/simulated-town-rpg/blob/main/docs/M23_RESULTS.md)
+- [Design principles](https://github.com/anoy-maker/simulated-town-rpg/blob/main/docs/DESIGN.md) · [Architecture and invariants](https://github.com/anoy-maker/simulated-town-rpg/blob/main/docs/ARCHITECTURE.md) · [Development cadence](https://github.com/anoy-maker/simulated-town-rpg/blob/main/docs/PERFORMANCE.md)
 
-These links point to a **fixed M31 development snapshot** so that the referenced results remain identifiable even if branches change.
+These links point to the current **`main` branch**; the milestone reports and their original data remain available in Git history.
 
 ## Try the simulation
 
-Use the [latest development branch](https://github.com/anoy-maker/simulated-town-rpg/tree/codex/m31-fast-verification), **Godot 4.6.3**, and **Python 3.12** for the documented M30/M31 environment. No external AI API or credentials are required for the ordinary headless economic scenarios. The optional native performance tests have additional build requirements documented in [M20](https://github.com/anoy-maker/simulated-town-rpg/blob/9f5e3ca9433540816f137aadea50e76a22d50b13/docs/M20_RESULTS.md).
+Use the default [`main` branch](https://github.com/anoy-maker/simulated-town-rpg/tree/main), **Godot 4.6.3**, and **Python 3.12** for the documented M30/M31 environment. No external AI API or credentials are required for the ordinary headless economic scenarios. The optional native performance tests have additional build requirements documented in [M20](https://github.com/anoy-maker/simulated-town-rpg/blob/main/docs/M20_RESULTS.md).
 
 ```sh
 git clone https://github.com/anoy-maker/simulated-town-rpg.git
 cd simulated-town-rpg
-git switch codex/m31-fast-verification
+# `main` is the verified development baseline.
 
 # Sample three-day worker-bidding experiment:
 godot --headless --no-header --path . --script res://scripts/tools/run_simulation.gd -- --scenario settlement_dynamic_wages --condition scarce --arm worker_bids --allocation original 3 42 --report-json
@@ -75,7 +75,7 @@ godot --headless --no-header --path . --script res://scripts/tools/run_simulatio
 python3 -B scripts/tools/verify_workflow.py development --subsystem wages --output work/readme-dev
 ```
 
-The default `run_simulation.gd` scenario remains the original M0 test case. For other conditions, legacy scenarios, detailed audits, or complete acceptance commands, see the development branch's documentation. Short development checks are **not** a substitute for full milestone certification.
+The default `run_simulation.gd` scenario remains the original M0 test case. For other conditions, historical scenarios, detailed audits, or complete acceptance commands, see [the verification workflow guide](docs/PERFORMANCE.md) and [M31 results](docs/M31_RESULTS.md). GitHub Actions runs the native-enabled Godot and Python regression suites on relevant changes to `main`; its **Simulation verification** workflow also offers a manual `full` scope for complete acceptance. Short development checks are **not** a substitute for full milestone certification.
 
 ## Where we're heading
 
