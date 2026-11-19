@@ -124,6 +124,16 @@ class WorkflowTests(unittest.TestCase):
         self.assertIn('run_wages.py',' '.join(plan['m30-matrix']))
         self.assertNotIn('--checkpoint',plan['m30-matrix']);self.assertFalse(any('--reuse' in a for argv in plan.values() for a in argv))
 
+    def test_queue_checkpoint_audits_every_capture_and_detects_nonaggregate_drift(self):
+        for corrupt in (False,True):
+            def capture(stage,days,mode):
+                return dict(report=dict(profitable=dict(ledger_sha256='ledger')),events=[dict(id=1)]+([dict(id=2)] if corrupt and stage=='D' and days==3 and mode=='scheduled' else []),measurement=dict(run_usec=1,command_seconds=1,canonical_sha256='report'))
+            with patch('measure_planning_jobs.capture',side_effect=capture),patch('measure_planning_jobs.validate'),patch('learning_audit.audit') as audit:
+                if corrupt:
+                    with self.assertRaises(AssertionError):flow.queue_checkpoint()
+                else:self.assertEqual(flow.queue_checkpoint()['independent_audits'],8)
+                self.assertEqual(audit.call_count,8)
+
     def test_full_pin_comparison_checks_complete_case_set_and_duplicates(self):
         actual=Path(self.temp.name)/'actual.csv';old=Path(self.temp.name)/'old.csv'
         text='case,summary_sha256,ledger_sha256\na,full,events\n';actual.write_text(text);old.write_text(text)

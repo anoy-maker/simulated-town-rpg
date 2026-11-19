@@ -222,6 +222,27 @@ def smoke(profile, days, proof, cache):
                 independent_audits=len(results), deterministic_cases=len(days)*len(arms), full_economic_parities=parities)
 
 
+def queue_checkpoint():
+    from measure_planning_jobs import capture,validate
+    from learning_audit import audit
+    rows=[]
+    for stage in 'CD':
+        for days in (1,3):
+            reference=None
+            for mode in ('sync','scheduled'):
+                data=capture(stage,days,mode);validate(data)
+                stamp=time.perf_counter();audit(data);elapsed=time.perf_counter()-stamp
+                if reference is not None and (reference['report']!=data['report'] or reference['events']!=data['events']):
+                    raise AssertionError('Complete queue economic replay drift')
+                reference=data
+                rows.append(dict(stage=stage,days=days,mode=mode,audit_seconds=elapsed,
+                                 native_run_seconds=data['measurement']['run_usec']/1e6,
+                                 command_seconds=data['measurement']['command_seconds'],
+                                 summary_sha256=data['measurement']['canonical_sha256'],
+                                 ledger_sha256=data['report']['profitable']['ledger_sha256']))
+    return dict(captures=rows,independent_audits=len(rows),deterministic_cases=4,raw_reuse=False)
+
+
 def full_plan(output):
     """The existing comprehensive M30 certification path, not a new audit framework."""
     py = [sys.executable, '-B', 'scripts/tools/']
@@ -320,6 +341,7 @@ def main():
                 if kind:
                     summary['smoke']=smoke(a.subsystem,[1] if a.level=='development' else [1,3],proof,a.cache_dir)
                 else:
+                    if a.level=='checkpoint':summary['queue_checkpoint']=queue_checkpoint()
                     command=[sys.executable,'-B','scripts/tools/performance_smoke.py','--output',str(a.output/'queue-smoke.json')]
                     summary['commands'].append(run_command('queue-smoke',command,a.output))
                     q=json.loads((a.output/'queue-smoke.json').read_text())
