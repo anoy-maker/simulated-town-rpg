@@ -1,6 +1,14 @@
 # M31 — Fast development and verification workflow
 
-**Delivered for review; comprehensive M31 acceptance is deliberately pending.**
+**Accepted and merged:** M31 passed the complete **17-stage** GitHub Actions
+verification on November 18, 2026, including **3,482 Godot checks**, **166 Python
+tests**, historical regressions, independent economic audits, the M30 matrix and
+the final performance smoke. See [the successful full run](https://github.com/anoy-maker/simulated-town-rpg/actions/runs/44449713489)
+and [merged PR #47](https://github.com/anoy-maker/simulated-town-rpg/pull/47).
+The initial draft intentionally deferred acceptance; references to deferral
+elsewhere below describe that earlier review-stage status, not today's result.
+A GitHub-runner cgroup metadata portability fix was added before final
+acceptance without changing the simulation's economics or native kernels.
 Tooling branches from completed M30 `f142f7b` on `codex/m31-fast-verification`.
 Every M30 source checksum is unchanged. No simulation, policy, state, schedule,
 accounting/audit assertion, Rust kernel, gameplay or golden result was changed.
