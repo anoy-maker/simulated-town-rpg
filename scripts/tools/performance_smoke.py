@@ -7,7 +7,9 @@ from planning_load_tools import capture,host,quantiles
 
 def regression_warnings(current,reference):
     warnings=[]
-    comparable=all(current['host'].get(k)==reference['host'].get(k) for k in ('godot','machine','cpu_max','rust_sha256'))
+    comparable=(current['host'].get('cpu_max') not in (None, 'unavailable')
+                and all(current['host'].get(k)==reference['host'].get(k)
+                        for k in ('godot','machine','cpu_max','rust_sha256')))
     if not comparable:warnings.append('Reference host/engine/kernel differs; timing ratios are informational only.')
     for case,new in current['cases'].items():
         old=reference.get('cases',{}).get(case)
