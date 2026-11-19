@@ -451,3 +451,10 @@ M31's initial development submission deliberately deferred full acceptance; this
   configured and accepted independently.
 
 **Stop after M31 for review.**
+
+## M32: simulation architecture separation audit
+
+Research-only [feasibility report](M32_ARCHITECTURE_FEASIBILITY.md): actual authority,
+custody, scheduling and observation dependencies; future laboratory profiles; and
+a proposed minimal M33 trade-window extraction. No simulation refactor, laboratory
+implementation, baseline adoption or measured speedup. **Stop for M32 review.**
