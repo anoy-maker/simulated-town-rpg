@@ -34,6 +34,14 @@ def validate(data):
         finished=[r['id'] for r in sorted(data['records'],key=lambda r:r['finished_usec'])]
         assert finished!=ids and finished.index('work-000')>0
 
+def _optional_cgroup_limit(path):
+    """Unavailable cgroup metadata must not fail correctness checks or invent a quota."""
+    try:
+        return path.read_text().strip() or 'unavailable'
+    except OSError:
+        return 'unavailable'
+
+
 def host():
     import platform,hashlib
-    return dict(godot=subprocess.check_output(['godot','--version'],text=True,env=godot_environment()).strip(),platform=platform.platform(),machine=platform.machine(),cpus=os.cpu_count(),cpu_max=Path('/sys/fs/cgroup/cpu.max').read_text().strip(),memory_max=Path('/sys/fs/cgroup/memory.max').read_text().strip(),rust_sha256=hashlib.sha256((ROOT/'native/m20/bin/libm20_math.so').read_bytes()).hexdigest(),bridge_sha256=hashlib.sha256((ROOT/'native/m20/bin/libm20_bridge.so').read_bytes()).hexdigest())
+    return dict(godot=subprocess.check_output(['godot','--version'],text=True,env=godot_environment()).strip(),platform=platform.platform(),machine=platform.machine(),cpus=os.cpu_count(),cpu_max=_optional_cgroup_limit(Path('/sys/fs/cgroup/cpu.max')),memory_max=_optional_cgroup_limit(Path('/sys/fs/cgroup/memory.max')),rust_sha256=hashlib.sha256((ROOT/'native/m20/bin/libm20_math.so').read_bytes()).hexdigest(),bridge_sha256=hashlib.sha256((ROOT/'native/m20/bin/libm20_bridge.so').read_bytes()).hexdigest())
